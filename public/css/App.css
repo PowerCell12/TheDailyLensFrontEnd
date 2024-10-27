@@ -1,0 +1,13 @@
+body > div{
+    width: 72%;
+    margin: auto;
+    position: relative;
+    background-color: white;
+    border-radius: 1em;
+    padding: 2em;
+    box-shadow: 2px 2px 0px 14px rgba(255,255,255,0.45);
+    margin-bottom: 5em; 
+    margin-top: 5em;
+
+}
+

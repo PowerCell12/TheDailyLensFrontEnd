@@ -1,0 +1,99 @@
+
+.footerTop{
+    display: flex;
+    justify-content: space-between;
+    h2{
+        font-size: 1.5em;
+        margin-left: 2.2em;
+        font-style: italic;
+    }
+    .footerLinks{
+        text-align: center;
+        list-style: none;
+        display: flex;
+        gap: 1.2em;
+        flex-direction: column;
+        margin-bottom: 2em;
+
+        li{
+            a{
+                text-decoration: none;
+                color: black;
+                font-weight: 300;
+            }
+            a:hover{
+                font-weight: 600;
+                color: #0065c5
+            }
+
+        }
+    }
+
+    .footerLinks:last-of-type{
+        margin-right: 4em;
+    }
+
+    .footerLinks  > li:not(:has(a)){
+        font-weight: 600;
+        font-size: 1.1em;
+        margin-bottom: .5em;
+        margin-top: .5em;
+    }
+    
+}
+
+
+
+.footerBottom{
+
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: .5em;
+    .footerFinalLinks{
+
+        list-style: none;
+        display: flex;
+        justify-content: space-between;
+        gap: 2em;
+
+        li > a{
+            text-decoration:  none;
+            color: black;
+
+
+        }
+
+        li > a:hover{
+            font-weight: 600;
+            color: #0065c5
+        }
+    }
+
+    .socials{
+        display: flex;
+        justify-content: space-between;
+        gap: 2em;
+        align-items: center;
+ 
+        a{
+            color: black;
+            font-size:1.3em;
+        }
+
+        a:hover{
+            color: #0065c5
+        }
+    }
+
+}
+
+
+.last{
+    margin-right: 2em;
+}
+
+
+/* temporary solution */
+.FooterTopDiv{
+    margin-top: 45em;
+}
