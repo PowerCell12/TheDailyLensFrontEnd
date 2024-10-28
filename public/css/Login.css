@@ -1,0 +1,185 @@
+
+
+.LoginPicture{
+  width: 30em;
+  height: 40em;
+  border-radius: 1em;
+  margin-left: 3em;
+}
+
+
+.LoginSection{
+  display: flex;
+  gap: 15em;
+  background-color: #587C9E;
+  border-radius: 1em;
+  padding: 1.2em;
+  margin-top: 2em;
+  box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+}
+
+
+.LoginForm{
+
+  display: flex;
+  flex-direction: column;
+
+  h3{
+    font-size: 3em;
+    color: white;
+    font-weight: 500;
+    margin-bottom: 0;
+  }
+
+  p{
+    margin-top: .8em;
+    margin-bottom: 2.2em;
+    font-size: .9em;
+    color: rgb(300, 300, 300);
+    font-weight: 400;
+    
+    a{
+      color: peachpuff;
+    }
+
+  }
+
+
+
+
+  .LoginInput{
+    padding: .8em;
+    border-radius: .3em;
+    border: none;
+    margin-bottom: 1.8em;
+    background-color: #E6E6FA;
+  }
+
+  .LoginInput:focus{
+    border: solid 2px #0b4444ad;
+    outline: none; 
+    box-shadow: rgb(38, 57, 77) 0px 0px 30px -10px;
+  }
+
+  .LoginInput:last-of-type{
+    margin-bottom: 1em;
+  }
+
+
+
+  .PasswordEye{
+    width: 1.6em;
+    position: absolute;
+    top: 31.3%;
+    right: 19.5%;
+    cursor: pointer;
+  }
+
+  .PasswordEye:active{
+    transform: scale(0.9);
+    transition: transform 0.1s ease;
+    opacity: 0.8;
+  }
+
+
+  .ChecboxTerms{
+    margin-bottom: 2em;
+    display: flex;
+    align-items: center;
+    gap: .5em;
+    
+    input{
+        width: 1.5em;
+        height: 1.5rem;
+        accent-color: white;    
+        margin-left: 0;
+        cursor: pointer;
+    }
+  
+    
+    input[type="checkbox"]:checked::after{
+      transform: translate(-50%, -50%);
+    }
+
+    label{
+      color: white;
+      font-size: .8em;
+
+      a{
+        color: peachpuff;
+      }
+    }
+
+
+  }
+
+
+  button[type="submit"]{
+    padding: .5em;
+    border-radius: .4em;
+    border: none;
+    cursor: pointer;
+
+    background-color: black;
+    color: white;
+    transition: transform 0.2s ease;
+    font-size: 1.1em;
+  }
+
+  button[type="submit"]:hover {
+    transform: scale(1.1); /* Slightly larger on hover */
+    transition: transform 0.2s ease; /* Smooth transition */
+  }
+
+
+
+  .divider{
+    display: flex;
+    align-items: center;
+    text-align: center;
+    gap: 16px;  
+    margin: 24px 0;  
+    color:antiquewhite;
+  }
+
+  .divider::before,
+  .divider::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid #374151; 
+  }
+
+
+  button[type="button"]{
+    text-align: center;
+    padding: .5em;
+    border-radius: .4em;
+    border: none;
+    cursor: pointer;
+    background-color: white;
+    font-size: 1.1em;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    gap: .5em;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    img{
+      width: 1.4em;
+      height: 1.4em;
+    }
+
+    span{
+      margin-top: 0.1em;
+    }
+
+  }
+
+  button[type="button"]:hover {
+    transform: scale(1.05); /* Slightly larger on hover */
+    transition: transform 0.2s ease; /* Smooth transition */
+  }
+
+}
+
+
