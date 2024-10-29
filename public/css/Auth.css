@@ -1,16 +1,14 @@
-
-
-.LoginPicture{
+.AuthPicture{
   width: 30em;
   height: 40em;
   border-radius: 1em;
-  margin-left: 3em;
 }
 
 
-.LoginSection{
+.AuthSection{
   display: flex;
-  gap: 15em;
+  justify-content: center;
+  gap: 17em;
   background-color: #587C9E;
   border-radius: 1em;
   padding: 1.2em;
@@ -19,7 +17,7 @@
 }
 
 
-.LoginForm{
+.AuthForm{
 
   display: flex;
   flex-direction: column;
@@ -47,7 +45,7 @@
 
 
 
-  .LoginInput{
+  .AuthInput{
     padding: .8em;
     border-radius: .3em;
     border: none;
@@ -55,13 +53,13 @@
     background-color: #E6E6FA;
   }
 
-  .LoginInput:focus{
+  .AuthInput:focus{
     border: solid 2px #0b4444ad;
     outline: none; 
     box-shadow: rgb(38, 57, 77) 0px 0px 30px -10px;
   }
 
-  .LoginInput:last-of-type{
+  .AuthInput:last-of-type{
     margin-bottom: 1em;
   }
 
@@ -69,9 +67,9 @@
 
   .PasswordEye{
     width: 1.6em;
-    position: absolute;
-    top: 31.3%;
-    right: 19.5%;
+    position: relative;
+    bottom: 39.5%;
+    left: 87%;
     cursor: pointer;
   }
 
@@ -183,3 +181,6 @@
 }
 
 
+#ConfirmPassword{
+  bottom: 43.5%;
+}

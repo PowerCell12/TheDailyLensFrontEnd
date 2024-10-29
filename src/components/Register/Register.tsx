@@ -1,15 +1,29 @@
+import { FormEvent, useState } from "react";
+import AuthForm from "../AuthForm";
 
 
 export default function Register(){
+    const [formData, setFormData] = useState({
+        "email": "",
+        "password": "",
+        "TermsCheckbox": false,
+        "confirmPassword": ""
+    })
+
+    function onSubmitHandler(e: FormEvent){
+        e.preventDefault()
+        console.log(formData)
+    }
 
     return (
 
-        <>
-        
-            <h1>This is the register page </h1>
-        
-        </>
+        <section className="AuthSection">
+            <AuthForm mode="register" formData={formData} setFormData={setFormData} onSubmitHandler={onSubmitHandler}/>
 
+
+            <img src="/LoginPicture.jpg" alt="" className="AuthPicture"/>
+        </section>
+        
     )
 
 }
