@@ -3,7 +3,7 @@ import { useState } from "react";
 
 
 // @ts-expect-error it doesn't fucking work otherwise
-export default function AuthForm({mode, formData, setFormData, onSubmitHandler}){
+export default function AuthForm({mode, formData, setFormData, onSubmitHandler, errorData}){
     const [hidePass, setHidePass] = useState({"password": true, "confirmPassword": true})
     const [passwordInputType, setPasswordInputType] = useState({"password": "password", "confirmPassword": "password"})
 
@@ -12,6 +12,7 @@ export default function AuthForm({mode, formData, setFormData, onSubmitHandler})
 
 
     function onChangeEvent(e: React.ChangeEvent<HTMLInputElement>){
+
         if (e.target.type == 'checkbox'){
             setFormData({...formData, [e.target.name]: e.target.checked})
         }
@@ -35,7 +36,6 @@ export default function AuthForm({mode, formData, setFormData, onSubmitHandler})
 
     }
 
-
     return (
         <form className="AuthForm" onSubmit={onSubmitHandler}>
 
@@ -47,20 +47,22 @@ export default function AuthForm({mode, formData, setFormData, onSubmitHandler})
                 <p>Returning User? <Link to="/login">Access Your Account</Link></p>
             }
 
-            <input type="text" className="AuthInput" placeholder="Email" name="email" value={formData["email"]} onChange={onChangeEvent}/>
+            <input type="text" className={`AuthInput ${errorData['email'] && "invalid" }`} placeholder="Email" name="email" value={formData["email"]} onChange={onChangeEvent}/>
+            {errorData["email"] && <span className='error-text'>Valid email required (e.g., user@example.com).</span>}
 
 
+            <input type={passwordInputType["password"]} className={`AuthInput ${errorData["password"] && "invalid"}`} placeholder="Enter your password" name="password" value={formData["password"]} onChange={onChangeEvent}/>
+            {errorData["password"] && <span className='error-text'>Use 6+ characters with numbers & symbols.</span>}
 
-            <input type={passwordInputType["password"]} className="AuthInput" placeholder="Enter your password" name="password" value={formData["password"]} onChange={onChangeEvent}/>
-
-            {!isLogin && <input className="AuthInput" placeholder="Confirm Your Password" name="confirmPassword" value={formData["confirmPassword"]} type={passwordInputType["confirmPassword"]} onChange={onChangeEvent}/>}
-
+            {!isLogin && <input className={`AuthInput ${errorData["confirmPassword"] && "invalid"}`} placeholder="Confirm Your Password" name="confirmPassword" value={formData["confirmPassword"]} type={passwordInputType["confirmPassword"]} onChange={onChangeEvent}/>}
+            {(!isLogin && errorData["confirmPassword"]) && <span className='error-text'>Passwords must match and be valid</span>}
 
 
-            <div className="ChecboxTerms">
+            <div className={`ChecboxTerms ${errorData["TermsCheckbox"] && "invalid" }`} >
                 <input type="checkbox" name="TermsCheckbox" checked={formData["TermsCheckbox"]} onChange={onChangeEvent}/>
                 <label htmlFor="TermsCheckbox">I agree to the <Link to="/terms">Terms & Conditions</Link></label>
             </div>
+            {errorData["TermsCheckbox"] && <span className="error-text" id={errorData["TermsCheckbox"] ? "invalidChecBoxSpan" : undefined}>Please accept the Terms & Conditions!</span>}
             
             <button type="submit">{ isLogin ? "Log In" : "Sign Up"}</button>
 
@@ -68,8 +70,8 @@ export default function AuthForm({mode, formData, setFormData, onSubmitHandler})
 
             <button type="button"><img src="/GoogleLogo.png" alt="" /> <span>Google</span></button>
 
-            <img src="/PasswordEye.png" alt="password" style={!isLogin ? { bottom: '48.9%' } : undefined} className="PasswordEye"  onClick={ChangeVisibilityPasswordHandler}/>
-            {!isLogin && <img  id='ConfirmPassword' src="/PasswordEye.png" alt="confirmPassword" className="PasswordEye" onClick={ChangeVisibilityPasswordHandler}/> }
+            <img  src="/PasswordEye.png" alt="password" className="PasswordEye" id={errorData["email"] ? "PasswordEyeInvalid" : undefined}  onClick={ChangeVisibilityPasswordHandler}/>
+            {!isLogin && <img  id='ConfirmPassword' src="/PasswordEye.png" alt="confirmPassword" className={`PasswordEye ${(errorData["email"] || errorData["password"]) && "PasswordEyeInvalid"}`} onClick={ChangeVisibilityPasswordHandler}/> }
         </form>
     )
 

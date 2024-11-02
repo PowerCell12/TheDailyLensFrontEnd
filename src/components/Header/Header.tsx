@@ -1,9 +1,29 @@
 import { Link, useNavigate } from "react-router-dom";
+import { Logout } from "../../services/AuthService";
 
 
 
 export default function Header(){
     const navigate = useNavigate();
+
+    function LogoutHandler(){
+
+        Logout(localStorage.getItem("authToken") || "")
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Logout failed');
+            }
+            return response.json();
+        })
+        .then((data) => {
+            console.log(data);
+            navigate("/");
+        })
+        .catch(err => {
+            console.error('Error:', err);
+        })
+
+    }
 
     return (
         <div className="header">
@@ -25,10 +45,17 @@ export default function Header(){
             </nav>
 
             <section className="authButtons">
-                <button className="loginButton" onClick={() => {navigate("/login")}}>Log In</button>
-                <button className="registerButton" onClick={() => {navigate("/register")}}>Register</button>
-                {/* <button className="logoutButton">Logout</button> */}
-                {/* a user profile that when clicked opens a menu with the logoutbutto and settings */}
+                {!localStorage.getItem("authToken")  ? (
+                    <>
+                         <button className="loginButton" onClick={() => {navigate("/login")}}>Log In</button>
+                         <button className="registerButton" onClick={() => {navigate("/register")}}>Register</button> 
+                    </>
+                    )  : (
+                        <>
+                        <img src="/PersonDefault.png" id="profilePicture" alt="" />
+                        <button className="logoutButton" onClick={LogoutHandler}>Logout</button>
+                        </> )
+                }
             </section>
 
         </ div>

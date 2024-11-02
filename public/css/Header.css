@@ -149,15 +149,22 @@ body{
 
 .logoutButton{
   font-size: 1.1em;
-  background-color: black;
-  color: white;
+  background-color: white;
+  color: black;
   border: none;
   border-radius: 10em;
   padding: 10px 20px;
   cursor: pointer;
   transition: background-color .7s ease;
+  margin-left: .5em;
+  font-size: 1em;
   &:hover{
-      background-color: white;
-      color: black
+      background-color: #343A40;
+      color: white
   }
 }
+
+#profilePicture{
+  width: 3em;
+}
+
