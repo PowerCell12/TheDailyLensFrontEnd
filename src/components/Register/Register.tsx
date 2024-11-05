@@ -43,21 +43,15 @@ export default function Register(){
             return;
         }
 
-
     
         AuthService({email: formData.email, password: formData.password}, 'http://localhost:5110/auth/register')
-        .then(res => {
-            return res.text()
+        .then(() => {
+            navigate("/")
         })
-        .then(data => {
-            localStorage.setItem("authToken", data) // not a good practice
-            
-            navigate("/");
-        })
-        .catch(err => { // will give error if gmail is already in use
-            console.log(err.message);
-            
-        });  
+        .catch(err => {
+            console.log(err)
+        });
+      
     }
 
     return (

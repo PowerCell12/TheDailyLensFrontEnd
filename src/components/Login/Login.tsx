@@ -31,18 +31,11 @@ export default function Login(){
             return;
         }
 
-
-
         AuthService({email: formData.email, password: formData.password}, 'http://localhost:5110/auth/login')
-        .then(res => {return res.text()})
-        .then(data => {
-            localStorage.setItem("authToken", data) // not a good practice
-            
+        .then(() => {
             navigate("/");
         })
-        .catch(err => {
-            console.log(err)
-        });  
+  
     }
 
 

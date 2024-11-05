@@ -4,6 +4,7 @@ import Header from "./components/Header/Header"
 import Footer from "./components/Footer/Footer"
 import Login from "./components/Login/Login"
 import Register from "./components/Register/Register"
+import RouteGuard from "./components/RouteGuard"
 
 
 function App() {
@@ -16,6 +17,12 @@ function App() {
         <Route path="/" element={<Home />}/>
         <Route path="/login" element={<Login />}/>
         <Route path="/register" element={<Register />}/>
+
+
+
+        <Route  element={<RouteGuard />}>
+        </Route>
+
       </Routes>
 
       <Footer />

@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { Logout } from "../../services/AuthService";
+import { fetchWithAuthorization} from "../../wrappers/fetchWrapper";
 
 
 
@@ -7,20 +7,21 @@ export default function Header(){
     const navigate = useNavigate();
 
     function LogoutHandler(){
+        const err = new Error('Logout failed');
+        
 
-        Logout(localStorage.getItem("authToken") || "")
+        fetchWithAuthorization("http://localhost:5110/auth/logout", "POST")
         .then(response => {
-            if (!response.ok) {
-                throw new Error('Logout failed');
+            if (!response?.ok) {
+                throw err;
             }
-            return response.json();
-        })
-        .then((data) => {
-            console.log(data);
+
+            localStorage.clear();
             navigate("/");
         })
-        .catch(err => {
-            console.error('Error:', err);
+        .catch((err) => {
+            console.log(err);
+            throw err;
         })
 
     }
