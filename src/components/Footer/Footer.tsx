@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
 import '../../../public/css/all.css' ;
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 
 export default function Footer(){
+    const date = new Date()
 
     return (
         <div className="FooterTopDiv">
@@ -44,7 +46,7 @@ export default function Footer(){
 
             <section className="footerBottom">
                 <ul className="footerFinalLinks">
-                    <li>The Daily Lens Inc. © 2024</li>
+                    <li>The Daily Lens Inc. © {date.getFullYear()}</li>
                     <li><Link to="/">Privacy</Link></li>
                     <li><Link to="/">Terms</Link></li>
                 </ul>

@@ -43,15 +43,23 @@ export default function Register(){
             return;
         }
 
-    
+
         AuthService({email: formData.email, password: formData.password}, 'http://localhost:5110/auth/register')
-        .then(() => {
-            navigate("/")
-        })
-        .catch(err => {
-            console.log(err)
-        });
-      
+            .then(async data => {
+                localStorage.setItem("authToken", data) // not a good practice
+                navigate("/")
+            })
+            .catch(err => {
+                    const status = err.message.split(" - ")[0]
+                    const statusText = err.message.split(" - ")[1]
+                    navigate("/error", {
+                        state: {
+                            code: status || 500,
+                            message: statusText || "Network Error"
+                        }  
+                    })
+                })       
+
     }
 
     return (

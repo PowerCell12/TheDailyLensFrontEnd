@@ -16,13 +16,13 @@ export function AuthService({email, password}: typeLogin, url: string){
         },
         body: JSON.stringify(obj)
     })
-    .then(res => {return res.text()})
-    .then(data => {
-        localStorage.setItem("authToken", data) // not a good practice
-    })
-    .catch(err => {
-        console.log(err)
-    });  
+    .then(async res => {
+        if (res.ok === false){
+            const message = await res.json()
+            throw Error(`${res.status} - ${message.message}`);
+        }
+    
+        return res.text()})
 
 }
 
