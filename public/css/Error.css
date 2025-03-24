@@ -1,0 +1,78 @@
+
+
+.ErrorPageImage{
+    width: 38%;
+    height: 95%;
+}
+
+.ErrorPageComponent{
+    display: flex;
+    justify-content: center;
+    gap: 4em;
+    background-color: #587c9e;
+    margin-top: 5em;
+    border-radius: 1em;
+    width: 78%;
+    height: 37em;
+    display: flex;
+    justify-self: center;
+    padding: 1em;
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+    transform: rotate(-1.5deg);
+    align-items: center;
+}
+
+
+.ErrorPageTitle{
+    color:white;
+    font-size: 2.5em;
+    margin-bottom: 0.5em;
+}
+
+.ErrorPageMessage{
+    color: white;
+    font-size: 1.1em;
+    font-weight: 300;
+    margin-top: 0.5em;
+    text-align: center;
+}
+
+.ErrorPageButtons{
+    display: flex;
+    justify-content: center;
+    gap: 5em;
+    margin-top: 3em;
+}
+
+
+.ErrorPageHomeButton, .ErrorPageBackButton{
+  background-color: black;
+  border-radius: 100px;
+  box-shadow: 
+    rgba(0, 0, 0, 0.35) 0 -25px 18px -14px inset,  /* Black with 0.35 alpha */
+    rgba(0, 0, 0, 0.25) 0 1px 2px,
+    rgba(0, 0, 0, 0.25) 0 2px 4px,
+    rgba(0, 0, 0, 0.25) 0 4px 8px,
+    rgba(0, 0, 0, 0.25) 0 8px 16px,
+    rgba(0, 0, 0, 0.25) 0 16px 32px;
+  color: white;
+  cursor: pointer;
+  display: inline-block;
+  padding: 10px 25px;
+  text-align: center;
+  transition: all 250ms;
+  border: 0;
+  font-size: 15.5px;
+}
+
+.ErrorPageHomeButton:hover, .ErrorPageBackButton:hover {
+    box-shadow: 
+    rgba(0, 123, 167, 0.45) 0 -25px 18px -14px inset, 
+    rgba(0, 123, 167, 0.25) 0 1px 2px,
+    rgba(0, 123, 167, 0.25) 0 2px 4px,
+    rgba(0, 123, 167, 0.25) 0 4px 8px,
+    rgba(0, 123, 167, 0.25) 0 8px 16px,
+    rgba(0, 123, 167, 0.25) 0 16px 32px;
+    transform: scale(1.05) rotate(1.5deg);
+}
+
