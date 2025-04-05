@@ -6,21 +6,25 @@ import Login from "./components/Login/Login"
 import Register from "./components/Register/Register"
 import RouteGuard from "./components/RouteGuard"
 import ErrorPage from "./components/ErrorPage"
+import ProfilePageComponent from "./components/ProfilePage/ProfilePageComponent"
+import { useState } from "react"
 
 
 function App() {
+  const [user , setUser] = useState({"name": "defaultName", "email": "", "accountType": "Basic User", "image": "", "bio": ""});
 
   return (
     <div>
-      <Header />
+      <Header user={user} setUser={setUser} />
     
       <Routes>
         <Route path="/" element={<Home />}/>
-        <Route path="/login" element={<Login />}/>
-        <Route path="/register" element={<Register />}/>
+        <Route path="/login" element={<Login user={user} setUser={setUser} />}/>
+        <Route path="/register" element={<Register user={user} setUser={setUser} />}/>
         <Route path="/error" element={<ErrorPage />}/>
 
         <Route  element={<RouteGuard />}>
+          <Route path="/profile" element={<ProfilePageComponent user={user} setUser={setUser} />}/>
         </Route>
 
       </Routes>

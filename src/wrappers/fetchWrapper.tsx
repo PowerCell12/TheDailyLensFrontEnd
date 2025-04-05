@@ -4,8 +4,7 @@ import { jwtDecode } from "jwt-decode";
 
 export async function FetchWithAuthorization(url: string, header: string, options: unknown = {}, body: unknown = {}) {
     const date = new Date();
-    const token = localStorage.getItem("authToken") || "";
-
+    const token = localStorage.getItem("authToken") || undefined;
 
     if (token === undefined || token === "" || token === null) {
         localStorage.removeItem("authToken");

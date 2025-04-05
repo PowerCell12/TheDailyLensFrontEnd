@@ -76,3 +76,4 @@ export function CheckEmailAndPassword(errorData, formData){
 
     return {newErrorData, hasError}
 }
+

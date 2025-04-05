@@ -42,3 +42,20 @@ export async function refreshToken(token: string): Promise<string | undefined>{
         return data;
     }
 }
+
+
+export async function fetchUserInfo(): Promise<{ name: string; email: string }>{
+
+    const token = localStorage.getItem("authToken");
+    
+    return fetch("http://localhost:5110/user/info", {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+        }
+    })
+    .then(result => {return result.json()})
+
+
+}

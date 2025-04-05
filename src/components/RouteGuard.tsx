@@ -6,9 +6,10 @@ export default function RouteGuard(){
     const navigate = useNavigate();
 
     useEffect(() => {
+
         const token = localStorage.getItem("authToken") || "";
         
-        if (token === "" || token === undefined) {
+        if (token === "" || token === undefined || token === null) {
             navigate("/login");
         }
     }, []); 

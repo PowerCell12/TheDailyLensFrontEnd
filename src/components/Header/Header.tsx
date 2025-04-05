@@ -1,12 +1,13 @@
 import { Link, useNavigate } from "react-router-dom";
 import { FetchWithAuthorization } from "../../wrappers/fetchWrapper";
 import { useEffect, useState } from "react";
+import { fetchUserInfo } from "../../services/AuthService";
+import { HeaderProps } from "../../interfaces/HeaderProps";
 
 
 
-export default function Header(){
+export default function Header({ user, setUser }: HeaderProps) {
     const [isOpen, setIsOpen] = useState(false);
-    const [user, setUser] = useState({"name": "defaultName", "email": ""});
 
     const navigate = useNavigate();
 
@@ -27,31 +28,36 @@ export default function Header(){
         return () => {document.removeEventListener("click", closeDropDown)}
     }, [isOpen]);
 
-
+    
     useEffect(() => {
-
         const token = localStorage.getItem("authToken");
 
-        if (token !== null){ 
-            fetch("http://localhost:5110/user/info", {
-                method: "GET",
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "Content-Type": "application/json"
-                }
-            })
-            .then(result => {return result.json()})
-            .then(data => {
-                setUser(data);
-            })
-
+        if (token === null || token === undefined || token === "") {
+            return;
         }
-    }, []);
+
+        fetchUserInfo().then(data => {
+            if (data.name == user.name && data.email == user.email){
+                return;
+            }
+            setUser({name: data.name, email: data.email}); 
+        }).catch(err =>  {
+            const status = err.message.split(" - ")[0]
+            const statusText = err.message.split(" - ")[1]
+            navigate("/error", {
+                state: {
+                    code: status || 500,
+                    message: statusText || "Network Error"
+                }  
+            })
+        }) 
+
+        
+    }, [user]);
 
 
 
     function LogoutHandler(){
-        
         
         FetchWithAuthorization("http://localhost:5110/auth/logout", "POST")
         .then(async response => {
@@ -60,12 +66,13 @@ export default function Header(){
                     throw Error(`${response.status} - ${message.message}`);
             }
 
-            localStorage.clear();
             setIsOpen(false);
+            localStorage.clear();
             setUser({"name": "defaultName", "email": ""});
             navigate("/");
         })
         .catch((err) => {
+            
             const status = err.message.split(" - ")[0]
             const statusText = err.message.split(" - ")[1]
             navigate("/error", {

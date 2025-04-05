@@ -1,10 +1,11 @@
 import { FormEvent, useState } from "react";
 import AuthForm from "../AuthForm";
-import { AuthService } from "../../services/AuthService";
+import { AuthService, fetchUserInfo } from "../../services/AuthService";
 import { CheckEmailAndPassword} from "../../utils/AuthUtils";
 import { useNavigate } from "react-router-dom";
+import { HeaderProps } from "../../interfaces/HeaderProps";
 
-export default function Login(){
+export default function Login({ setUser }: HeaderProps){
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
@@ -34,6 +35,11 @@ export default function Login(){
         AuthService({email: formData.email, password: formData.password}, 'http://localhost:5110/auth/login')
         .then(data => {
             localStorage.setItem("authToken", data) // not a good practice
+
+            fetchUserInfo().then(data => {
+                setUser(data)
+            })
+
             navigate("/")
         })
         .catch(err => {

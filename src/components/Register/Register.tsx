@@ -1,11 +1,12 @@
 import { FormEvent, useState } from "react";
 import AuthForm from "../AuthForm";
-import { AuthService } from "../../services/AuthService";
+import { AuthService, fetchUserInfo } from "../../services/AuthService";
 import { useNavigate } from "react-router-dom";
 import { CheckEmailAndPassword, PasswordValidation} from "../../utils/AuthUtils";
+import { HeaderProps } from "../../interfaces/HeaderProps";
 
 
-export default function Register(){
+export default function Register({ setUser } : HeaderProps){
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
@@ -47,6 +48,11 @@ export default function Register(){
         AuthService({email: formData.email, password: formData.password}, 'http://localhost:5110/auth/register')
             .then(async data => {
                 localStorage.setItem("authToken", data) // not a good practice
+                
+                fetchUserInfo().then(data => {
+                    setUser(data)
+                })
+
                 navigate("/")
             })
             .catch(err => {
