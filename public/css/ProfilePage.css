@@ -6,8 +6,10 @@
     margin: 2em;
     padding-left: 5em;
     box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+    max-width: 78%;
+    justify-self: center;    
 
-    aside{
+    .ProfilePageAccountManagment{
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -92,11 +94,111 @@
 
     main{
         margin-left: 2em;
+        border-right: 1px solid #454545;
+        padding-right: 2em;
+        max-width: 34%;
 
-        .ProfilePageProfileInformation{
-            
+
+        .ProfilePageh2{
+            margin-bottom: .2em;
         }
 
+        .ProfilePageProfileInformation{
+            display: flex;
+            gap: 4em;
+            justify-content: center;
+
+            article{
+                
+                h5{
+                    margin-bottom: 0;
+                    margin-left: 1.2em;
+                    font-style: italic;
+                }
+
+                p{
+                    margin-top: .2em;
+                    border-radius: .6em;
+                    background-color: white;
+                    border: 1px solid #000;
+                    padding: .3em 2em; 
+                }
+            }
+        }   
+
+        .ProfilePageh3{
+            margin-bottom: 0em;
+        }
+
+        .ProfilePageh5{
+            margin-top: 1em;
+            margin-bottom: 0em;
+            margin-left: 1.2em;
+            font-style: italic;
+        }
+
+        .ProfilePagep{
+            margin-top: .2em;
+            border-radius: .6em;
+            background-color: white;
+            border: 1px solid #000;
+            padding: .3em 2em; 
+            margin-bottom: 1.5em;
+        }
+
+        .ProfilePageBio{
+            max-height: 14%;
+            overflow: auto
+        }
     }
 
+
+    .ProfilePageAccountSettings{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border-right: none;
+        padding-left: 2em;
+        justify-content: center;
+
+        .ProfilePageAccountSettingsSection{
+            display: flex;
+            align-items: center;
+            border-right: none;
+            padding-left: 2em;
+            justify-content: center;
+            gap: 2em;
+        }
+    }
+
+}
+
+
+#ProfilePageLinkEdit{
+    text-decoration: none;
+    color: #000;
+    font-weight: 500;
+    padding: .5em 1em;
+    border-radius: .3em;
+    background-color: #AFDDFF;
+    border: 1px solid #000;
+    cursor: pointer;
+    transition: all .14s ease-out;
+}
+
+#ProfilePageLinkDelete:hover, #ProfilePageLinkEdit:hover{
+    box-shadow: 4px 4px 0 #000;
+    transform: translate(-4px,-4px);
+}
+
+#ProfilePageLinkDelete{
+    text-decoration: none;
+    color: #000;
+    font-weight: 500;
+    padding: .5em 1em;
+    border-radius: .3em;
+    background-color: #FF033E;
+    border: 1px solid #000;
+    cursor: pointer;
+    transition: all .14s ease-out;
 }
