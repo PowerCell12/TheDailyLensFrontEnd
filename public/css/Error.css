@@ -1,8 +1,8 @@
 
 
 .ErrorPageImage{
-    width: 38%;
-    height: 95%;
+    width: 25em;
+    height: 25em;
 }
 
 .ErrorPageComponent{
@@ -47,7 +47,7 @@
 
 .ErrorPageHomeButton, .ErrorPageBackButton{
   background-color: black;
-  border-radius: 100px;
+  border-radius: .3em;
   box-shadow: 
     rgba(0, 0, 0, 0.35) 0 -25px 18px -14px inset,  /* Black with 0.35 alpha */
     rgba(0, 0, 0, 0.25) 0 1px 2px,
@@ -57,12 +57,11 @@
     rgba(0, 0, 0, 0.25) 0 16px 32px;
   color: white;
   cursor: pointer;
-  display: inline-block;
-  padding: 10px 25px;
+  padding: 13px 30px;
   text-align: center;
-  transition: all 250ms;
+  transition: all  0.5s ease;
   border: 0;
-  font-size: 15.5px;
+  font-size: 1.05em;
 }
 
 .ErrorPageHomeButton:hover, .ErrorPageBackButton:hover {
@@ -73,6 +72,6 @@
     rgba(0, 123, 167, 0.25) 0 4px 8px,
     rgba(0, 123, 167, 0.25) 0 8px 16px,
     rgba(0, 123, 167, 0.25) 0 16px 32px;
-    transform: scale(1.05) rotate(1.5deg);
+    transform: scale(1.05) translateY(-2px);
 }
 

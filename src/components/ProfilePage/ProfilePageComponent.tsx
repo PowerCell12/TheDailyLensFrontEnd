@@ -1,8 +1,48 @@
 import { Link } from "react-router-dom"
 import { HeaderProps } from "../../interfaces/HeaderProps"
+import { useEffect, useRef } from "react"
 
 
 export default function ProfilePageComponent({user, setUser} : HeaderProps){
+    const ImageFileref = useRef<HTMLInputElement>(null)
+
+    useEffect(() => {
+        if (ImageFileref.current == null || ImageFileref.current == undefined) return
+
+        ImageFileref.current.addEventListener("change", () => {
+
+            if (ImageFileref.current?.files?.length == 0) return
+
+            const file = ImageFileref.current?.files?.[0]
+
+            const formData = new FormData()
+            if (!file) return 
+
+            formData.append("file", file)
+            
+            // formData.append("userId", user.email)
+
+            fetch("http://localhost:5110/user/uploadImage", {
+                method: "POST",
+                body: formData,
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`
+                }
+            })
+
+        })
+
+
+    }, [])
+
+    function imgHandler() {
+        if (ImageFileref.current == null || ImageFileref.current == undefined) return
+
+
+        ImageFileref.current.click()
+    }
+
+
 
 
     return (
@@ -11,7 +51,9 @@ export default function ProfilePageComponent({user, setUser} : HeaderProps){
             <aside className="ProfilePageAccountManagment">
                 <h2>Account Managment</h2>
 
-                <img  src="/PersonDefault.png" alt="" />
+                <img onClick={() => {imgHandler()}}   src="/PersonDefault.png" alt="" />
+
+                <input ref={ImageFileref} type="file" className="ProfilePageComponentImageFile" />
 
                 <p className="ProfilePageComponentGreeting">Hello, {user.name}!</p>
                 <form className="ProfilePageComponentForm" action="" method="post">
@@ -32,7 +74,7 @@ export default function ProfilePageComponent({user, setUser} : HeaderProps){
                 <section className="ProfilePageProfileInformation">
                     <article>
                         <h5>Username</h5>
-                        <p>{user.name == user.email ? "N/A" : user.name}</p>
+                        <p>{user.name == user.email ? "N/A" : user.name}</p>    
                     </article>
 
                     <article>
@@ -63,15 +105,15 @@ export default function ProfilePageComponent({user, setUser} : HeaderProps){
                 <h3 className="ProfilePageh3">About the User</h3>
 
                 <h5 className="ProfilePageh5">Bio</h5>
-                <p className="ProfilePagep ProfilePageBio">{user.bio == null ? "Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit tempora pariatur eius, totam quisquam dolore nisi eligendi illo eos temporibus itaque harum obcaecati recusandae eum quod nihil quos sequi sit!" : user.bio}</p>
+                <p className="ProfilePagep ProfilePageBio">{user.bio == null ? "N/A" : user.bio}</p>
 
             </main>
 
             <aside className="ProfilePageAccountSettings">
                 <h2>Account Settings</h2>
                 <section className="ProfilePageAccountSettingsSection">
-                    <Link id="ProfilePageLinkEdit" to="/profile" className="ProfilePageLink">Edit Profile</Link>
-                    <Link id="ProfilePageLinkDelete" to="/profile" className="ProfilePageLink">Delete Account</Link>
+                    <Link id="ProfilePageLinkEdit" to="/profile/edit" className="ProfilePageLink">Edit Profile</Link>
+                    <Link id="ProfilePageLinkDelete" to="/profile/delete" className="ProfilePageLink">Delete Account</Link>
                 </section>
             </aside>
 

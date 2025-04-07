@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FetchWithAuthorization } from "../../wrappers/fetchWrapper";
 import { useEffect, useState } from "react";
 import { fetchUserInfo } from "../../services/AuthService";
@@ -10,7 +10,7 @@ export default function Header({ user, setUser }: HeaderProps) {
     const [isOpen, setIsOpen] = useState(false);
 
     const navigate = useNavigate();
-
+    const location = useLocation();
 
     useEffect(() => {
         if (isOpen == false){
@@ -19,7 +19,7 @@ export default function Header({ user, setUser }: HeaderProps) {
 
         const closeDropDown = (e: MouseEvent) => {
             const target = e.target as HTMLElement;
-            if (!target.closest(".sub-menu-wrap")   && !target.closest('#profilePicture') && isOpen == true){ 
+            if (!target.closest(".sub-menu-wrap")   && !target.closest('#profilePicture') && isOpen == true  ){ 
                 setIsOpen(false);
             }   
         }   
@@ -27,6 +27,10 @@ export default function Header({ user, setUser }: HeaderProps) {
 
         return () => {document.removeEventListener("click", closeDropDown)}
     }, [isOpen]);
+
+    useEffect(() => {
+        setIsOpen(false);
+    }, [location])
 
     
     useEffect(() => {
@@ -40,7 +44,7 @@ export default function Header({ user, setUser }: HeaderProps) {
             if (data.name == user.name && data.email == user.email){
                 return;
             }
-            setUser({name: data.name, email: data.email}); 
+            setUser({name: data.name, email: data.email, accountType: data.accountType, country: data.country, fullName: data.fullName, image: data.image, bio: data.bio}); 
         }).catch(err =>  {
             const status = err.message.split(" - ")[0]
             const statusText = err.message.split(" - ")[1]
@@ -68,7 +72,7 @@ export default function Header({ user, setUser }: HeaderProps) {
 
             setIsOpen(false);
             localStorage.clear();
-            setUser({"name": "defaultName", "email": ""});
+            setUser({"name": "defaultName", "email": "", "accountType": "", "country": "", "fullName": "", "image": "", "bio": ""});
             navigate("/");
         })
         .catch((err) => {

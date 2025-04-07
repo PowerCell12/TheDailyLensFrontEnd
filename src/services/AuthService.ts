@@ -1,3 +1,5 @@
+import { HeaderProps } from "../interfaces/HeaderProps"
+
 type typeLogin = {
     email: string,
     password: string
@@ -44,7 +46,7 @@ export async function refreshToken(token: string): Promise<string | undefined>{
 }
 
 
-export async function fetchUserInfo(): Promise<{ name: string; email: string }>{
+export async function fetchUserInfo(): Promise<HeaderProps["user"]>{
 
     const token = localStorage.getItem("authToken");
     

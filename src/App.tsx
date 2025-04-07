@@ -8,10 +8,11 @@ import RouteGuard from "./components/RouteGuard"
 import ErrorPage from "./components/ErrorPage"
 import ProfilePageComponent from "./components/ProfilePage/ProfilePageComponent"
 import { useState } from "react"
+import GuestGuard from "./components/GuestGuard"
 
 
 function App() {
-  const [user , setUser] = useState({"name": "defaultName", "email": "", "accountType": "Basic User", "image": "", "bio": ""});
+  const [user , setUser] = useState({"name": "defaultName", "email": "", "accountType": "Basic User", "image": "", "bio": "", "country": "", "fullName": ""});
 
   return (
     <div>
@@ -19,12 +20,15 @@ function App() {
     
       <Routes>
         <Route path="/" element={<Home />}/>
-        <Route path="/login" element={<Login user={user} setUser={setUser} />}/>
-        <Route path="/register" element={<Register user={user} setUser={setUser} />}/>
         <Route path="/error" element={<ErrorPage />}/>
 
         <Route  element={<RouteGuard />}>
           <Route path="/profile" element={<ProfilePageComponent user={user} setUser={setUser} />}/>
+        </Route>
+
+        <Route element={<GuestGuard />}>
+          <Route path="/login" element={<Login user={user} setUser={setUser} />}/>
+          <Route path="/register" element={<Register user={user} setUser={setUser} />}/>
         </Route>
 
       </Routes>

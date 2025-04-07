@@ -1,45 +1,44 @@
 .ProfilePageComponent{
     display: flex;
     background-color: #587C9E;
-    border-radius: 2em;
+    border-radius: 1em;
     padding: 2em;
     margin: 2em;
-    padding-left: 5em;
     box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
-    max-width: 78%;
-    justify-self: center;    
+    justify-content: space-evenly;    
+    color: white;
+
 
     .ProfilePageAccountManagment{
         display: flex;
         flex-direction: column;
         align-items: center;
-        border-right: 1px solid #454545;
-        padding-right: 2em;
-
+        padding-left: 2.5em;
+        
         img{
-            width: 12em;
-            height: 12em;
+            width: 15em;
+            height: 15em;
             border-radius: 50%;
             cursor: pointer;
         }
 
         img:hover{
-            box-shadow: 0 0 15px #000;
+            box-shadow: 0 0 15px white;
             transition: 0.3s;
         }
     
  
         .ProfilePageComponentPassword{
-            margin-top: .2em;
+            margin-top: .5em;
             border-radius: .3em;
             border: none;
-            font-size: 1.1em;
+            font-size: 1.2em;
         }
 
         .ProfilePageComponentLabelPassword{
             margin-bottom: 0em;
             margin-top: 2.5em;
-            font-size: .8em;
+            font-size: .9em;
             padding-left: 1em;
             font-weight: 600;
             font-style: italic;    
@@ -50,42 +49,35 @@
             flex-direction: column;
         }
 
-
-        .ProfilePageComponentButton{
-            margin-top: 1em;
-            border: none;
-            border-radius: .4em;
-            padding: .5em 1em;
+        .ProfilePageComponentButton {
+            margin-top: 1.3em;
+            border-radius: .3em;
+            padding: .7em 1em;
+            color: white;
+            background-color: black;
+            border: 1px solid #000;
+            cursor: pointer;
+            font-size: 1.05em;
+            line-height: 1.5;
+            transition: all .2s ease-out;
         }
 
-
-        .ProfilePageComponentButton {outline: 0;
-        grid-gap: 8px;
-        background-color: #AFDDFF;
-        align-items: center;
-        border: 1px solid #000;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 16px;
-        gap: 8px;
-        justify-content: center;
-        line-height: 1.5;
-        padding: 12px 16px;
-        transition: all .14s ease-out;
-        }
         .ProfilePageComponentButton:hover {
-            box-shadow: 4px 4px 0 #000;
-            transform: translate(-4px,-4px);
+            box-shadow: 4px 4px 0 #587C9E;
+            transform: translateY(-4px);
         }
+
+
         .ProfilePageComponentButton:focus-visible{
             outline-offset: 1px;
         }
 
         .ProfilePageComponentGreeting{
             font-weight: 600;
-            margin-top: 1em;
-            color: #000;    
+            margin-top: 1.5em;
+            color: white;    
             font-style: italic;
+            font-size: 1.1em;
         }
     
 
@@ -93,33 +85,33 @@
     }
 
     main{
-        margin-left: 2em;
+        padding-right: 4em;
+        padding-left: 4em;
+        max-width: 35%; 
+        border-left: 1px solid #454545;
         border-right: 1px solid #454545;
-        padding-right: 2em;
-        max-width: 34%;
 
-
-        .ProfilePageh2{
-            margin-bottom: .2em;
-        }
 
         .ProfilePageProfileInformation{
             display: flex;
             gap: 4em;
             justify-content: center;
+            padding: 0em 2em;
 
             article{
                 
                 h5{
-                    margin-bottom: 0;
-                    margin-left: 1.2em;
+                    margin-bottom: .2em;
+                    margin-left: 1em;
                     font-style: italic;
+                    font-size: 0.9em;
                 }
 
                 p{
                     margin-top: .2em;
                     border-radius: .6em;
                     background-color: white;
+                    color: black;
                     border: 1px solid #000;
                     padding: .3em 2em; 
                 }
@@ -132,9 +124,10 @@
 
         .ProfilePageh5{
             margin-top: 1em;
-            margin-bottom: 0em;
-            margin-left: 1.2em;
+            margin-bottom:.2em;
+            margin-left: 1em;
             font-style: italic;
+            font-size: .9em;
         }
 
         .ProfilePagep{
@@ -144,6 +137,7 @@
             border: 1px solid #000;
             padding: .3em 2em; 
             margin-bottom: 1.5em;
+            color: black
         }
 
         .ProfilePageBio{
@@ -157,15 +151,11 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        border-right: none;
-        padding-left: 2em;
         justify-content: center;
 
         .ProfilePageAccountSettingsSection{
             display: flex;
-            align-items: center;
-            border-right: none;
-            padding-left: 2em;
+            align-items: center; 
             justify-content: center;
             gap: 2em;
         }
@@ -176,29 +166,55 @@
 
 #ProfilePageLinkEdit{
     text-decoration: none;
-    color: #000;
-    font-weight: 500;
-    padding: .5em 1em;
+    color: white;
+    padding: .7em 1.6em;
     border-radius: .3em;
-    background-color: #AFDDFF;
-    border: 1px solid #000;
+    background-color: black;
     cursor: pointer;
-    transition: all .14s ease-out;
+    transition: all .2s ease-out;    
+    font-size: 1.05em;
 }
 
 #ProfilePageLinkDelete:hover, #ProfilePageLinkEdit:hover{
-    box-shadow: 4px 4px 0 #000;
-    transform: translate(-4px,-4px);
+    box-shadow: 4px 4px 0 #587C9E;
+    transform: translateY(-5px);
 }
 
 #ProfilePageLinkDelete{
     text-decoration: none;
-    color: #000;
-    font-weight: 500;
-    padding: .5em 1em;
+    color: white;
+    padding: .7em 1.6em;
     border-radius: .3em;
-    background-color: #FF033E;
-    border: 1px solid #000;
+    background-color: #D11A2A;
     cursor: pointer;
-    transition: all .14s ease-out;
+    transition: all .2s ease-out;
+    font-size: 1.05em;
 }
+
+
+
+
+
+
+
+
+
+
+
+.ProfilePageComponentImageFile{
+    display: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -180,7 +180,8 @@ body{
 
 .sub-menu-wrap{
   position: absolute;
-  top: 17%;
+  z-index: 100;
+  top: 7.2em;
   right: 13%;
   width: 17.5em;
   display: none;
