@@ -164,10 +164,14 @@ body{
   }
 }
 
-#profilePicture{
-  width: 3em;
+#profilePicture, #profilePicture2{
+  width: 3.5em;
+  height: 3.5em;
   cursor: pointer;
   transition:  transform .3s ease;
+  border-radius: 50%;
+  object-fit: cover;
+  image-rendering: auto; 
 }
 
 

@@ -1,10 +1,11 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { HeaderProps } from "../../interfaces/HeaderProps"
 import { useEffect, useRef } from "react"
 
 
 export default function ProfilePageComponent({user, setUser} : HeaderProps){
     const ImageFileref = useRef<HTMLInputElement>(null)
+    const navigate = useNavigate()
 
     useEffect(() => {
         if (ImageFileref.current == null || ImageFileref.current == undefined) return
@@ -26,9 +27,26 @@ export default function ProfilePageComponent({user, setUser} : HeaderProps){
                 method: "POST",
                 body: formData,
                 headers: {
-                    "Authorization": `Bearer ${localStorage.getItem("token")}`
+                    "Authorization": `Bearer ${localStorage.getItem("authToken")}`
                 }
             })
+            .then(async (res) => {
+                if (!res.ok){            
+                    const message =  await res.json()
+                    throw Error(`${res.status} - ${message.message}`);
+                }
+
+                setUser({...user, imageUrl: `http://localhost:5110/images/${file.name}`})
+            }).catch(err => {
+                const status = err.message.split(" - ")[0]
+                const statusText = err.message.split(" - ")[1]
+                navigate("/error", {
+                    state: {
+                        code: status || 500,
+                        message: statusText || "Network Error"
+                    }  
+                })
+            }) 
 
         })
 
@@ -40,6 +58,9 @@ export default function ProfilePageComponent({user, setUser} : HeaderProps){
 
 
         ImageFileref.current.click()
+
+        console.log(user); 
+
     }
 
 
@@ -51,7 +72,7 @@ export default function ProfilePageComponent({user, setUser} : HeaderProps){
             <aside className="ProfilePageAccountManagment">
                 <h2>Account Managment</h2>
 
-                <img onClick={() => {imgHandler()}}   src="/PersonDefault.png" alt="" />
+                <img onClick={() => {imgHandler()}}   src={user.imageUrl == "" ? "/PersonDefault.png" : user.imageUrl} className={"ProfilePageComponentImage"} alt="" />
 
                 <input ref={ImageFileref} type="file" className="ProfilePageComponentImageFile" />
 

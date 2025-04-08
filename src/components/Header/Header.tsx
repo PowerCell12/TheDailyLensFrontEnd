@@ -44,7 +44,8 @@ export default function Header({ user, setUser }: HeaderProps) {
             if (data.name == user.name && data.email == user.email){
                 return;
             }
-            setUser({name: data.name, email: data.email, accountType: data.accountType, country: data.country, fullName: data.fullName, image: data.image, bio: data.bio}); 
+            
+            setUser({name: data.name, email: data.email, accountType: data.accountType, country: data.country, fullName: data.fullName, imageUrl:  `http://localhost:5110/${data.imageUrl}`, bio: data.bio});
         }).catch(err =>  {
             const status = err.message.split(" - ")[0]
             const statusText = err.message.split(" - ")[1]
@@ -72,7 +73,7 @@ export default function Header({ user, setUser }: HeaderProps) {
 
             setIsOpen(false);
             localStorage.clear();
-            setUser({"name": "defaultName", "email": "", "accountType": "", "country": "", "fullName": "", "image": "", "bio": ""});
+            setUser({"name": "defaultName", "email": "", "accountType": "", "country": "", "fullName": "", "imageUrl": "", "bio": ""});
             navigate("/");
         })
         .catch((err) => {
@@ -119,12 +120,12 @@ export default function Header({ user, setUser }: HeaderProps) {
                     )  : (
                         <>
 
-                            <img src="/PersonDefault.png" id="profilePicture" onClick={() => {setIsOpen(!isOpen);}} alt="" />
+                            <img src={user.imageUrl == undefined ? "/PersonDefault.png" : user.imageUrl} id="profilePicture" onClick={() => {setIsOpen(!isOpen);}} alt="" />
 
                             <div className="sub-menu-wrap" style={{ display: isOpen ? 'block' : 'none' }}>
                                 <div className="sub-menu">
                                     <div className="user-info">
-                                        <img src="/PersonDefault.png" alt="" />
+                                        <img src={user.imageUrl == undefined ? "/PersonDefault.png" : user.imageUrl} id="profilePicture2" alt="" />
 
                                          
                                         <h3>{user.name !== user.email ? <span>{`Username: ${user.name}`}</span> : <Link to={"/profile/edit"}>Set up your profile!</Link>}</h3>

@@ -20,6 +20,8 @@
             height: 15em;
             border-radius: 50%;
             cursor: pointer;
+            object-fit: cover;
+            object-position: center;
         }
 
         img:hover{
