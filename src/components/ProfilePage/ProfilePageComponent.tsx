@@ -21,7 +21,6 @@ export default function ProfilePageComponent({user, setUser} : HeaderProps){
 
             formData.append("file", file)
             
-            // formData.append("userId", user.email)
 
             fetch("http://localhost:5110/user/uploadImage", {
                 method: "POST",
@@ -72,7 +71,7 @@ export default function ProfilePageComponent({user, setUser} : HeaderProps){
             <aside className="ProfilePageAccountManagment">
                 <h2>Account Managment</h2>
 
-                <img onClick={() => {imgHandler()}}   src={user.imageUrl == "" ? "/PersonDefault.png" : user.imageUrl} className={"ProfilePageComponentImage"} alt="" />
+                <img onClick={() => {imgHandler()}}   src={user.imageUrl == undefined ? "/PersonDefault.png" : user.imageUrl} className={"ProfilePageComponentImage"} alt="" />
 
                 <input ref={ImageFileref} type="file" className="ProfilePageComponentImageFile" />
 
