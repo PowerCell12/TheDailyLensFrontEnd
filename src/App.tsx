@@ -9,10 +9,11 @@ import ErrorPage from "./components/ErrorPage"
 import ProfilePageComponent from "./components/ProfilePage/ProfilePageComponent"
 import { useState } from "react"
 import GuestGuard from "./components/GuestGuard"
+import EditProfile from "./components/EditProfile/EditProfile"
 
 
 function App() {
-  const [user , setUser] = useState({"name": "defaultName", "email": "", "accountType": "Basic User", "image": "", "bio": "", "country": "", "fullName": ""});
+  const [user , setUser] = useState({"name": "defaultName", "email": "", "accountType": "Basic User", "imageUrl": "", "bio": "", "country": "", "fullName": ""});
 
   return (
     <div>
@@ -24,6 +25,7 @@ function App() {
 
         <Route  element={<RouteGuard />}>
           <Route path="/profile" element={<ProfilePageComponent user={user} setUser={setUser} />}/>
+          <Route path="/profile/edit" element={<EditProfile user={user} setUser={setUser } />}/>
         </Route>
 
         <Route element={<GuestGuard />}>

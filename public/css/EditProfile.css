@@ -1,0 +1,154 @@
+
+.EditProfileComponent{
+    display: flex;
+    background-color: #587C9E;
+    border-radius: 1em;
+    flex-direction: column;
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+    color: white;
+    width: 54em;
+    justify-self: center;
+    margin-top: 2em; 
+}
+
+.EditProfileComponent > main{
+    padding: 2em;
+}
+
+.EditProfileImage{
+    width: 100%;
+    border-top-right-radius: 1em;
+    border-top-left-radius: 1em;
+    height: 12em;
+    object-fit: cover;
+    object-position: center;
+}
+
+
+.EditProfileImageAccount{
+    width: 11em;
+    height: 11em;
+    border-radius: 50%;
+    cursor: pointer;
+    object-fit: cover;
+    object-position: center;
+    position: absolute;
+    left: 38.4em;
+    top: 16em;
+    box-shadow: 0 0 15px white;
+}
+
+.EditProfileImageAccount:hover{
+    box-shadow: 0 0 40px white;
+    transition: 0.3s;
+}
+
+
+.EditProfileTitle{
+    font-size: 2.2em;
+    font-weight: 600;
+    margin-bottom: .2em;
+    text-align: center;
+    margin-top: 1.7em;
+}
+
+.EditProfileForm{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2em;
+}
+
+.EditProfileFormSection > article{
+    display: flex;
+    flex-direction: column;
+
+    label{
+        margin-bottom: 0em;
+        margin-top: 2.5em;
+        padding-left: 1em;
+        font-weight: 600;
+        font-style: italic;  
+    }
+
+    input{
+        margin-top: .5em;
+        border-radius: .5em;
+        background-color: white;
+        color: black;
+        border: 1px solid #000;
+        padding: .5em 2em;
+        font-size: 1.01em; 
+    }
+
+}
+
+.EditProfileFormSection{
+    display: flex;
+    gap: 4em;
+}
+
+
+.EditProfileFormBioDiv{
+    display: flex;
+    flex-direction: column;
+}
+
+.EditProfileBio{
+    margin-bottom: .5em;
+    margin-top: .8em;
+    padding-left: 1em;
+    font-weight: 600;
+    font-style: italic;  
+}
+
+#bio{
+    border-radius: .5em;
+    background-color: white;
+    color: black;
+    border: 1px solid #000;
+    padding: .5em 2em;
+    font-size: 1.07em;
+    width: 35.5em;
+    height: 5em;
+    max-height: 20%;;
+}
+
+
+.EditProfileFormButtons{
+    display: flex;
+    justify-content: center;
+    gap: 8em;
+    margin-top: 1.2em;
+    margin-bottom: 1.2em;
+}
+
+.EditProfileCancel{
+    text-decoration: none;
+    color: white;
+    background-color: #D11A2A;
+    padding: .7em 1.6em;
+    border-radius: .3em;
+    /* background-color: black; */
+    cursor: pointer;
+    transition: all .2s ease-out;    
+    font-size: 1.05em;
+    border: none;
+}
+
+.EditProfileSave{
+    text-decoration: none;
+    color: white;
+    background-color: #4BB543;
+    padding: .7em 1.6em;
+    border-radius: .3em;
+    /* background-color: black; */
+    cursor: pointer;
+    transition: all .2s ease-out;    
+    font-size: 1.05em;
+    border: none;
+}
+
+.EditProfileFormButtons > button:hover{
+    transform: translateY(-5px);  
+}

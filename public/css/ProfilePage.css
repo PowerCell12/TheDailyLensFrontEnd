@@ -3,7 +3,7 @@
     background-color: #587C9E;
     border-radius: 1em;
     padding: 2em;
-    margin: 2em;
+    margin-top: 2em;
     box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
     justify-content: space-evenly;    
     color: white;
@@ -207,7 +207,9 @@
     display: none;
 }
 
-
+.ProfilePageh2{
+    text-align: center;
+}
 
 
 
