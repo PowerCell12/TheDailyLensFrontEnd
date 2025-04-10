@@ -1,56 +1,14 @@
-import { Link, useNavigate } from "react-router-dom"
 import { HeaderProps } from "../../interfaces/HeaderProps"
-import { useEffect, useRef } from "react"
+import { useRef } from "react"
+import useUploadingImage from "../../hooks/UploadImage"
+import { Link } from "react-router-dom"
+
 
 
 export default function ProfilePageComponent({user, setUser} : HeaderProps){
     const ImageFileref = useRef<HTMLInputElement>(null)
-    const navigate = useNavigate()
+    useUploadingImage(ImageFileref, {user, setUser})
 
-    useEffect(() => {
-        if (ImageFileref.current == null || ImageFileref.current == undefined) return
-
-        ImageFileref.current.addEventListener("change", () => {
-
-            if (ImageFileref.current?.files?.length == 0) return
-
-            const file = ImageFileref.current?.files?.[0]
-
-            const formData = new FormData()
-            if (!file) return 
-
-            formData.append("file", file)
-            
-
-            fetch("http://localhost:5110/user/uploadImage", {
-                method: "POST",
-                body: formData,
-                headers: {
-                    "Authorization": `Bearer ${localStorage.getItem("authToken")}`
-                }
-            })
-            .then(async (res) => {
-                if (!res.ok){            
-                    const message =  await res.json()
-                    throw Error(`${res.status} - ${message.message}`);
-                }
-
-                setUser({...user, imageUrl: `http://localhost:5110/images/${file.name}`})
-            }).catch(err => {
-                const status = err.message.split(" - ")[0]
-                const statusText = err.message.split(" - ")[1]
-                navigate("/error", {
-                    state: {
-                        code: status || 500,
-                        message: statusText || "Network Error"
-                    }  
-                })
-            }) 
-
-        })
-
-
-    }, [])
 
     function imgHandler() {
         if (ImageFileref.current == null || ImageFileref.current == undefined) return
@@ -58,12 +16,8 @@ export default function ProfilePageComponent({user, setUser} : HeaderProps){
 
         ImageFileref.current.click()
 
-        console.log(user); 
-
+        console.log(user.imageUrl); 
     }
-
-
-
 
     return (
         <section className="ProfilePageComponent">

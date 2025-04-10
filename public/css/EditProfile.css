@@ -50,6 +50,8 @@
     margin-bottom: .2em;
     text-align: center;
     margin-top: 1.7em;
+    position: relative;
+    top: .5em;
 }
 
 .EditProfileForm{
@@ -151,4 +153,8 @@
 
 .EditProfileFormButtons > button:hover{
     transform: translateY(-5px);  
+}
+
+#EditProfileImageFileInput{
+    display: none ; 
 }
