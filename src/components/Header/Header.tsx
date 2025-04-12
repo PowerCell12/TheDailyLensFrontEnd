@@ -1,16 +1,15 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FetchWithAuthorization } from "../../wrappers/fetchWrapper";
 import { useEffect, useState } from "react";
-import { fetchUserInfo } from "../../services/AuthService";
 import { HeaderProps } from "../../interfaces/HeaderProps";
 
 
 
 export default function Header({ user, setUser }: HeaderProps) {
     const [isOpen, setIsOpen] = useState(false);
-
     const navigate = useNavigate();
     const location = useLocation();
+
 
     useEffect(() => {
         if (isOpen == false){
@@ -27,38 +26,12 @@ export default function Header({ user, setUser }: HeaderProps) {
 
         return () => {document.removeEventListener("click", closeDropDown)}
     }, [isOpen]);
+    
 
     useEffect(() => {
         setIsOpen(false);
     }, [location])
 
-    
-    useEffect(() => {
-        const token = localStorage.getItem("authToken");
-
-        if (token === null || token === undefined || token === "") {
-            return;
-        }
-
-        fetchUserInfo().then(data => {
-            if (data.name == user.name && data.email == user.email){
-                return;
-            }
-            
-            setUser({name: data.name, email: data.email, accountType: data.accountType, country: data.country, fullName: data.fullName, imageUrl:  `http://localhost:5110/${data.imageUrl}`, bio: data.bio});
-        }).catch(err =>  {
-            const status = err.message.split(" - ")[0]
-            const statusText = err.message.split(" - ")[1]
-            navigate("/error", {
-                state: {
-                    code: status || 500,
-                    message: statusText || "Network Error"
-                }  
-            })
-        }) 
-
-        
-    }, [user]);
 
 
 

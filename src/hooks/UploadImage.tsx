@@ -4,7 +4,7 @@ import { useEffect } from "react"
 
 
 
-export default function useUploadingImage(ImageFileref: React.RefObject<HTMLInputElement>, {user, setUser} : HeaderProps) {
+export default function useUploadingImage(ImageFileref: React.RefObject<HTMLInputElement>, {user, setUser} : HeaderProps, setfromCancel: React.Dispatch<React.SetStateAction<boolean>> = () => {}){
     const navigate = useNavigate()
 
 
@@ -42,6 +42,7 @@ export default function useUploadingImage(ImageFileref: React.RefObject<HTMLInpu
                     throw Error(`${res.status} - ${message.message}`);
                 }
 
+                setfromCancel(true)
                 setUser({...user, imageUrl: `http://localhost:5110/images/${file.name}`})
             }).catch(err => {
                 const status = err.message.split(" - ")[0]
@@ -54,7 +55,7 @@ export default function useUploadingImage(ImageFileref: React.RefObject<HTMLInpu
                 })
             })
         })
-    }, [user])
+    }, [user, navigate, ImageFileref])
     
     
     return undefined

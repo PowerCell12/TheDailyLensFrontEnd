@@ -1,26 +1,81 @@
 import { HeaderProps } from "../../interfaces/HeaderProps"
-import { useRef } from "react"
+import { useRef, useState } from "react"
 import useUploadingImage from "../../hooks/UploadImage"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 
 
 export default function ProfilePageComponent({user, setUser} : HeaderProps){
+    const navigate = useNavigate()
     const ImageFileref = useRef<HTMLInputElement>(null)
+    const DeleteWriteRef = useRef<HTMLInputElement>(null)
+    const [deleteButtonClicked, setDeleteButtonClicked] = useState(false)
+    const [DELETEWritten, setDELETEWritten] = useState(false)
     useUploadingImage(ImageFileref, {user, setUser})
 
 
     function imgHandler() {
         if (ImageFileref.current == null || ImageFileref.current == undefined) return
 
-
         ImageFileref.current.click()
+    }
 
-        console.log(user.imageUrl); 
+
+    function DeleteAccount() {
+        console.log(DeleteWriteRef.current?.value !== "DELETE")
+        if (DeleteWriteRef.current?.value.trim() != "DELETE"){
+            // console.log("first")
+
+            setDELETEWritten(true)
+        }
+        else{
+            fetch("http://localhost:5110/user/deleteProfile", {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("authToken")}`
+                }}
+            ).then(async (res) => {
+                if (!res.ok){
+                    const message =  await res.json()
+                    throw Error(`${res.status} - ${message.message}`);
+                }
+
+                localStorage.removeItem("authToken")
+                navigate("/")
+            }).catch(err => {
+                const status = err.message.split(" - ")[0]
+                const statusText = err.message.split(" - ")[1]
+                navigate("/error", {
+                    state: {
+                        code: status || 500,
+                        message: statusText || "Network Error"
+                    }  
+                })
+            })
+
+        }
+        
+        
+
     }
 
     return (
         <section className="ProfilePageComponent">
+            {deleteButtonClicked && 
+                <div className="EditProfileDeleteAccountContainer" onClick={() => {setDeleteButtonClicked(false); setDELETEWritten(false)}}>
+                    <div className="EditProfileDeleteAccount" onClick={(event) => {event.stopPropagation()}}>
+                        <i onClick={() => {setDeleteButtonClicked(false); setDELETEWritten(false);}} className="fa-solid fa-xmark" id="EditProfileDeleteAccountClose"></i>
+                        <h1>Delete Account</h1>
+                        <p>Deleting your account will remove all of your information! This action cannot be undone!</p>
+                        <span>To confirm this, type "DELETE"</span>
+                        <section>
+                            <input  ref={DeleteWriteRef} type="text" />
+                            <button type="button" onClick={() => {DeleteAccount()}}>Delete Account</button>
+                            {DELETEWritten && <p className="EditProfileDeleteAccountError">Please type "DELETE" to confirm</p>}
+                        </section>
+                    </div>
+                </div>
+            }
 
             <aside className="ProfilePageAccountManagment">
                 <h2>Account Managment</h2>
@@ -87,7 +142,7 @@ export default function ProfilePageComponent({user, setUser} : HeaderProps){
                 <h2>Account Settings</h2>
                 <section className="ProfilePageAccountSettingsSection">
                     <Link id="ProfilePageLinkEdit" to="/profile/edit" className="ProfilePageLink">Edit Profile</Link>
-                    <Link id="ProfilePageLinkDelete" to="/profile/delete" className="ProfilePageLink">Delete Account</Link>
+                    <button id="ProfilePageLinkDelete" onClick={() => {setDeleteButtonClicked(true)}} className="ProfilePageLink">Delete Account</button>
                 </section>
             </aside>
 
