@@ -22,10 +22,7 @@ export default function ProfilePageComponent({user, setUser} : HeaderProps){
 
 
     function DeleteAccount() {
-        console.log(DeleteWriteRef.current?.value !== "DELETE")
         if (DeleteWriteRef.current?.value.trim() != "DELETE"){
-            // console.log("first")
-
             setDELETEWritten(true)
         }
         else{
@@ -59,8 +56,42 @@ export default function ProfilePageComponent({user, setUser} : HeaderProps){
 
     }
 
+    function DeleteProfilePicHandler(){
+
+        if (user.imageUrl == "/PersonDefault.png") return
+
+        const formData = new FormData()
+        formData.append("file", "1")
+
+        fetch("http://localhost:5110/user/uploadImageWithCancel", {
+            method: "POST",
+            body: formData,
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("authToken")}`
+            }
+        }).then (async (res) => {
+            if (!res.ok){
+                const message =  await res.json()
+                throw Error(`${res.status} - ${message.message}`);
+            }
+
+            setUser({...user, imageUrl: "/PersonDefault.png"})
+        }).catch(err => {
+            const status = err.message.split(" - ")[0]
+            const statusText = err.message.split(" - ")[1]
+            navigate("/error", {
+                state: {
+                    code: status || 500,
+                    message: statusText || "Network Error"
+                }  
+            })
+        })
+
+    }
+
     return (
         <section className="ProfilePageComponent">
+            <img src="/deleteProfilePic.png" alt="" id="DeleteProfilePic" onClick={() => {DeleteProfilePicHandler()}}/>
             {deleteButtonClicked && 
                 <div className="EditProfileDeleteAccountContainer" onClick={() => {setDeleteButtonClicked(false); setDELETEWritten(false)}}>
                     <div className="EditProfileDeleteAccount" onClick={(event) => {event.stopPropagation()}}>
@@ -80,11 +111,11 @@ export default function ProfilePageComponent({user, setUser} : HeaderProps){
             <aside className="ProfilePageAccountManagment">
                 <h2>Account Managment</h2>
 
-                <img onClick={() => {imgHandler()}}   src={user.imageUrl == undefined ? "/PersonDefault.png" : user.imageUrl} className={"ProfilePageComponentImage"} alt="" />
+                <img onClick={() => {imgHandler()}}   src={user.imageUrl} className={"ProfilePageComponentImage"} alt="" />
 
                 <input ref={ImageFileref} type="file" className="ProfilePageComponentImageFile" />
 
-                <p className="ProfilePageComponentGreeting">Hello, {user.name}!</p>
+                <p className="ProfilePageComponentGreeting">Hello, {user.name || user.email}!</p>
                 <form className="ProfilePageComponentForm" action="" method="post">
                     <label className="ProfilePageComponentLabelPassword">New Password</label>
                     <input type="password" placeholder={"*".repeat(8)} className="ProfilePageComponentPassword"/>
@@ -103,12 +134,12 @@ export default function ProfilePageComponent({user, setUser} : HeaderProps){
                 <section className="ProfilePageProfileInformation">
                     <article>
                         <h5>Username</h5>
-                        <p>{user.name == user.email ? "N/A" : user.name}</p>    
+                        <p>{user.name || "N/A"}</p>    
                     </article>
 
                     <article>
                         <h5>Full Name</h5>
-                        <p>{user.fullName == null ? "N/A" : user.fullName}</p>
+                        <p>{user.fullName || "N/A"}</p>
                     </article>
 
                 </section>
@@ -116,12 +147,12 @@ export default function ProfilePageComponent({user, setUser} : HeaderProps){
                 <section className="ProfilePageProfileInformation">
                     <article>
                         <h5>Account Type</h5>
-                        <p>{user.accountType ? user.accountType : "N/A"}</p>
+                        <p>{user.accountType || "Basic User"}</p>
                     </article>
 
                     <article>
                         <h5>Country</h5>
-                        <p>{user.country == null ? "N/A" : user.country}</p>
+                        <p>{user.country || "N/A"}</p>
                     </article>
 
                 </section>
@@ -134,7 +165,7 @@ export default function ProfilePageComponent({user, setUser} : HeaderProps){
                 <h3 className="ProfilePageh3">About the User</h3>
 
                 <h5 className="ProfilePageh5">Bio</h5>
-                <p className="ProfilePagep ProfilePageBio">{user.bio == null ? "N/A" : user.bio}</p>
+                <p className="ProfilePagep ProfilePageBio">{user.bio || "N/A"}</p>
 
             </main>
 

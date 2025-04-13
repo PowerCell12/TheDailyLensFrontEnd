@@ -46,7 +46,7 @@ export default function Header({ user, setUser }: HeaderProps) {
 
             setIsOpen(false);
             localStorage.clear();
-            setUser({"name": "defaultName", "email": "", "accountType": "", "country": "", "fullName": "", "imageUrl": "", "bio": ""});
+            setUser({"name": "defaultName", "email": "", "accountType": "", "country": "", "fullName": "", "imageUrl": "/PersonDefault.png", "bio": ""});
             navigate("/");
         })
         .catch((err) => {
@@ -93,12 +93,12 @@ export default function Header({ user, setUser }: HeaderProps) {
                     )  : (
                         <>
 
-                            <img src={user.imageUrl == undefined ? "/PersonDefault.png" : user.imageUrl} id="profilePicture" onClick={() => {setIsOpen(!isOpen);}} alt="" />
+                            <img src={user.imageUrl} id="profilePicture" onClick={() => {setIsOpen(!isOpen);}} alt="" />
 
                             <div className="sub-menu-wrap" style={{ display: isOpen ? 'block' : 'none' }}>
                                 <div className="sub-menu">
                                     <div className="user-info">
-                                        <img src={user.imageUrl == undefined ? "/PersonDefault.png" : user.imageUrl} id="profilePicture2" alt="" />
+                                        <img src={user.imageUrl} id="profilePicture2" alt="" />
 
                                          
                                         <h3>{user.name !== user.email ? <span>{`Username: ${user.name}`}</span> : <Link to={"/profile/edit"}>Set up your profile!</Link>}</h3>

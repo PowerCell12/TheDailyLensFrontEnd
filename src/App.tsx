@@ -14,7 +14,7 @@ import { fetchUserInfo } from "./services/AuthService"
 
 
 function App() {
-    const [user , setUser] = useState({"name": "defaultName", "email": "", "accountType": "Basic User", "imageUrl": "", "bio": "", "country": "", "fullName": ""});
+    const [user , setUser] = useState({"name": "defaultName", "email": "", "accountType": "Basic User", "imageUrl": "/PersonDefault.png", "bio": "", "country": "", "fullName": ""});
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -28,8 +28,14 @@ function App() {
               if (data.name == user.name && data.email == user.email){
                   return;
               }
-              
-              setUser({name: data.name, email: data.email, accountType: data.accountType, country: data.country, fullName: data.fullName, imageUrl:  `http://localhost:5110/${data.imageUrl}`, bio: data.bio});
+
+              if (data.imageUrl == null || data.imageUrl == undefined || data.imageUrl == ""){
+                setUser({name: data.name, email: data.email, accountType: data.accountType, country: data.country, fullName: data.fullName, imageUrl:  "/PersonDefault.png", bio: data.bio});
+
+              }
+              else{
+                setUser({name: data.name, email: data.email, accountType: data.accountType, country: data.country, fullName: data.fullName, imageUrl:  `http://localhost:5110/${data.imageUrl}`, bio: data.bio});
+              }
           }).catch(err =>  {
               const status = err.message.split(" - ")[0]
               const statusText = err.message.split(" - ")[1]

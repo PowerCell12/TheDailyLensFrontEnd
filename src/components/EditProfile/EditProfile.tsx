@@ -6,6 +6,9 @@ import { Countries, UserValidations } from "../../utils/UserUtils"
 
 
 export default function EditProfile({user, setUser}: HeaderProps){
+    const ListCountry = useMemo<string[]>(() => {
+        return Countries()
+    }, [])
     const navigate = useNavigate()
     const ImageRef = useRef<HTMLInputElement>(null)
     const [originalImage, setOriginalImage] = useState<string | undefined>(user.imageUrl)
@@ -13,7 +16,7 @@ export default function EditProfile({user, setUser}: HeaderProps){
     const [InputDict, setInputDict] = useState({
         username: user.name == user.email ? "" : user.name,
         fullName: user.fullName || "",
-        country: user.country || "",
+        country: user.country || ListCountry[0],
         email: user.email || "",
         bio: user.bio || ""
     })
@@ -25,14 +28,11 @@ export default function EditProfile({user, setUser}: HeaderProps){
     })
 
     useUploadingImage(ImageRef, {user, setUser}, setfromCancel)
-    const ListCountry = useMemo<string[]>(() => {
-        return Countries()
-    }, [])
 
 
 
     useEffect(() => {
-        setInputDict({username: user.name == user.email ? "" : user.name, fullName: user.fullName || "", country: user.country || "", email: user.email || "", bio: user.bio || ""})
+        setInputDict({username: user.name == user.email ? "" : user.name, fullName: user.fullName || "", country: user.country || ListCountry[0], email: user.email || "", bio: user.bio || ""})
 
 
         if (fromCancel){
@@ -54,7 +54,8 @@ export default function EditProfile({user, setUser}: HeaderProps){
             return
         }
 
-        
+        console.log(InputDict.country)
+
         fetch("http://localhost:5110/user/editProfile", {
             method: "POST",
             body: JSON.stringify({
@@ -99,8 +100,6 @@ export default function EditProfile({user, setUser}: HeaderProps){
     }
 
     function cancelHandler(){
-        console.log(originalImage?.split("/").pop())
-        console.log(ImageRef.current?.files?.[0]?.name)
         if (String(originalImage?.split("/").pop()) === String(ImageRef.current?.files?.[0]?.name)) {
             navigate("/profile")
             return
@@ -118,7 +117,7 @@ export default function EditProfile({user, setUser}: HeaderProps){
             }
             //@ts-expect-error bullshit
             else formData.append("file", originalImage?.split("/").pop())
-
+        }
 
         if (ImageRef.current?.files?.[0] == undefined) {
             navigate("/profile")
@@ -140,7 +139,7 @@ export default function EditProfile({user, setUser}: HeaderProps){
             }
 
             setfromCancel(true)
-            setUser({...user, imageUrl: originalImage})
+            setUser({...user, "imageUrl": originalImage || "/PersonDefault.png"})
 
             navigate("/profile") 
         }).catch(err => {
@@ -153,16 +152,13 @@ export default function EditProfile({user, setUser}: HeaderProps){
                 }  
             })
         })
-
-        }
-
     }
 
 
     return (
         <section className="EditProfileComponent">
             <img src="/EditPageWallpaper.jpg" alt="" className="EditProfileImage"/>
-            <img onClick={() => {ProfileImageHandler()}} className="EditProfileImageAccount" src={user.imageUrl == undefined ? "/PersonDefault.png" : user.imageUrl} alt="" />
+            <img onClick={() => {ProfileImageHandler()}} className="EditProfileImageAccount" src={user.imageUrl} alt="" />
             
             <input ref={ImageRef} type="file" id="EditProfileImageFileInput" />
 

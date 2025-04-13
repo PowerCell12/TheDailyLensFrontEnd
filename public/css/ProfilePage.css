@@ -318,7 +318,16 @@
 }
 
 
-
+#DeleteProfilePic{
+    position: absolute;
+    top: 22.4%;
+    right: 75%;
+    cursor: pointer;
+    color: black;
+    width: 2.3em;
+    opacity: 0.9;
+    z-index: 2;
+}
 
 
 
