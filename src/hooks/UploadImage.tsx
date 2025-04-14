@@ -12,6 +12,8 @@ export default function useUploadingImage(ImageFileref: React.RefObject<HTMLInpu
     useEffect(() => {
         if (ImageFileref.current == null || ImageFileref.current == undefined) return
 
+        const ref = ImageFileref.current
+
         ImageFileref.current.addEventListener("change", () => {
 
             if (ImageFileref.current?.files?.length == 0) return
@@ -28,6 +30,7 @@ export default function useUploadingImage(ImageFileref: React.RefObject<HTMLInpu
 
             formData.append("file", file)
             
+            console.log(file.name)
 
             fetch("http://localhost:5110/user/uploadImage", {
                 method: "POST",
@@ -42,9 +45,13 @@ export default function useUploadingImage(ImageFileref: React.RefObject<HTMLInpu
                     throw Error(`${res.status} - ${message.message}`);
                 }
 
+                return res.json()
+            }).then((data) => {
+                console.log(data)
                 setfromCancel(true)
-                setUser({...user, imageUrl: `http://localhost:5110/images/${file.name}`})
-            }).catch(err => {
+                setUser({...user, imageUrl: `http://localhost:5110/${data.imageUrl}`})
+            })
+            .catch(err => {
                 const status = err.message.split(" - ")[0]
                 const statusText = err.message.split(" - ")[1]
                 navigate("/error", {
@@ -55,7 +62,11 @@ export default function useUploadingImage(ImageFileref: React.RefObject<HTMLInpu
                 })
             })
         })
-    }, [user, navigate, ImageFileref])
+
+        return () => {
+            ref.removeEventListener("change", () => {})
+        }
+    }, [navigate, ImageFileref])
     
     
     return undefined

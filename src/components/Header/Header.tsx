@@ -92,7 +92,6 @@ export default function Header({ user, setUser }: HeaderProps) {
                     </>
                     )  : (
                         <>
-
                             <img src={user.imageUrl} id="profilePicture" onClick={() => {setIsOpen(!isOpen);}} alt="" />
 
                             <div className="sub-menu-wrap" style={{ display: isOpen ? 'block' : 'none' }}>
@@ -101,7 +100,7 @@ export default function Header({ user, setUser }: HeaderProps) {
                                         <img src={user.imageUrl} id="profilePicture2" alt="" />
 
                                          
-                                        <h3>{user.name !== user.email ? <span>{`Username: ${user.name}`}</span> : <Link to={"/profile/edit"}>Set up your profile!</Link>}</h3>
+                                        <h3>{user.name !== user.email && user.name ? <span>{`Username: ${user.name}`}</span> : <Link to={"/profile/edit"}>Set up your profile!</Link>}</h3>
                                     </div>
                                     <hr />
 

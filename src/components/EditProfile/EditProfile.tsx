@@ -11,7 +11,7 @@ export default function EditProfile({user, setUser}: HeaderProps){
     }, [])
     const navigate = useNavigate()
     const ImageRef = useRef<HTMLInputElement>(null)
-    const [originalImage, setOriginalImage] = useState<string | undefined>(user.imageUrl)
+    const [originalImage, setOriginalImage] = useState<string>(user.imageUrl)
     const [fromCancel, setfromCancel] = useState(false)
     const [InputDict, setInputDict] = useState({
         username: user.name == user.email ? "" : user.name,
@@ -28,7 +28,6 @@ export default function EditProfile({user, setUser}: HeaderProps){
     })
 
     useUploadingImage(ImageRef, {user, setUser}, setfromCancel)
-
 
 
     useEffect(() => {
@@ -54,7 +53,6 @@ export default function EditProfile({user, setUser}: HeaderProps){
             return
         }
 
-        console.log(InputDict.country)
 
         fetch("http://localhost:5110/user/editProfile", {
             method: "POST",
@@ -105,10 +103,35 @@ export default function EditProfile({user, setUser}: HeaderProps){
             return
         }
 
+
         const formData = new FormData()
         
         if (originalImage == undefined || originalImage == null || originalImage == "" || originalImage == "/PersonDefault.png"){ 
-            formData.append("file", "1")
+            fetch("http://localhost:5110/user/resetProfileImage", {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("authToken")}`
+                }
+            }).then(async (res) => {
+                if (!res.ok){
+                    const message =  await res.json()
+                    throw Error(`${res.status} - ${message.message}`);
+                }
+
+                setfromCancel(true)
+                setUser({...user, imageUrl: "/PersonDefault.png"})
+                navigate("/profile")
+            }).catch(err => {
+                const status = err.message.split(" - ")[0]
+                const statusText = err.message.split(" - ")[1]
+                navigate("/error", {
+                    state: {
+                        code: status || 500,
+                        message: statusText || "Network Error"
+                    }  
+                })
+            })
+
         }
         else{
             if (originalImage?.split("/").pop() == undefined || originalImage?.split("/").pop() == null || originalImage?.split("/").pop() == "") {
@@ -125,7 +148,8 @@ export default function EditProfile({user, setUser}: HeaderProps){
         }
 
 
-        fetch("http://localhost:5110/user/uploadImageWithCancel", {
+
+        fetch("http://localhost:5110/user/uploadImage", {
             method: "POST",
             body: formData,
             headers: {
@@ -139,8 +163,7 @@ export default function EditProfile({user, setUser}: HeaderProps){
             }
 
             setfromCancel(true)
-            setUser({...user, "imageUrl": originalImage || "/PersonDefault.png"})
-
+            setUser({...user, "imageUrl": originalImage})
             navigate("/profile") 
         }).catch(err => {
             const status = err.message.split(" - ")[0]
@@ -155,8 +178,39 @@ export default function EditProfile({user, setUser}: HeaderProps){
     }
 
 
+    function DeleteProfilePicHandler(){
+
+        if (user.imageUrl == "/PersonDefault.png") return
+
+
+        fetch("http://localhost:5110/user/resetProfileImage", {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("authToken")}`
+            }
+        }).then (async (res) => {
+            if (!res.ok){
+                const message =  await res.json()
+                throw Error(`${res.status} - ${message.message}`);
+            }
+
+            setUser({...user, imageUrl: "/PersonDefault.png"})
+        }).catch(err => {
+            const status = err.message.split(" - ")[0]
+            const statusText = err.message.split(" - ")[1]
+            navigate("/error", {
+                state: {
+                    code: status || 500,
+                    message: statusText || "Network Error"
+                }  
+            })
+        })
+
+    }
+
     return (
         <section className="EditProfileComponent">
+            <img src="/deleteProfilePic.png" alt="" id="DeleteProfilePicEdit" onClick={() => {DeleteProfilePicHandler()}}/>
             <img src="/EditPageWallpaper.jpg" alt="" className="EditProfileImage"/>
             <img onClick={() => {ProfileImageHandler()}} className="EditProfileImageAccount" src={user.imageUrl} alt="" />
             

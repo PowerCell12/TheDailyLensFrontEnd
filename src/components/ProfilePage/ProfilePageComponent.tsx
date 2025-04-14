@@ -60,12 +60,9 @@ export default function ProfilePageComponent({user, setUser} : HeaderProps){
 
         if (user.imageUrl == "/PersonDefault.png") return
 
-        const formData = new FormData()
-        formData.append("file", "1")
 
-        fetch("http://localhost:5110/user/uploadImageWithCancel", {
+        fetch("http://localhost:5110/user/resetProfileImage", {
             method: "POST",
-            body: formData,
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("authToken")}`
             }
@@ -91,7 +88,7 @@ export default function ProfilePageComponent({user, setUser} : HeaderProps){
 
     return (
         <section className="ProfilePageComponent">
-            <img src="/deleteProfilePic.png" alt="" id="DeleteProfilePic" onClick={() => {DeleteProfilePicHandler()}}/>
+            <img src="/deleteProfilePic.png" alt="" id="DeleteProfilePicProfile" onClick={() => {DeleteProfilePicHandler()}}/>
             {deleteButtonClicked && 
                 <div className="EditProfileDeleteAccountContainer" onClick={() => {setDeleteButtonClicked(false); setDELETEWritten(false)}}>
                     <div className="EditProfileDeleteAccount" onClick={(event) => {event.stopPropagation()}}>
@@ -134,7 +131,7 @@ export default function ProfilePageComponent({user, setUser} : HeaderProps){
                 <section className="ProfilePageProfileInformation">
                     <article>
                         <h5>Username</h5>
-                        <p>{user.name || "N/A"}</p>    
+                        <p>{user.name !== user.email && user.name ? user.name : "N/A"}</p>    
                     </article>
 
                     <article>

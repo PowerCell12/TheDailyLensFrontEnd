@@ -50,7 +50,7 @@ export default function Register({ setUser } : HeaderProps){
                 localStorage.setItem("authToken", data) // not a good practice
                 
                 fetchUserInfo().then(data => {
-                    setUser({...data, "imageUrl": "/PersonDefault.png"})
+                    setUser({...data})
                 })
 
                 navigate("/")

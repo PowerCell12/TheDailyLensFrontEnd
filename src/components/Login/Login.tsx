@@ -37,9 +37,6 @@ export default function Login({ setUser }: HeaderProps){
             localStorage.setItem("authToken", data) // not a good practice
 
             fetchUserInfo().then(data => {
-                if (data.imageUrl == null || data.imageUrl == undefined || data.imageUrl == ""){
-                    data.imageUrl = "/PersonDefault.png"
-                }
                 setUser(data)
             })
 

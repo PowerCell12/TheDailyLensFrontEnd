@@ -8,7 +8,8 @@ type typeLogin = {
 export function AuthService({email, password}: typeLogin, url: string){
     const obj = {
         Email: email,
-        Password: password
+        Password: password, 
+        ImageUrl: "/PersonDefault.png"
     }
 
     return fetch(url, {

@@ -11,6 +11,7 @@ import { useEffect, useState } from "react"
 import GuestGuard from "./components/GuestGuard"
 import EditProfile from "./components/EditProfile/EditProfile"
 import { fetchUserInfo } from "./services/AuthService"
+import CreateBlog from "./components/CreateBlog/CreateBlog"
 
 
 function App() {
@@ -29,9 +30,8 @@ function App() {
                   return;
               }
 
-              if (data.imageUrl == null || data.imageUrl == undefined || data.imageUrl == ""){
+              if (data.imageUrl == "/PersonDefault.png" || data.imageUrl == null || data.imageUrl == undefined || data.imageUrl == ""){
                 setUser({name: data.name, email: data.email, accountType: data.accountType, country: data.country, fullName: data.fullName, imageUrl:  "/PersonDefault.png", bio: data.bio});
-
               }
               else{
                 setUser({name: data.name, email: data.email, accountType: data.accountType, country: data.country, fullName: data.fullName, imageUrl:  `http://localhost:5110/${data.imageUrl}`, bio: data.bio});
@@ -62,6 +62,7 @@ function App() {
           <Route  element={<RouteGuard />}>
             <Route path="/profile" element={<ProfilePageComponent user={user} setUser={setUser} />}/>
             <Route path="/profile/edit" element={<EditProfile user={user} setUser={setUser } />}/>
+            <Route path="/createBlog" element={<CreateBlog />}/>
           </Route>
 
           <Route element={<GuestGuard />}>
