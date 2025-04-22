@@ -29,6 +29,7 @@ export default function useUploadingImage(ImageFileref: React.RefObject<HTMLInpu
             if (!file) return 
 
             formData.append("file", file)
+            formData.append("frontEndUrl", "ProfilePage/EditProfile")
             
             console.log(file.name)
 
