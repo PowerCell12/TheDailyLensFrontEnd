@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'react-quill/dist/quill.snow.css';
+import DOMPurify from 'dompurify';
 
 
 import ReactQuill, { Quill }  from 'react-quill';
@@ -15,6 +16,12 @@ Quill.register("modules/resize", QuillResizeImage);
 export default function CreateBlog() {
     const [editorData, setEditorData] = useState('');
     const [title, setTitle] = useState("");
+
+    const [previewThumbnail, setPreviewThumbnail] = useState(false); // a boolean for previewing the thumbnail
+    const [thumbnail, setThumbnail] = useState<File | null>(null); // actually file 
+    const [thumbnailUrl, setThumbnailUrl] = useState<string>(""); // in memory link to the flie 
+    const ThumbnailInputRef = useRef<HTMLInputElement>(null);
+
     const navigate = useNavigate();
 
     const quillRef = useRef<ReactQuill | null>(null);
@@ -101,14 +108,109 @@ export default function CreateBlog() {
 
     function createBlogComponent(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        console.log("Content:", editorData);
-        // Add your API submission logic here
+        let pathImage = ""
+        const cleaned = DOMPurify.sanitize(editorData);
+            
+        if (!thumbnail){    
+            pathImage = "/BlogThumbnailDefault.png"
+
+            createBlogPost(pathImage, cleaned)
+        }
+        else{
+            const formData = new FormData();
+            formData.append("file", thumbnail);
+            formData.append("frontEndUrl", "CreateBlog");
+
+            fetch("http://localhost:5110/user/uploadImage", {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("authToken")}`
+                },
+                body: formData
+            }).then(async (res) => {
+                if (!res.ok){
+                    const message =  await res.json()
+                    throw Error(`${res.status} - ${message.message}`);
+                }
+
+                return res.json()
+            }).then(data =>{
+                pathImage = `http://localhost:5110/${data.imageUrl}`
+
+                createBlogPost(pathImage, cleaned)
+            }).catch(err => {
+                const status = err.message.split(" - ")[0]
+                const statusText = err.message.split(" - ")[1]
+                navigate("/error", {
+                    state: {
+                        code: status || 500,
+                        message: statusText || "Network Error"
+                    }  
+                })
+            })
+        }
     }
 
+    function createBlogPost(pathImage: string, cleaned: string){
+        fetch("http://localhost:5110/blog", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("authToken")}`
+            },
+            body: JSON.stringify({title, thumbnail: pathImage, content: cleaned})
+        }).then(() => {
+            navigate("/")
+        }).catch(err => {
+            const status = err.message.split(" - ")[0]
+            const statusText = err.message.split(" - ")[1]
+            navigate("/error", {
+                state: {
+                    code: status || 500,
+                    message: statusText || "Network Error"
+                }  
+            })
+        })
+    }
+
+    function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+        const file = e.target.files?.[0];
+
+        if (!file) return;
+
+        if (file.size > 5_242_880) {
+            return 
+        }
+
+        setThumbnail(file);
+        setThumbnailUrl(URL.createObjectURL(file));
+        setPreviewThumbnail(true);
+    }
+
+    function ClearThumbnail(handler: string){
+        if (handler != "discard"){
+            setPreviewThumbnail(false);
+        }
+        else{
+            setThumbnail(null);
+            setThumbnailUrl("");
+            setPreviewThumbnail(false);
+
+            if (ThumbnailInputRef.current) {
+                ThumbnailInputRef.current.value = "";
+            }
+        }
+    }
+
+    function ChangeVisibilityPasswordHandler(){
+        if (thumbnailUrl){
+            setPreviewThumbnail(true)
+        }
+    }
 
     return (
         <section className="CreateBlogComponent">
-                <h1 className="CreateBlogTitle">Write Your Story</h1>
+                <h1 className="CreateBlogTitle">Tell Your Story</h1>
                 <p className="CreateBlogMessage">Share your ideas, experiences, and stories with readers around the globe.</p>
 
                 <form className="CreateBlogForm" onSubmit={createBlogComponent}>
@@ -121,6 +223,28 @@ export default function CreateBlog() {
                             id="BlogTitle"
                             required
                         />
+                    </article>
+
+                    <article className='CreateBlogThumbnail'>
+                        <img src="/PasswordEye.png" onClick={() => { ChangeVisibilityPasswordHandler() }} className='SeeThumbnail' alt="" />
+                        <span className='CreateBlogThumbnailMessage'>Recommended size: 1200x675 px; must be under 2 MB</span>
+                        <label htmlFor="BlogThumbnail" id='CreateBlogThumbnailButton'>Select Thumbnail Image</label>
+                        <input ref={ThumbnailInputRef} id="BlogThumbnail" type="file" accept='image/*' onChange={(e) => { handleFileChange(e) } }/>
+                        {previewThumbnail && (
+                              <div className='thumbnail-preview-container' onClick={() => { ClearThumbnail("outside")}}>
+                                <div className="thumbnail-preview"  onClick={(e) => { e.stopPropagation() }}>
+                                    <img 
+                                        src={thumbnailUrl} 
+                                        alt="Selected thumbnail preview" 
+                                        className="thumbnail-preview-image"
+                                    />
+                                    <i onClick={() => { ClearThumbnail("x mark") }} className="fa-solid fa-xmark" id="CreateBlogThumbnailDeleteMark"></i>
+                                    <article id='thumbnail-preview-buttons'>
+                                        <button  type="button"  onClick={() => { ClearThumbnail("discard") }} className="thumbnail-preview-button">Discard Selection</button>
+                                    </article>
+                                </div>
+                            </div>
+                        )}
                     </article>
 
                     <img src="/quill-pen.png" className='CreateBlogImage' alt="" />

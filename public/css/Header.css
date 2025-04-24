@@ -174,6 +174,9 @@ body{
   image-rendering: auto; 
 }
 
+#profilePicture2{
+  cursor:default !important;
+}
 
 #profilePicture:hover{
   transform: translateY(-.2em);

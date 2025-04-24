@@ -33,7 +33,7 @@
         display: flex;
         flex-direction: column;
         gap: 1em;
-        width: 75%;
+        width: 85%;
         text-align: center;
 
         article{
@@ -88,7 +88,7 @@
 
 .EditorWrapper{
     max-width: 100%;     /* or whatever max width you prefer */
-    max-height: 35em;    /* or your preferred max height */
+    max-height: 40em;    /* or your preferred max height */
     overflow: auto;  
 }
 
@@ -138,3 +138,143 @@
     top: 14.05em;
     left: 31.8em;
 }
+
+
+.CreateBlogThumbnailMessage{
+    position: absolute;
+    top: 38.5%;
+    font-size: .8em;
+    font-style: italic;
+}
+
+.CreateBlogThumbnail{
+    margin-top: 1em;
+    margin-bottom: 4em;
+}
+
+#CreateBlogThumbnailButton{ 
+    background-color: black;
+    border-radius: .3em;
+    box-shadow: 
+      rgba(0, 0, 0, 0.35) 0 -25px 18px -14px inset,  /* Black with 0.35 alpha */
+      rgba(0, 0, 0, 0.25) 0 1px 2px,
+      rgba(0, 0, 0, 0.25) 0 2px 4px,
+      rgba(0, 0, 0, 0.25) 0 4px 8px,
+      rgba(0, 0, 0, 0.25) 0 8px 16px,
+      rgba(0, 0, 0, 0.25) 0 16px 32px;
+    color: white;
+    cursor: pointer;
+    padding: 13px 5em;
+    text-align: center;
+    transition: all  0.5s ease;
+    border: 0;
+    font-style: normal !important;
+}
+
+#CreateBlogThumbnailButton:hover{    
+    box-shadow: 
+    rgba(0, 123, 167, 0.45) 0 -25px 18px -14px inset, 
+    rgba(0, 123, 167, 0.25) 0 1px 2px,
+    rgba(0, 123, 167, 0.25) 0 2px 4px,
+    rgba(0, 123, 167, 0.25) 0 4px 8px,
+    rgba(0, 123, 167, 0.25) 0 8px 16px,
+    rgba(0, 123, 167, 0.25) 0 16px 32px;
+    transform: scale(1.05) translateY(-2px);
+}
+
+
+
+
+#BlogThumbnail{
+    display: none;
+}
+
+
+.thumbnail-preview-container{
+    position:absolute;
+    bottom: 0em;
+    right: .1em;
+    background: rgba( 255, 255, 255, 0.2 );
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 3px );
+    border-radius: 1em;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.thumbnail-preview{
+    position: absolute;
+    top: 15%;
+    left: 25%;
+    background-color: white;
+    padding: 2em 2em 1.5em 2em;
+    border-radius: .8em;
+    box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
+}
+
+.thumbnail-preview-image{
+    width: 	40em;
+    height: 22.5em;
+    display: block;
+}
+
+
+#thumbnail-preview-buttons{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5em; 
+    margin-top: 1.5em;
+}
+
+.thumbnail-preview-button{
+    text-decoration: none;
+    color: white;
+    padding: .7em 2.5em;
+    border-radius: .3em;
+    background-color: #D11A2A;
+    cursor: pointer;
+    transition: all .2s ease-out;
+    font-size: 1em;
+    border: none;
+}
+
+.thumbnail-preview-button:hover{
+    transform: translateY(-5px);
+}
+
+
+
+
+#CreateBlogThumbnailDeleteMark{
+    position: absolute;
+    top: 1.3%;
+    right: 1.3%;
+    cursor: pointer;
+    color: black;
+    font-size: 1.5em;
+}
+
+#CreateBlogThumbnailDeleteMark:hover{
+    color: #D11A2A;
+    transform: scale(1.2);
+    transition: 0.4s;
+}
+
+
+.SeeThumbnail{
+    width: 1.8em;
+    position: absolute;
+    left: 61%;  
+    cursor: pointer;
+}
+
+.SeeThumbnail:hover{
+    transform: scale(1.15);
+    transition: 0.4s;
+}
+
