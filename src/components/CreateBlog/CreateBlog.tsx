@@ -8,6 +8,7 @@ import ReactQuill, { Quill }  from 'react-quill';
 // @ts-expect-error bs ys
 import { ImageDrop } from 'quill-image-drop-module';
 import QuillResizeImage from 'quill-resize-image';
+import handleError from '../../utils/handleError';
 
 Quill.register('modules/imageDrop', ImageDrop);
 Quill.register("modules/resize", QuillResizeImage);
@@ -65,14 +66,7 @@ export default function CreateBlog() {
                         }
                     })
                     .catch(err => {
-                        const [status, ...messageParts] = err.message.split(" - ");
-                        const statusText = messageParts.join(" - ") || "Network Error";
-                        navigate("/error", {
-                            state: {
-                                code: status || 500,
-                                message: statusText
-                            }  
-                        })
+                        handleError(err, navigate)
                     })
             }})
 
@@ -139,14 +133,7 @@ export default function CreateBlog() {
 
                 createBlogPost(pathImage, cleaned)
             }).catch(err => {
-                const status = err.message.split(" - ")[0]
-                const statusText = err.message.split(" - ")[1]
-                navigate("/error", {
-                    state: {
-                        code: status || 500,
-                        message: statusText || "Network Error"
-                    }  
-                })
+                handleError(err, navigate)
             })
         }
     }
@@ -162,14 +149,7 @@ export default function CreateBlog() {
         }).then(() => {
             navigate("/")
         }).catch(err => {
-            const status = err.message.split(" - ")[0]
-            const statusText = err.message.split(" - ")[1]
-            navigate("/error", {
-                state: {
-                    code: status || 500,
-                    message: statusText || "Network Error"
-                }  
-            })
+            handleError(err, navigate)
         })
     }
 

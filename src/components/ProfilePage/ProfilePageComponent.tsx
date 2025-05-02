@@ -2,6 +2,7 @@ import { HeaderProps } from "../../interfaces/HeaderProps"
 import { useRef, useState } from "react"
 import useUploadingImage from "../../hooks/UploadImage"
 import { Link, useNavigate } from "react-router-dom"
+import handleError from "../../utils/handleError"
 
 
 
@@ -40,14 +41,7 @@ export default function ProfilePageComponent({user, setUser} : HeaderProps){
                 localStorage.removeItem("authToken")
                 navigate("/")
             }).catch(err => {
-                const status = err.message.split(" - ")[0]
-                const statusText = err.message.split(" - ")[1]
-                navigate("/error", {
-                    state: {
-                        code: status || 500,
-                        message: statusText || "Network Error"
-                    }  
-                })
+                handleError(err, navigate)
             })
 
         }
@@ -74,14 +68,7 @@ export default function ProfilePageComponent({user, setUser} : HeaderProps){
 
             setUser({...user, imageUrl: "/PersonDefault.png"})
         }).catch(err => {
-            const status = err.message.split(" - ")[0]
-            const statusText = err.message.split(" - ")[1]
-            navigate("/error", {
-                state: {
-                    code: status || 500,
-                    message: statusText || "Network Error"
-                }  
-            })
+            handleError(err, navigate)
         })
 
     }

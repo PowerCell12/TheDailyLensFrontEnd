@@ -4,6 +4,7 @@ import { AuthService, fetchUserInfo } from "../../services/AuthService";
 import { useNavigate } from "react-router-dom";
 import { CheckEmailAndPassword, PasswordValidation} from "../../utils/AuthUtils";
 import { HeaderProps } from "../../interfaces/HeaderProps";
+import handleError from "../../utils/handleError";
 
 
 export default function Register({ setUser } : HeaderProps){
@@ -56,14 +57,7 @@ export default function Register({ setUser } : HeaderProps){
                 navigate("/")
             })
             .catch(err => {
-                    const status = err.message.split(" - ")[0]
-                    const statusText = err.message.split(" - ")[1]
-                    navigate("/error", {
-                        state: {
-                            code: status || 500,
-                            message: statusText || "Network Error"
-                        }  
-                    })
+                    handleError(err, navigate)
                 })       
 
     }

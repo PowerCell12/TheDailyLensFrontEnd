@@ -1,0 +1,123 @@
+.BlogThumbnail{
+    width: 30em;
+    height: 19em;
+    border-radius: .3em;
+}
+
+
+.BlogUserImage{
+    width: 3.5em;
+    height: 3.5em;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.PostedBlogs{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 5em;
+    margin-top: 2em;
+    background-color: #587c9e;
+    padding: 2em;
+    border-radius: .5em;
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+    padding-bottom: 4em;
+}
+
+.BlogCard{
+    background-color: #e1e5f2;
+    padding: 2em;
+    max-height: 43em;
+    min-height: 32em;
+    border-radius: .5em;
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+    max-width: 30em;
+    cursor: pointer;
+    transition: all 0.45s ease-in-out;
+}
+
+.BlogCard:hover{
+    transform: scale(1.02);
+    background-color: #f0f0f0;
+}
+
+
+.BlogInfo{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1em;
+    gap: 6em;
+}
+
+.BlogUserInfo{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+
+    p{
+        margin: 0;
+        font-size: .85em;
+        font-style: italic;
+        font-weight: 500;
+    }
+}
+
+.BlogInfoDetails{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: .5em;
+
+    span{
+        font-size: .85em;
+        font-style: italic;
+        font-weight: 500;
+    }
+
+    ul{
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        gap: .6em;
+
+        li{
+            color: #211C84;
+            font-weight: 600;
+            list-style: none;
+            font-size: .85em;
+        }
+    }
+
+}
+
+.BlogTitle{
+    margin-top: 1em;
+    font-weight: 500;
+    font-style: italic;
+    text-align: center;
+    font-size: 1.4em;
+    margin-bottom: .5em;
+}
+
+.BlogContent{
+    margin-bottom: 0em;
+    margin-top: .25em;
+    max-height: 15em;
+    overflow: auto;
+}
+
+.PostedBlogsTitle{
+    margin-top: 1em !important;
+    text-align: center;
+    font-size: 2em;
+    font-style: italic;
+    margin-bottom: .8em;
+    margin-top: .3em;
+}

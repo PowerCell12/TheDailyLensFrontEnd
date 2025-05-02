@@ -2,6 +2,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FetchWithAuthorization } from "../../wrappers/fetchWrapper";
 import { useEffect, useState } from "react";
 import { HeaderProps } from "../../interfaces/HeaderProps";
+import handleError from "../../utils/handleError";
 
 
 
@@ -46,19 +47,22 @@ export default function Header({ user, setUser }: HeaderProps) {
 
             setIsOpen(false);
             localStorage.clear();
-            setUser({"name": "defaultName", "email": "", "accountType": "", "country": "", "fullName": "", "imageUrl": "/PersonDefault.png", "bio": ""});
+            setUser({
+                "name": "defaultName",
+                "email": "",
+                "accountType": "",
+                "country": "",
+                "fullName": "",
+                "imageUrl": "/PersonDefault.png",
+                "bio": "",
+                "id": 0,
+                "likedComments": [],
+                "dislikedComments": []
+            });
             navigate("/");
         })
         .catch((err) => {
-            
-            const status = err.message.split(" - ")[0]
-            const statusText = err.message.split(" - ")[1]
-            navigate("/error", {
-                state: {
-                    code: status || 500,
-                    message: statusText || "Network Error"
-                }  
-            })
+            handleError(err, navigate)
         }); 
         
 
@@ -112,7 +116,7 @@ export default function Header({ user, setUser }: HeaderProps) {
 
 
 
-                                    <Link to="/relatedBlogs" className="sub-menu-link">
+                                    <Link to={`/${user.name}/postedBlogs`} className="sub-menu-link">
                                         <img src="/Blogs.png" alt="" />
                                         <p>See Your Posted blogs</p>
                                         <span>&gt;</span>

@@ -1,12 +1,9 @@
-import { useLocation, useNavigate } from "react-router-dom"
+import {  useNavigate, useParams } from "react-router-dom"
 
 
 export default function ErrorPage(){
-    const location = useLocation()
     const navigate = useNavigate();
-
-    const code = location.state.code;
-    const message = location.state.message;
+    const { code = 404, message = "Page not found"} = useParams()
 
 
     return (

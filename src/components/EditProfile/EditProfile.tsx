@@ -3,6 +3,7 @@ import {  useNavigate } from "react-router-dom"
 import useUploadingImage from "../../hooks/UploadImage"
 import { HeaderProps } from "../../interfaces/HeaderProps"
 import { Countries, UserValidations } from "../../utils/UserUtils"
+import handleError from "../../utils/handleError"
 
 
 export default function EditProfile({user, setUser}: HeaderProps){
@@ -78,14 +79,7 @@ export default function EditProfile({user, setUser}: HeaderProps){
             setUser({...user, name: data.username, fullName: data.fullName, country: data.country, email: data.email, bio: data.bio})
             navigate("/profile")
         }).catch(err => {
-            const status = err.message.split(" - ")[0]
-            const statusText = err.message.split(" - ")[1]
-            navigate("/error", {
-                state: {
-                    code: status || 500,
-                    message: statusText || "Network Error"
-                }  
-            })
+            handleError(err, navigate)
         })
 
     
@@ -122,14 +116,7 @@ export default function EditProfile({user, setUser}: HeaderProps){
                 setUser({...user, imageUrl: "/PersonDefault.png"})
                 navigate("/profile")
             }).catch(err => {
-                const status = err.message.split(" - ")[0]
-                const statusText = err.message.split(" - ")[1]
-                navigate("/error", {
-                    state: {
-                        code: status || 500,
-                        message: statusText || "Network Error"
-                    }  
-                })
+                handleError(err, navigate)
             })
 
         }
@@ -166,14 +153,7 @@ export default function EditProfile({user, setUser}: HeaderProps){
             setUser({...user, "imageUrl": originalImage})
             navigate("/profile") 
         }).catch(err => {
-            const status = err.message.split(" - ")[0]
-            const statusText = err.message.split(" - ")[1]
-            navigate("/error", {
-                state: {
-                    code: status || 500,
-                    message: statusText || "Network Error"
-                }  
-            })
+            handleError(err, navigate)
         })
     }
 
@@ -196,14 +176,7 @@ export default function EditProfile({user, setUser}: HeaderProps){
 
             setUser({...user, imageUrl: "/PersonDefault.png"})
         }).catch(err => {
-            const status = err.message.split(" - ")[0]
-            const statusText = err.message.split(" - ")[1]
-            navigate("/error", {
-                state: {
-                    code: status || 500,
-                    message: statusText || "Network Error"
-                }  
-            })
+            handleError(err, navigate)
         })
 
     }

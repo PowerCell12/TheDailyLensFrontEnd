@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom"
 import { HeaderProps } from "../interfaces/HeaderProps"
 import { useEffect } from "react"
+import handleError from "../utils/handleError"
 
 
 
@@ -53,14 +54,7 @@ export default function useUploadingImage(ImageFileref: React.RefObject<HTMLInpu
                 setUser({...user, imageUrl: `http://localhost:5110/${data.imageUrl}`})
             })
             .catch(err => {
-                const status = err.message.split(" - ")[0]
-                const statusText = err.message.split(" - ")[1]
-                navigate("/error", {
-                    state: {
-                        code: status || 500,
-                        message: statusText || "Network Error"
-                    }  
-                })
+                handleError(err, navigate)
             })
         })
 

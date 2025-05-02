@@ -142,7 +142,7 @@
 
 .CreateBlogThumbnailMessage{
     position: absolute;
-    top: 38.5%;
+    top: 38.5em;
     font-size: .8em;
     font-style: italic;
 }
