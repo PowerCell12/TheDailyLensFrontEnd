@@ -294,7 +294,7 @@ export default function ShowComments({user}: HeaderProps){
 
                 {blogData?.map((comment) => {
                     if (comment.ParentCommentId != null) return null
-                    return <Comment key={comment.id} {...comment} {...commentProps} />
+                    return <Comment key={comment.id} {...comment} {...commentProps} authorId={comment.authorId} />
                 })}
 
             </section>

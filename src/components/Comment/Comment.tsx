@@ -39,9 +39,6 @@ export default function Comment({ id, title, content, authorId, createdAt, user,
             }
           };
 
-          blogData.find((x: CommentBlog) => x.id == id).replies.map((reply: CommentBlog) => {
-            console.log(reply.id);
-          })
 
           document.addEventListener('mousedown', handleClickOutside);
           return () => {
@@ -209,11 +206,11 @@ export default function Comment({ id, title, content, authorId, createdAt, user,
                     <span>{blogData.find((x: CommentBlog) => x.id == id).dislikes}</span>
                 </article>
 
-                <button onClick={() => {setIsReplaying(true); setIsEditing(false); setCommentId(id); setIsOpen(false);
+                {/* <button onClick={() => {setIsReplaying(true); setIsEditing(false); setCommentId(id); setIsOpen(false);
                     if (blogData.find(x => x.id == id).replies.length > 0){
                         setReplyingToReply(true)
                     }
-                }} className="ReplyCommentButton">Reply</button>
+                }} className="ReplyCommentButton">Reply</button> */}
             </article>
 
 

@@ -1,17 +1,21 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import handleError from "../../utils/handleError";
 import { BlogInfo } from "../../interfaces/BlogInfo";
 import DateFormatter from "../../utils/dateUtils";
 import { HeaderProps } from "../../interfaces/HeaderProps";
+import DeleteConfirmation from "../DeleteConfirmation/DeleteConfirmation";
 
 
-export default function BlogDetail({user, setUser}: HeaderProps){
+export default function BlogDetail({user}: HeaderProps){
     const [blogData, setBlogData] = useState<BlogInfo>()
     const [showAdminOptions, setShowAdminOptions] = useState(false)
+    const [deleteButtonClicked, setDeleteButtonClicked] = useState(false)
+    const [DELETEWritten, setDELETEWritten] = useState(false)
+    const dropDownRef = useRef<HTMLDivElement | null>(null);
     const navigate = useNavigate()
     const { id } = useParams()
-
+    const [liked, setLiked] = useState(user.likedBlogs.includes(Number(id)))
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -30,12 +34,27 @@ export default function BlogDetail({user, setUser}: HeaderProps){
         }).then(data => {
             console.log(data)
             setBlogData(data)
+            setLiked(data.likedUsers["$values"].includes(user.id))
         }).catch(err =>{
             handleError(err, navigate)
         })
 
 
-    }, [navigate, id])
+    }, [navigate, id, user.id])
+
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropDownRef.current && !dropDownRef.current.contains(event.target)) {
+              setShowAdminOptions(false);
+            }
+          };
+
+          document.addEventListener('mousedown', handleClickOutside);
+          return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+          };
+      });
 
 
     function deleteBlogHandler(){
@@ -53,26 +72,62 @@ export default function BlogDetail({user, setUser}: HeaderProps){
 
     }
 
+    
+    function likeHandler(){
+
+        fetch(`http://localhost:5110/blog/${id}/like`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("authToken")}`
+            },
+            body: JSON.stringify({liked: !liked})
+        }).then(async (res) => {
+            if (!res.ok){
+                const message =  await res.json()
+                throw Error(`${res.status} - ${message.message}`);
+            }
+            return res.json()
+        }).then(data => {
+
+            setLiked(!liked)
+            setBlogData((prev) => {
+                if (!prev) return prev;
+                return {
+                    ...prev,
+                    likes: data
+                };
+            })
+
+        }).catch(err =>{
+            handleError(err, navigate)
+        })
+
+    }
+
+
     const tags = ["Global", "Business", "Technology"]
 
     return (
         <>
-
             <section className="BlogDetailMain">
+                {deleteButtonClicked && (
+                    <DeleteConfirmation setDeleteButtonClicked={setDeleteButtonClicked} deleteHandler={deleteBlogHandler} DELETEWritten={DELETEWritten} setDELETEWritten={setDELETEWritten} />
+                )}
 
                 <img className="BlogDetailThumbnail" src={blogData?.thumbnail? blogData.thumbnail : "/BlogThumbnailDefault.png"} alt="" />
 
                 {user.id === blogData?.authorId && (
-                    <>
-                        <img className="BlogDetailDots" onClick={() => setShowAdminOptions(!showAdminOptions)} src="/dots-settings.png" alt="" />
+                    <article ref={dropDownRef} className="BlogDetailAdmin">
+                        <img className="BlogDetailDots" onClick={(e) => {e.stopPropagation(); setShowAdminOptions(!showAdminOptions)}} src="/dots-settings.png" alt="" />
                     
                         {showAdminOptions &&
-                            <section className="BlogDetailAdminOptions">
-                                <button onClick={() => {deleteBlogHandler()}}>Delete</button>
-                                <button onClick={() => navigate(`/blog/${id}/edit`)}>Edit</button>
-                            </section>
+                                <section className="BlogDetailAdminOptions" >
+                                    <button onClick={() => {setDeleteButtonClicked(true); setShowAdminOptions(false); window.scrollTo(50, 50)}}>Delete</button>
+                                    <button onClick={() => navigate(`/blog/${id}/edit`)}>Edit</button>
+                                </section>
                         }   
-                    </>
+                    </ article>
                 )}
 
 
@@ -102,6 +157,10 @@ export default function BlogDetail({user, setUser}: HeaderProps){
 
                 {user && (    
                         <section className="BlogDetailCommentButtons">
+                            <article  onClick={() => {likeHandler()}}>
+                                <img src={liked ? "/likeClicked.png" : "/like.png"} alt="" />
+                                <span>{blogData?.likes}</span>
+                            </article>
                             <button className="BlogDetailCommentButtonFirst" onClick={() => {navigate(`/blog/${id}/comments`)}}>Show Comments</button>
                         </section>
                 )}

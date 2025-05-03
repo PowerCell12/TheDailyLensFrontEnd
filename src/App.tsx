@@ -17,10 +17,11 @@ import  handleError  from "./utils/handleError.ts"
 import ShowComments from "./components/ShowComments/ShowComments.tsx"
 import { HeaderProps } from "./interfaces/HeaderProps.ts"
 import PostedBlogs from "./components/PostedBlogs/PostedBlogs.tsx"
+import EditBlog from "./components/EditBlog/EditBlog.tsx"
 
 
 function App() {
-    const [user , setUser] = useState<HeaderProps["user"]>({"name": "defaultName", "email": "", "accountType": "Basic User", "imageUrl": "/PersonDefault.png", "bio": "", "country": "", "fullName": "", id: 0, likedComments: [], dislikedComments: []});
+    const [user , setUser] = useState<HeaderProps["user"]>({"name": "defaultName", "email": "", "accountType": "Basic User", "imageUrl": "/PersonDefault.png", "bio": "", "country": "", "fullName": "", id: 0, likedComments: [], dislikedComments: [], likedBlogs: []});
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -40,7 +41,7 @@ function App() {
                 imageUrl = "/PersonDefault.png"
               }else imageUrl = `http://localhost:5110/${data.imageUrl}`
 
-              setUser({name: data.name, email: data.email, accountType: data.accountType, country: data.country, fullName: data.fullName, imageUrl:  imageUrl, bio: data.bio, id: data.id, likedComments: data.likedComments["$values"], dislikedComments: data.dislikedComments["$values"]});
+              setUser({name: data.name, email: data.email, accountType: data.accountType, country: data.country, fullName: data.fullName, imageUrl:  imageUrl, bio: data.bio, id: data.id, likedComments: data.likedComments["$values"], dislikedComments: data.dislikedComments["$values"], likedBlogs: data.likedBlogs["$values"]});
           }).catch(err =>  {
             handleError(err, navigate)
           }) 
@@ -65,6 +66,7 @@ function App() {
             <Route path="/createBlog" element={<CreateBlog />}/>
             <Route path="/blog/:id/comments" element={<ShowComments user={user} setUser={setUser}/>}/>
             <Route path="/:userName/postedBlogs" element={<PostedBlogs user={user} setUser={setUser} /> }/>
+            <Route path="/blog/:id/edit" element={<EditBlog />}/>
           </Route>
 
           <Route element={<GuestGuard />}>

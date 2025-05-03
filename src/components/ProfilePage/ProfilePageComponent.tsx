@@ -3,13 +3,13 @@ import { useRef, useState } from "react"
 import useUploadingImage from "../../hooks/UploadImage"
 import { Link, useNavigate } from "react-router-dom"
 import handleError from "../../utils/handleError"
+import DeleteConfirmation from "../DeleteConfirmation/DeleteConfirmation"
 
 
 
 export default function ProfilePageComponent({user, setUser} : HeaderProps){
     const navigate = useNavigate()
     const ImageFileref = useRef<HTMLInputElement>(null)
-    const DeleteWriteRef = useRef<HTMLInputElement>(null)
     const [deleteButtonClicked, setDeleteButtonClicked] = useState(false)
     const [DELETEWritten, setDELETEWritten] = useState(false)
     useUploadingImage(ImageFileref, {user, setUser})
@@ -23,10 +23,6 @@ export default function ProfilePageComponent({user, setUser} : HeaderProps){
 
 
     function DeleteAccount() {
-        if (DeleteWriteRef.current?.value.trim() != "DELETE"){
-            setDELETEWritten(true)
-        }
-        else{
             fetch("http://localhost:5110/user/deleteProfile", {
                 method: "DELETE",
                 headers: {
@@ -43,11 +39,6 @@ export default function ProfilePageComponent({user, setUser} : HeaderProps){
             }).catch(err => {
                 handleError(err, navigate)
             })
-
-        }
-        
-        
-
     }
 
     function DeleteProfilePicHandler(){
@@ -77,19 +68,7 @@ export default function ProfilePageComponent({user, setUser} : HeaderProps){
         <section className="ProfilePageComponent">
             <img src="/deleteProfilePic.png" alt="" id="DeleteProfilePicProfile" onClick={() => {DeleteProfilePicHandler()}}/>
             {deleteButtonClicked && 
-                <div className="EditProfileDeleteAccountContainer" onClick={() => {setDeleteButtonClicked(false); setDELETEWritten(false)}}>
-                    <div className="EditProfileDeleteAccount" onClick={(event) => {event.stopPropagation()}}>
-                        <i onClick={() => {setDeleteButtonClicked(false); setDELETEWritten(false);}} className="fa-solid fa-xmark" id="EditProfileDeleteAccountClose"></i>
-                        <h1>Delete Account</h1>
-                        <p>Deleting your account will remove all of your information! This action cannot be undone!</p>
-                        <span>To confirm this, type "DELETE"</span>
-                        <section>
-                            <input  ref={DeleteWriteRef} type="text" />
-                            <button type="button" onClick={() => {DeleteAccount()}}>Delete Account</button>
-                            {DELETEWritten && <p className="EditProfileDeleteAccountError">Please type "DELETE" to confirm</p>}
-                        </section>
-                    </div>
-                </div>
+                <DeleteConfirmation setDeleteButtonClicked={setDeleteButtonClicked} deleteHandler={DeleteAccount} DELETEWritten={DELETEWritten} setDELETEWritten={setDELETEWritten} />
             }
 
             <aside className="ProfilePageAccountManagment">

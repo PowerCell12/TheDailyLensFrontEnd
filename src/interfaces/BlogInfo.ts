@@ -22,4 +22,3 @@ export interface CommentBlog{
     ParentCommentId: number,
 }
 
-
