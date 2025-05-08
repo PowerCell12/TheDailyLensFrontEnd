@@ -5,10 +5,12 @@
 @import "/public/css/Error.css";
 @import "/public/css/ProfilePage.css";
 @import "/public/css/EditProfile.css";
-@import "/public/css/CreateBlog.css";
+@import "/public/css/BlogForm.css";
 @import "/public/css/Home.css";
 @import "/public/css/BlogDetails.css";
 @import "/public/css/ShowComments.css";
 @import "/public/css/Comment.css";
-@import "/public/css/PostedBlogs.css";
+@import "/public/css/SavedBlogs.css";
 @import "/public/css/deleteAccount.css";
+@import "/public/css/SearchComponent.css";
+

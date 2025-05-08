@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { BlogInfo } from "../../interfaces/BlogInfo"
 import handleError from "../../utils/handleError"
@@ -11,6 +11,18 @@ export default function Home(){
     const [latestBlogs, setLatestBlogs] = useState<BlogInfo[]>([])
     const [topBlogs, setTopBlogs] = useState<BlogInfo[]>([])
     const [readAllClicked, setReadAllClicked] = useState(false)
+    const searchRef = useRef<HTMLInputElement>(null)
+
+    useEffect(() => {
+    
+        searchRef.current?.addEventListener("keydown", (e) => {
+            if (e.key == "Enter"){
+                console.log(searchRef.current?.value)
+                navigate(`results?search_query=${searchRef.current?.value}`)
+            }
+        })
+
+    }, [searchRef, navigate])
 
     useEffect(() => {
 
@@ -28,7 +40,9 @@ export default function Home(){
           
             return res.json()
         }).then(data => {
-            setLatestBlogs(data["$values"])
+            setLatestBlogs(data["$values"].map((blog: BlogInfo) => {
+                return {...blog, tags: blog.tags["$values"]}
+            }))
         }).catch((err) => {
             handleError(err, navigate)
         }); 
@@ -47,7 +61,9 @@ export default function Home(){
           
             return res.json()
         }).then(data => {
-            setTopBlogs(data["$values"])
+            setTopBlogs(data["$values"].map((blog: BlogInfo) => {
+                return {...blog, tags: blog.tags["$values"]}
+            }))
         }).catch((err) => {
             handleError(err, navigate)
         }); 
@@ -56,25 +72,21 @@ export default function Home(){
     }, [navigate])
 
 
-    const dummyTags = ["Breaking", "World", "Opinion", "Culture"];
-
-
-
     return (
         <>
             <main className="homeMain">
                 <div className="searchBar">
-                    <input type="text" placeholder="Search"/>
-                    <img src="/searchIcon.png" alt="" />
+                    <input ref={searchRef} type="text" placeholder="Search"/>
+                    <img onClick={() => (navigate(`results?search_query=${searchRef.current?.value}`))} src="/searchIcon.png" alt="" />
                 </div>
 
                 <section className="homeMainContent">
-                    <article className="latest-headlines">
+                    <article className="latest-headlines" >
                             <button className="MainLatestHeadlinesSeeMore">View all</button>
                             <button className="MainToptHeadlinesSeeMore">View all</button>
                             <h1>Latest Headlines</h1>
                             
-                            <section className="MainLatestHeadlines">
+                            <section className="MainLatestHeadlines" onClick={() => navigate(`blog/${latestBlogs[0]?.id}`)}>
 
                                 <img className="MainLatestHeadlinesImage" src={latestBlogs[0]?.thumbnail} alt="" />
 
@@ -89,8 +101,8 @@ export default function Home(){
                                         <span>{DateFormatter(latestBlogs[0]?.createdAt)}</span>
 
                                         <ul className="MainLatestHeadlinesTags">
-                                            {dummyTags.map((tag) => {
-                                                return <li key={tag}>{tag}</li> // HERE KEY IS THE TAG.ID
+                                            {latestBlogs[0]?.tags?.map((tag) => {
+                                                return <li title={tag} key={tag}>{tag}</li> // HERE KEY IS THE TAG.ID
                                             })}
                                         </ul>
                                     </section>
@@ -101,12 +113,12 @@ export default function Home(){
                                 {readAllClicked ? ( 
                                         <>
                                             <div className="MainLatestHeadlinesContent" dangerouslySetInnerHTML={{__html: getHTMLElements(latestBlogs[0]?.content, 9)}}></div> 
-                                            <button className="MainLatestHeadlinesReadAll" onClick={() => {setReadAllClicked(!readAllClicked)}}>Read Less</button> 
+                                            <button className="MainLatestHeadlinesReadAll" onClick={(e) => {setReadAllClicked(!readAllClicked); e.stopPropagation()}}>Read Less</button> 
                                         </> )
                                     : (
                                         <>
                                             <div className="MainLatestHeadlinesContent" dangerouslySetInnerHTML={{__html: getHTMLElements(latestBlogs[0]?.content, 3)}}></div>
-                                            <button className="MainLatestHeadlinesReadAll" onClick={() => {setReadAllClicked(!readAllClicked)}}>Read More</button> 
+                                            <button className="MainLatestHeadlinesReadAll" onClick={(e) => {setReadAllClicked(!readAllClicked); e.stopPropagation()}}>Read More</button> 
                                         </>
                                      )}
 
@@ -120,8 +132,8 @@ export default function Home(){
                                         <span>{DateFormatter(latestBlogs[1]?.createdAt)}</span>
 
                                         <ul className="MainLatestHeadlinesTags">
-                                                {dummyTags.map((tag) => {
-                                                    return <li key={tag}>{tag}</li> // HERE KEY IS THE TAG.ID
+                                                {latestBlogs[1]?.tags?.map((tag) => {
+                                                    return <li title={tag} key={tag}>{tag}</li> // HERE KEY IS THE TAG.ID
                                                 })}
                                         </ul>
                                     </section>
@@ -138,7 +150,7 @@ export default function Home(){
                                                 <section className="OtherLatestHeadlineUserInfo1">
                                                     <span>{DateFormatter(latestBlogs[1]?.createdAt)}</span>
 
-                                                    <span className="OtherLatestHeadlineTags">{dummyTags[0]}</span>
+                                                    <span title={blog.tags[0]} className="OtherLatestHeadlineTags">{blog.tags[0]}</span>
                                                 </section>
 
                                                 <h3>{blog.title}</h3>
@@ -171,7 +183,7 @@ export default function Home(){
                                         <section>
                                             <span className="OtherTopHeadlineUserInfo">{DateFormatter(blog.createdAt)}</span>
 
-                                            <span  className="OtherLatestHeadlineTags">{dummyTags[0]}</span>
+                                            <span title={blog.tags[0]} className="OtherLatestHeadlineTags">{blog.tags[0]}</span>
                                         </section>
                                     </section>
                                 )

@@ -18,10 +18,12 @@ import ShowComments from "./components/ShowComments/ShowComments.tsx"
 import { HeaderProps } from "./interfaces/HeaderProps.ts"
 import PostedBlogs from "./components/PostedBlogs/PostedBlogs.tsx"
 import EditBlog from "./components/EditBlog/EditBlog.tsx"
+import LikedBlogs from "./components/LikedBlogs/LikedBlogs.tsx"
+import SearchComponent from "./components/SearchComponent/SearchComponent.tsx"
 
 
 function App() {
-    const [user , setUser] = useState<HeaderProps["user"]>({"name": "defaultName", "email": "", "accountType": "Basic User", "imageUrl": "/PersonDefault.png", "bio": "", "country": "", "fullName": "", id: 0, likedComments: [], dislikedComments: [], likedBlogs: []});
+    const [user , setUser] = useState<HeaderProps["user"]>({"name": "defaultName", "email": "", "accountType": "Basic User", "imageUrl": "/PersonDefault.png", "bio": "", "country": "", "fullName": "", "id": "0", "likedComments": [], "dislikedComments": [], "likedBlogs": []});
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -59,6 +61,7 @@ function App() {
           <Route path="/error/:code/:message" element={<ErrorPage />}/>
           <Route path="*" element={<Navigate to="/error/404/Page%20Not%20Found" />} />
           <Route path="/blog/:id" element={<BlogDetail user={user} setUser={setUser} />}/>
+          <Route path="/results" element={<SearchComponent  />}/>
 
           <Route  element={<RouteGuard />}>
             <Route path="/profile" element={<ProfilePageComponent user={user} setUser={setUser} />}/>
@@ -67,6 +70,7 @@ function App() {
             <Route path="/blog/:id/comments" element={<ShowComments user={user} setUser={setUser}/>}/>
             <Route path="/:userName/postedBlogs" element={<PostedBlogs user={user} setUser={setUser} /> }/>
             <Route path="/blog/:id/edit" element={<EditBlog />}/>
+            <Route path="/:userName/likedBlogs" element={<LikedBlogs user={user} setUser={setUser} />} />
           </Route>
 
           <Route element={<GuestGuard />}>

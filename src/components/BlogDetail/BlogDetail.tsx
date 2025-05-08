@@ -32,8 +32,10 @@ export default function BlogDetail({user}: HeaderProps){
             }
             return res.json()
         }).then(data => {
-            console.log(data)
-            setBlogData(data)
+            setBlogData({
+                ...data,
+                tags: data.tags["$values"]
+            })
             setLiked(data.likedUsers["$values"].includes(user.id))
         }).catch(err =>{
             handleError(err, navigate)
@@ -105,9 +107,7 @@ export default function BlogDetail({user}: HeaderProps){
 
     }
 
-
-    const tags = ["Global", "Business", "Technology"]
-
+    
     return (
         <>
             <section className="BlogDetailMain">
@@ -141,9 +141,9 @@ export default function BlogDetail({user}: HeaderProps){
                     <article className="BlogDetailUser2">
                         <span>{DateFormatter(blogData?.createdAt || "")}</span>
                         <ul className="BlogDetailTags">
-                        {tags.map((tag) => {
+                        {blogData?.tags?.map((tag) => {
                             return (
-                                <li key={tag}>{tag}</li> // TAG ID
+                                <li title={tag} key={tag}>{tag}</li> // TAG ID
                             )}
                         )}
                         </ul>

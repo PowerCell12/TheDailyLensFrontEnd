@@ -55,9 +55,10 @@ export default function Header({ user, setUser }: HeaderProps) {
                 "fullName": "",
                 "imageUrl": "/PersonDefault.png",
                 "bio": "",
-                "id": 0,
+                "id": "0",
                 "likedComments": [],
-                "dislikedComments": []
+                "dislikedComments": [],
+                "likedBlogs": []
             });
             navigate("/");
         })
@@ -80,10 +81,10 @@ export default function Header({ user, setUser }: HeaderProps) {
             <nav >
 
                 <ul className="menu">
-                    <li><Link to="/">Business</Link></li>
-                    <li><Link to="/">Technology</Link></li>
-                    <li><Link to="/">Weather</Link></li>
-                    <li><Link to="/">Today</Link></li>
+                    <li><Link to={`results?search_query=business`}>Business</Link></li>
+                    <li><Link to={`results?search_query=technology`}>Technology</Link></li>
+                    <li><Link to={`results?search_query=weather`}>Weather</Link></li>
+                    <li><Link to={`results?search_query=politics`}>Politics</Link></li>
                 </ul>   
 
             </nav>
@@ -130,7 +131,7 @@ export default function Header({ user, setUser }: HeaderProps) {
 
 
 
-                                    <Link to="/LikedBlogs" className="sub-menu-link">
+                                    <Link to={`/${user.name}/likedBlogs`} className="sub-menu-link">
                                         <img src="/Liked.png" alt="" />
                                         <p>See Your Liked blogs</p>
                                         <span>&gt;</span>

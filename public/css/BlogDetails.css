@@ -196,3 +196,12 @@
     box-shadow: 4px 4px 0 #587C9E;
     transform: translateY(-5px);
 }
+
+
+.BlogDetailTags{
+    li{
+        max-width: 4.4em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}

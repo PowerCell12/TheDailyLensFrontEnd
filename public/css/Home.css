@@ -57,6 +57,7 @@
     color: black;
     width: 42em;
     margin-bottom: 2em;
+    cursor: pointer;
     transition: transform 0.8s ease;
 }
 
@@ -132,6 +133,9 @@
         font-weight: 600;
         list-style: none;
         font-size: .85em;
+        max-width: 4.4em;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }
 
@@ -348,6 +352,9 @@
     color: #211C84;
     font-style: normal;
     font-weight: 600;
+    max-width: 4.4em;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .MainToptHeadlinesSeeMore{

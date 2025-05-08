@@ -14,11 +14,18 @@ Quill.register('modules/imageDrop', ImageDrop);
 Quill.register("modules/resize", QuillResizeImage);
 
 
-export default function BlogForm({editorData, title, setTitle, thumbnail, setThumbnail, thumbnailUrl, setThumbnailUrl, blogHandler, setEditorData, serviceName}){
+export default function BlogForm({editorData, title, setTitle, thumbnail, setThumbnail, thumbnailUrl, setThumbnailUrl, blogHandler, setEditorData, serviceName, tags, setTags}){
     const [previewThumbnail, setPreviewThumbnail] = useState(false); // a boolean for previewing the thumbnail
+    const [tagsCount, setTagsCount] = useState(4); // a counter for the tags
+    const [overTagCount, setOverTagCount] = useState(false); // a boolean for the tag count
+    const tagInputRef = useRef<HTMLInputElement>(null);
     const ThumbnailInputRef = useRef<HTMLInputElement>(null);
     const navigate = useNavigate();
     const quillRef = useRef<ReactQuill | null>(null);
+
+    useEffect(() => {
+        setTagsCount(4 - tags.length);
+    }, [tags.length])
 
     useEffect(() => {
               // @ts-expect-error this bs
@@ -88,6 +95,36 @@ export default function BlogForm({editorData, title, setTitle, thumbnail, setThu
         'align',
         'link', 'image'
     ];
+
+    function handleTagInput(e){
+        if (e.key === "Enter"){
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (tagInputRef.current?.value === ""){
+                setOverTagCount(false);
+                return;
+            }
+
+            const tagInput = tagInputRef.current?.value.split(",")
+            .map(tag => tag.trim())
+            .filter(tag => tag !== "")
+            .map(tag => tag.toLowerCase())
+            .filter((tag, index, self) => self.indexOf(tag) === index);
+
+            if (tagsCount - (tagInput?.length ?? 0) < 0){
+                setOverTagCount(true);
+                return;
+            }
+
+
+            setTagsCount(prev => prev - (tagInput?.length ?? 0));
+            tagInputRef.current!.value = "";
+            setOverTagCount(false);
+            setTags(prev => [...prev, ...(tagInput ?? [])]);
+        }
+
+    }
 
 
     function createBlogComponent(event: React.FormEvent<HTMLFormElement>) {
@@ -171,6 +208,25 @@ export default function BlogForm({editorData, title, setTitle, thumbnail, setThu
         }
     }
 
+    function removeTag(tag: string){
+        setTags(prev => prev.filter(t => t !== tag));
+        setTagsCount(prev => prev  + 1);
+        setOverTagCount(false);
+    }
+
+    function removeAllTags(e){
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (tagInputRef.current) {
+            tagInputRef.current.value = "";
+        }
+
+        setTags([]);
+        setTagsCount(4);
+        setOverTagCount(false);
+    }
+
     return (
          <form className="CreateBlogForm" onSubmit={createBlogComponent}>
                 <article>
@@ -208,6 +264,35 @@ export default function BlogForm({editorData, title, setTitle, thumbnail, setThu
 
                 <img src="/quill-pen.png" className='CreateBlogImage' alt="" />
                 <img src="/quill-pen.png" className='CreateBlogImage2' alt="" />
+
+
+
+                <section className='BlogTagsBlogForm'>
+                    <ul id='tag-list'></ul>
+                    <header className='BlogTagsHeader'>
+                        <img src="/tags.png" alt="" />
+                        <h4>Tags</h4>
+                        <img src="/tags.png" alt="" />
+                    </header>
+                    <p>Press enter or add a comma after each tag</p>
+                    <section className='BlogTagsDiv'>
+                        {tags.map((tag, index) => (
+                            <div key={index} className={"BlogTags"}>
+                                <p title={tag}>{tag}</p>
+                                <i onClick={() => {removeTag(tag)}} className="fa-solid fa-xmark fa-lg BlogTagRemove"></i>
+                            </div>
+                        ))}
+                        <input onKeyDown={handleTagInput}  ref={tagInputRef} type="text" id='tag-input' placeholder='Add a tag' />
+                    </section>
+                    <section className='BlogTagsButtons'>
+                        <span>{tagsCount} tags are remaining</span>
+                        <button onClick={(e) => {removeAllTags(e)}}>Remove All</button>
+                    </section>
+                    {overTagCount && (
+                        <p className='BlogTagsError'>You have gone over the tag limit, remove some tags (max 4)</p>
+                    )}
+                </section>
+
 
 
                 <div className='EditorWrapper'>

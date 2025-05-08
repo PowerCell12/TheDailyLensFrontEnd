@@ -9,6 +9,7 @@ export default function EditBlog(){
     const [title, setTitle] = useState(""); 
     const [thumbnail, setThumbnail] = useState<File | null>(null); // actually file 
     const [thumbnailUrl, setThumbnailUrl] = useState<string>(""); // in memory link to the flie
+    const [tags, setTags] = useState<string[]>([]); // an array for the tags
     const { id } = useParams()
 
     const navigate = useNavigate();
@@ -26,9 +27,12 @@ export default function EditBlog(){
                 }
                 return res.json()
             }).then(data => {
+                const tags = data.tags["$values"]
+
                 setEditorData(data.content)
                 setTitle(data.title)
                 setThumbnailUrl(data.thumbnail)
+                setTags(tags)
             }).catch(err =>{
                 handleError(err, navigate)
             })
@@ -44,7 +48,7 @@ export default function EditBlog(){
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${localStorage.getItem("authToken")}`,
             },
-            body: JSON.stringify({title, thumbnail: pathImage, content: cleaned})
+            body: JSON.stringify({title, thumbnail: pathImage, content: cleaned, tags: tags})
         }).then(async (res) => {
             if (!res.ok){
                 const message =  await res.json()
@@ -63,7 +67,7 @@ export default function EditBlog(){
                 <p className="CreateBlogMessage">Polish your story: refine every detail and share an even stronger narrative.</p>
 
 
-                <BlogForm editorData={editorData} title={title} setTitle={setTitle} thumbnail={thumbnail} setThumbnail={setThumbnail} thumbnailUrl={thumbnailUrl} setThumbnailUrl={setThumbnailUrl} blogHandler={editBlogPost} setEditorData={setEditorData} serviceName={"EditBlog"} />
+                <BlogForm editorData={editorData} title={title} setTitle={setTitle} thumbnail={thumbnail} setThumbnail={setThumbnail} thumbnailUrl={thumbnailUrl} setThumbnailUrl={setThumbnailUrl} blogHandler={editBlogPost} setEditorData={setEditorData} serviceName={"EditBlog"} tags={tags} setTags={setTags} />
         </section>
     )
 

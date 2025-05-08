@@ -1,18 +1,20 @@
-import { useEffect, useState } from "react";
-import handleError from "../../utils/handleError";
 import { useNavigate } from "react-router-dom";
-import { BlogInfo } from "../../interfaces/BlogInfo";
 import { HeaderProps } from "../../interfaces/HeaderProps";
+import { useEffect, useState } from "react";
+import { BlogInfo } from "../../interfaces/BlogInfo";
 import SavedBlogs from "../SavedBlogs/SavedBlogs";
+import handleError from "../../utils/handleError";
 
 
-export default function PostedBlogs({user}: HeaderProps) {
+
+export default function LikedBlogs({user}: HeaderProps){
     const navigate = useNavigate()
     const [blogs, setBlogs] = useState<BlogInfo[]>([])
 
 
     useEffect(() => {
-        fetch(`http://localhost:5110/user/${user.name}/getBlogsByUser`, {
+
+        fetch(`http://localhost:5110/user/${user.name}/getLikedBlogs`, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("authToken")}`
@@ -26,9 +28,11 @@ export default function PostedBlogs({user}: HeaderProps) {
             return res.json()
         }).then(data => {
             setBlogs(data["$values"])
+            console.log(data["$values"])
         }).catch(err => {
             handleError(err, navigate)
         })
+
 
     }, [user.name, navigate])
 
@@ -36,8 +40,9 @@ export default function PostedBlogs({user}: HeaderProps) {
     const customTags = ["javascript", "typescript", "python", "java", "csharp"]
 
 
-    return(
-        <SavedBlogs blogs={blogs} customTags={customTags} title={"Posted"}/>
+    return (
+        <SavedBlogs blogs={blogs} customTags={customTags} title="Liked" />
     )
+
 
 }

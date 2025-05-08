@@ -1,0 +1,218 @@
+.searchBar2{
+    position: relative;
+    left: -2.5%;
+    margin-bottom: 1.2em;
+
+    img{
+        position: absolute;
+        top: 24.8%;
+        left: 23.4%
+    };
+
+}
+
+
+.SearchComponent{
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    margin-top: 1em;
+    align-items: center;
+    justify-content: center;
+    background-color: #587C9E;
+    padding: 2em;
+    width: 85%;
+    justify-self: center;
+    border-radius: .5em;
+    color:white;
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+    padding-bottom: 2em !important;
+}
+
+.SearchComponentNoResults{
+    font-size: 1.4em;
+    text-align: center;
+}
+
+
+.SearchComponentResultUser{
+    display: flex;
+    gap: 8em;
+    align-items: center;
+    justify-content: center;
+    background-color: #e1e5f2;
+    padding: 2em;
+    border-radius: .4em;
+    color: black;
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+    transition: all .32s ease-in-out;
+    cursor: pointer;
+
+    img{
+        width: 4.8em;
+        height: 4.8em;
+        object-fit: cover;
+        object-position: center;
+        border-radius: 50%;
+    }
+
+    div{
+        display: flex;
+        flex-direction: column;
+        gap: 1.2em;
+        justify-content: center;
+        align-items: center;
+
+        h2{
+            margin-bottom: 0em;
+        }
+        p{
+            margin-top: 0em;
+            font-style: italic;
+            font-size: .9em;
+        }
+    }
+}
+
+.SearchComponentResultUser:hover{
+    transform: translateY(-4px);
+}
+
+
+.SearchComponentResultBlog{
+    display: flex;
+    gap: 2.5em;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #e1e5f2;
+    padding: 2em;
+    border-radius: .4em;
+    color: black;
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+    transition: all .32s ease-in-out;
+    cursor: pointer;
+    transition: all .32s ease-in-out;
+
+    img{ 
+        width: 14em;
+        height: 10em;
+        object-fit: cover;
+        object-position: center;
+        border-radius: .2em;
+    }
+
+
+}
+
+.SearchComponentResultBlog:hover{
+    transform: translateY(-4px);
+}
+
+
+.SearchComponentResults{
+    display: flex;
+    flex-direction: column;
+    gap: 3em;
+}
+
+.BlogAuthorSearch{
+    display: flex;
+    gap: 2em;
+    justify-content: center;
+    align-items: center;
+
+    img{
+        width: 3.5em;
+        height: 3.5em;
+        object-fit: cover;
+        object-position: center;
+        border-radius: 50%;
+    }
+
+    p{
+        margin-top: 0em;
+        margin-bottom: 0em;
+        font-style: italic;
+        font-size: .9em;
+        font-weight: 500;
+    }
+
+}
+
+.BlogInfoSearch{
+    display: flex;
+    flex-direction: column;
+    gap: 1.5em;
+
+    h2{
+        margin-bottom: 0em;
+        text-align: center;
+        max-width: 16em;
+        font-size: 1.4em;
+    }
+}
+
+
+.BlogInfoDetailsSearch{
+    display: flex;
+    flex-direction: column;
+    gap: 1.5em;
+
+    ul{
+        display: flex;
+        gap: 1em;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        justify-content: center;
+        align-items: center;
+    }
+
+    li{
+        max-width: 4em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: #211C84;
+        font-weight: 600;
+        list-style: none;
+        font-size: .85em;
+        border: none;
+        background-color: transparent !important;
+    }
+
+    article{
+        display: flex;
+        gap: 2em;
+        justify-content: center;
+        align-items: center;
+
+        .BlogDateSearch{
+            font-size: .85em;
+            font-style: italic;
+            font-weight: 500;
+        }
+
+        .BlogLikesSearch{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1em;
+            background-color: #F5F7F8;
+            padding: .1em 1em;
+            border-radius: .5em;
+            transition: all .4s ease-in-out;
+            cursor: pointer;
+            border: 1px solid black;
+
+            img{
+                width: 1.3em;
+                height: 1.3em;
+            }
+
+            p{
+                font-size: .9em;
+            }
+        }
+    }
+}
+

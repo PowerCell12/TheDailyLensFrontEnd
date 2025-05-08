@@ -10,6 +10,7 @@ export default function CreateBlog() {
     const [title, setTitle] = useState(""); 
     const [thumbnail, setThumbnail] = useState<File | null>(null); // actually file 
     const [thumbnailUrl, setThumbnailUrl] = useState<string>(""); // in memory link to the flie
+    const [tags, setTags] = useState<string[]>([]); // an array for the tags
 
     const navigate = useNavigate();
     
@@ -22,7 +23,7 @@ export default function CreateBlog() {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${localStorage.getItem("authToken")}`
             },
-            body: JSON.stringify({title, thumbnail: pathImage, content: cleaned})
+            body: JSON.stringify({title, thumbnail: pathImage, content: cleaned, tags: tags})
         }).then(() => {
             navigate("/")
         }).catch(err => {
@@ -36,7 +37,7 @@ export default function CreateBlog() {
                 <h1 className="CreateBlogTitle">Tell Your Story</h1>
                 <p className="CreateBlogMessage">Share your ideas, experiences, and stories with readers around the globe.</p>
 
-                <BlogForm editorData={editorData} title={title} setTitle={setTitle} thumbnail={thumbnail} setThumbnail={setThumbnail} thumbnailUrl={thumbnailUrl} setThumbnailUrl={setThumbnailUrl} blogHandler={createBlogPost} setEditorData={setEditorData} serviceName={"CreateBlog"} />
+                <BlogForm editorData={editorData} title={title} setTitle={setTitle} thumbnail={thumbnail} setThumbnail={setThumbnail} thumbnailUrl={thumbnailUrl} setThumbnailUrl={setThumbnailUrl} blogHandler={createBlogPost} setEditorData={setEditorData} serviceName={"CreateBlog"} tags={tags} setTags={setTags} />
             
         </section>
     )
