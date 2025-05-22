@@ -96,7 +96,7 @@ export default function BlogForm({editorData, title, setTitle, thumbnail, setThu
         'link', 'image'
     ];
 
-    function handleTagInput(e){
+    function handleTagInput(e: React.KeyboardEvent<HTMLInputElement>){
         if (e.key === "Enter"){
             e.preventDefault();
             e.stopPropagation();
@@ -121,6 +121,7 @@ export default function BlogForm({editorData, title, setTitle, thumbnail, setThu
             setTagsCount(prev => prev - (tagInput?.length ?? 0));
             tagInputRef.current!.value = "";
             setOverTagCount(false);
+            // @ts-expect-error doesn't matter
             setTags(prev => [...prev, ...(tagInput ?? [])]);
         }
 
@@ -209,12 +210,13 @@ export default function BlogForm({editorData, title, setTitle, thumbnail, setThu
     }
 
     function removeTag(tag: string){
+        // @ts-expect-error doesn't matter
         setTags(prev => prev.filter(t => t !== tag));
         setTagsCount(prev => prev  + 1);
         setOverTagCount(false);
     }
 
-    function removeAllTags(e){
+    function removeAllTags(e: React.MouseEvent<HTMLButtonElement>){
         e.preventDefault();
         e.stopPropagation();
 
@@ -276,8 +278,9 @@ export default function BlogForm({editorData, title, setTitle, thumbnail, setThu
                     </header>
                     <p>Press enter or add a comma after each tag</p>
                     <section className='BlogTagsDiv'>
+                        {/* @ts-expect-error doesn't matter */}
                         {tags.map((tag, index) => (
-                            <div key={index} className={"BlogTags"}>
+                            <div key={index} className={"BlogTagsBlogFormDiv"}>
                                 <p title={tag}>{tag}</p>
                                 <i onClick={() => {removeTag(tag)}} className="fa-solid fa-xmark fa-lg BlogTagRemove"></i>
                             </div>

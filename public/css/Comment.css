@@ -12,28 +12,64 @@
     color: black;
     padding: 1.5em;
     box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
-    width: 100%;
+    width: 102%;
     transition: all .3s ease-in-out;    
 }
 
+
+.RepliedCommentSection {
+    padding: 0.75em 1.2em;
+    margin-left: 1em;
+    border-left: 3px solid #3498db;
+    background-color: #f8f9fa;
+    border-radius: 0.4em;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 4px 12px;
+    transition: all 0.2s ease-in-out;
+    position: relative;
+    padding-bottom: 1em;
+    padding-top: 1em;
+    margin-bottom: 3.5em;
+}
+
+.RepliedCommentSection:hover {
+    background-color: #f1f5f9;
+}
+
+
+
+.RepliedRepliesSection{
+    margin-top: 2em;
+}
+
+
+.RepliesSection{
+    margin-top: 1em;
+}
+
+
+
+
+
+
+
+
+
 .CommentSection:hover{
     background-color: #F5F7F8;
-    transform: translateY(-4px);
 }
 
 .CommentHeaderAccount{
     width: 100%;
     border-bottom: 1.5px solid #A9A9A9;
     display: flex;
-    justify-content: center;
+    justify-content:  space-between;
     align-items: center;
-
+    gap: 12em;
 
     section{
         display: flex;
         gap: 2em;
         padding-bottom: 1em;
-        width: 29.5em;
     }
 
     img{

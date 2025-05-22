@@ -6,8 +6,8 @@ type NavigateFunction =
 
 
 export default function handleError(error: Error, navigate: NavigateFunction) {
-    const status = error.message.split(" - ")[0]
-    const statusText = error.message.split(" - ")[1]
+    const statusText = error.message
+    const status = "500"
     
     navigate(`/error/${status}/${statusText}`)
 }

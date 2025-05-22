@@ -1,19 +1,17 @@
-import { useEffect, useMemo, useRef, useState } from "react"
+import {  useEffect, useMemo, useRef, useState } from "react"
 import {  useNavigate } from "react-router-dom"
-import useUploadingImage from "../../hooks/UploadImage"
-import { HeaderProps } from "../../interfaces/HeaderProps"
 import { Countries, UserValidations } from "../../utils/UserUtils"
 import handleError from "../../utils/handleError"
+import { useAuth } from "../../contexts/useAuth"
 
 
-export default function EditProfile({user, setUser}: HeaderProps){
+export default function EditProfile(){
+    const { user, setUser} = useAuth();
     const ListCountry = useMemo<string[]>(() => {
         return Countries()
     }, [])
     const navigate = useNavigate()
     const ImageRef = useRef<HTMLInputElement>(null)
-    const [originalImage, setOriginalImage] = useState<string>(user.imageUrl)
-    const [fromCancel, setfromCancel] = useState(false)
     const [InputDict, setInputDict] = useState({
         username: user.name == user.email ? "" : user.name,
         fullName: user.fullName || "",
@@ -27,20 +25,41 @@ export default function EditProfile({user, setUser}: HeaderProps){
         emailError: false,
         bioError: false
     })
-
-    useUploadingImage(ImageRef, {user, setUser}, setfromCancel)
+    const [Imagefile, setImagefile] = useState<File>()
+    const [ImagefileURL, setImagefileURL] = useState<string>("")
 
 
     useEffect(() => {
-        setInputDict({username: user.name == user.email ? "" : user.name, fullName: user.fullName || "", country: user.country || ListCountry[0], email: user.email || "", bio: user.bio || ""})
+        setInputDict({
+            username: user.name == user.email ? "" : user.name,
+            fullName: user.fullName || "",
+            country: user.country || ListCountry[0],
+            email: user.email || "",
+            bio: user.bio || ""
+        })
+    }, [user, ListCountry])
+
+    useEffect(() => {
+    
+        function EditProfilePicHandler(){
+
+            if (!ImageRef.current || !ImageRef.current.files || ImageRef.current.files[0] == undefined || ImageRef.current.files[0] == null) return
 
 
-        if (fromCancel){
-            setfromCancel(false)
-            return
+            setImagefile(ImageRef.current.files[0])
+            setImagefileURL(URL.createObjectURL(ImageRef.current.files[0]))
         }
-        setOriginalImage(user.imageUrl)
-    }, [user])
+
+
+        ImageRef.current?.addEventListener("change", EditProfilePicHandler)
+
+        return () => {
+            ImageRef.current?.removeEventListener("change", EditProfilePicHandler)
+        }
+
+
+    }, [])
+
 
 
     function SubmitEditProfile(event: React.FormEvent<HTMLFormElement>){ 
@@ -55,6 +74,51 @@ export default function EditProfile({user, setUser}: HeaderProps){
         }
 
 
+        const formData = new FormData();
+
+        if (Imagefile){
+            formData.append("file", Imagefile);
+            formData.append("frontEndUrl", "EditProfile");
+        
+            fetch("http://localhost:5110/user/uploadImage", {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("authToken")}`
+                },
+                body: formData
+            }).then(async (res) => {
+                if (!res.ok){
+                    const message =  await res.json()
+                    throw Error(`${res.status} - ${message.message}`);
+                }
+                return res.json()
+            }).then((data) => {
+                setUser({...user, imageUrl: `http://localhost:5110/${data.imageUrl}`})  
+            }).catch(err => {
+                handleError(err, navigate)
+            })   
+        }
+
+        if (ImagefileURL == "/PersonDefault.png"){
+            fetch("http://localhost:5110/user/resetProfileImage", {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("authToken")}`
+                }
+            }).then (async (res) => {
+                if (!res.ok){
+                    const message =  await res.json()
+                    throw Error(`${res.status} - ${message.message}`);
+                }
+    
+                setUser({...user, imageUrl: "/PersonDefault.png"})
+            }).catch(err => {
+                handleError(err, navigate)
+            })
+        }
+        
+        
+
         fetch("http://localhost:5110/user/editProfile", {
             method: "POST",
             body: JSON.stringify({
@@ -62,7 +126,7 @@ export default function EditProfile({user, setUser}: HeaderProps){
                 fullName: InputDict.fullName,
                 country: InputDict.country,
                 email: InputDict.email,
-                bio: InputDict.bio
+                bio: InputDict.bio,
             }),
             headers: {
                 "Content-Type": "application/json",
@@ -77,7 +141,7 @@ export default function EditProfile({user, setUser}: HeaderProps){
             return res.json()
         }).then((data) => {
             setUser({...user, name: data.username, fullName: data.fullName, country: data.country, email: data.email, bio: data.bio})
-            navigate("/profile")
+            navigate(`/profile/${data.username}`)
         }).catch(err => {
             handleError(err, navigate)
         })
@@ -92,100 +156,28 @@ export default function EditProfile({user, setUser}: HeaderProps){
     }
 
     function cancelHandler(){
-        if (String(originalImage?.split("/").pop()) === String(ImageRef.current?.files?.[0]?.name)) {
-            navigate("/profile")
-            return
-        }
-
-
-        const formData = new FormData()
-        
-        if (originalImage == undefined || originalImage == null || originalImage == "" || originalImage == "/PersonDefault.png"){ 
-            fetch("http://localhost:5110/user/resetProfileImage", {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${localStorage.getItem("authToken")}`
-                }
-            }).then(async (res) => {
-                if (!res.ok){
-                    const message =  await res.json()
-                    throw Error(`${res.status} - ${message.message}`);
-                }
-
-                setfromCancel(true)
-                setUser({...user, imageUrl: "/PersonDefault.png"})
-                navigate("/profile")
-            }).catch(err => {
-                handleError(err, navigate)
-            })
-
-        }
-        else{
-            if (originalImage?.split("/").pop() == undefined || originalImage?.split("/").pop() == null || originalImage?.split("/").pop() == "") {
-                console.log("problem with the image name")
-                return
-            }
-            //@ts-expect-error bullshit
-            else formData.append("file", originalImage?.split("/").pop())
-        }
-
-        if (ImageRef.current?.files?.[0] == undefined) {
-            navigate("/profile")
-            return
-        }
-
-
-
-        fetch("http://localhost:5110/user/uploadImage", {
-            method: "POST",
-            body: formData,
-            headers: {
-                "Authorization": `Bearer ${localStorage.getItem("authToken")}`
-            }
-        })
-        .then(async (res) => {
-            if (!res.ok){
-                const message =  await res.json()
-                throw Error(`${res.status} - ${message.message}`);
-            }
-
-            setfromCancel(true)
-            setUser({...user, "imageUrl": originalImage})
-            navigate("/profile") 
-        }).catch(err => {
-            handleError(err, navigate)
-        })
+        navigate(`/profile/${user.name}`)
     }
 
 
+
     function DeleteProfilePicHandler(){
-
-        if (user.imageUrl == "/PersonDefault.png") return
-
-
-        fetch("http://localhost:5110/user/resetProfileImage", {
-            method: "POST",
-            headers: {
-                "Authorization": `Bearer ${localStorage.getItem("authToken")}`
-            }
-        }).then (async (res) => {
-            if (!res.ok){
-                const message =  await res.json()
-                throw Error(`${res.status} - ${message.message}`);
-            }
-
-            setUser({...user, imageUrl: "/PersonDefault.png"})
-        }).catch(err => {
-            handleError(err, navigate)
-        })
-
+        if (ImagefileURL !== "" && ImagefileURL !== "/PersonDefault.png") {
+            URL.revokeObjectURL(ImagefileURL)
+            setImagefileURL("")
+        }
+        else{
+            if (user.imageUrl == "/PersonDefault.png") return
+            setImagefileURL("/PersonDefault.png")
+        }
+        
     }
 
     return (
         <section className="EditProfileComponent">
             <img src="/deleteProfilePic.png" alt="" id="DeleteProfilePicEdit" onClick={() => {DeleteProfilePicHandler()}}/>
             <img src="/EditPageWallpaper.jpg" alt="" className="EditProfileImage"/>
-            <img onClick={() => {ProfileImageHandler()}} className="EditProfileImageAccount" src={user.imageUrl} alt="" />
+            <img onClick={() => {ProfileImageHandler()}} className="EditProfileImageAccount" src={ImagefileURL == "" ? user.imageUrl : ImagefileURL} alt="" />
             
             <input ref={ImageRef} type="file" id="EditProfileImageFileInput" />
 

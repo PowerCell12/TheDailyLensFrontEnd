@@ -121,3 +121,11 @@
     margin-bottom: .8em;
     margin-top: .3em;
 }
+
+.BlogTagsSavedBlogs{
+    max-width: 3em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border: none;
+    background-color: transparent;
+}

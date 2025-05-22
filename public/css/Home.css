@@ -50,7 +50,7 @@
 .MainLatestHeadlines{
     display: flex;
     flex-direction: column;
-    background-color: #F2F9FF;
+    background-color: #e1e5f2;
     padding: 2em 3em;
     border-radius: 1em;
     box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
@@ -63,6 +63,7 @@
 
 .MainLatestHeadlines:hover{
     transform: scale(1.02);
+    background-color: #f0f0f0;
 }
 
 
@@ -164,7 +165,7 @@
 .OtherLatestHeadlineFirst{
     max-width: 56%;
     color: black;
-    background-color: #F2F9FF;
+    background-color: #e1e5f2;
     padding: 2em 2em;
     border-radius: 1em;
     box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
@@ -208,6 +209,7 @@
 .OtherLatestHeadlineFirst:hover{
     transform: scale(1.02);
     cursor: pointer;
+    background-color: #f0f0f0;
 }
 
 
@@ -221,7 +223,7 @@
     flex-direction: column;
     justify-content: space-evenly;
     color: black;
-    background-color: #F2F9FF;
+    background-color: #e1e5f2;
     border-radius: 1em;
     box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
     width: 75%;
@@ -268,6 +270,7 @@
 
 .OtherLatestHeadlineOthers:hover{
     transform: scale(1.02);
+    background-color: #f0f0f0;
 }
 
 .OtherLatestHeadlineOthers2
@@ -321,7 +324,7 @@
     flex-direction: column;
     justify-content: space-between;
     color: black;
-    background-color: #F2F9FF;
+    background-color: #e1e5f2;
     border-radius: 1em;
     box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
     transition: transform 0.8s ease; 
@@ -346,6 +349,7 @@
 
 .OtherTopHeadline:hover{
     transform: scale(1.04);
+    background-color: #f0f0f0;
 }
 
 .OtherLatestHeadlineTags{
@@ -410,7 +414,7 @@
     flex-direction: column;
     gap: .5em;
     color: black;
-    background-color: #F2F9FF;
+    background-color: #e1e5f2;
     border-radius: 1em;
     box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
     transition: transform 0.8s ease; 
@@ -465,4 +469,5 @@
 
 .subscribe:hover{
     transform: scale(1.05);
+    background-color: #f0f0f0;
 }

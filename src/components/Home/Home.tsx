@@ -18,7 +18,8 @@ export default function Home(){
         searchRef.current?.addEventListener("keydown", (e) => {
             if (e.key == "Enter"){
                 console.log(searchRef.current?.value)
-                navigate(`results?search_query=${searchRef.current?.value}`)
+                if (searchRef.current?.value == "") return
+                navigate(`results?search_query=${searchRef.current?.value}&page=1`)
             }
         })
 
@@ -77,13 +78,13 @@ export default function Home(){
             <main className="homeMain">
                 <div className="searchBar">
                     <input ref={searchRef} type="text" placeholder="Search"/>
-                    <img onClick={() => (navigate(`results?search_query=${searchRef.current?.value}`))} src="/searchIcon.png" alt="" />
+                    <img onClick={() => (searchRef.current?.value != "" && navigate(`results?search_query=${searchRef.current?.value}&page=1`))} src="/searchIcon.png" alt="" />
                 </div>
 
                 <section className="homeMainContent">
                     <article className="latest-headlines" >
-                            <button className="MainLatestHeadlinesSeeMore">View all</button>
-                            <button className="MainToptHeadlinesSeeMore">View all</button>
+                            <button className="MainLatestHeadlinesSeeMore" onClick={() => navigate(`/results?search_query=latest&page=1`)}>View all</button>
+                            <button className="MainToptHeadlinesSeeMore" onClick={() => navigate(`/results?search_query=top&page=1`)}>View all</button>
                             <h1>Latest Headlines</h1>
                             
                             <section className="MainLatestHeadlines" onClick={() => navigate(`blog/${latestBlogs[0]?.id}`)}>
@@ -92,7 +93,7 @@ export default function Home(){
 
                                 <article className="MainLatestHeadlinesUserInfo">
                                     <section>
-                                        <img className="MainLatestHeadlinesUserImage" src={latestBlogs[0]?.userImageUrl ? `http://localhost:5110/${latestBlogs[0]?.userImageUrl}` : "/PersonDefault.png"}/>
+                                        <img className="MainLatestHeadlinesUserImage" src={(latestBlogs[0]?.userImageUrl && latestBlogs[0]?.userImageUrl !== "/PersonDefault.png") ? `http://localhost:5110/${latestBlogs[0]?.userImageUrl}` : "/PersonDefault.png"}/>
 
                                         <span>{latestBlogs[0]?.userName}</span>
                                     </section>
@@ -112,12 +113,12 @@ export default function Home(){
 
                                 {readAllClicked ? ( 
                                         <>
-                                            <div className="MainLatestHeadlinesContent" dangerouslySetInnerHTML={{__html: getHTMLElements(latestBlogs[0]?.content, 9)}}></div> 
+                                            <div className="MainLatestHeadlinesContent" dangerouslySetInnerHTML={{__html: getHTMLElements(latestBlogs[0]?.content, 3)}}></div> 
                                             <button className="MainLatestHeadlinesReadAll" onClick={(e) => {setReadAllClicked(!readAllClicked); e.stopPropagation()}}>Read Less</button> 
                                         </> )
                                     : (
                                         <>
-                                            <div className="MainLatestHeadlinesContent" dangerouslySetInnerHTML={{__html: getHTMLElements(latestBlogs[0]?.content, 3)}}></div>
+                                            <div className="MainLatestHeadlinesContent" dangerouslySetInnerHTML={{__html: getHTMLElements(latestBlogs[0]?.content, 1)}}></div>
                                             <button className="MainLatestHeadlinesReadAll" onClick={(e) => {setReadAllClicked(!readAllClicked); e.stopPropagation()}}>Read More</button> 
                                         </>
                                      )}
@@ -156,7 +157,7 @@ export default function Home(){
                                                 <h3>{blog.title}</h3>
 
                                                 <section className="OtherLatestHeadlineUserInfo2">
-                                                    <img src={blog.userImageUrl ? `http://localhost:5110/${blog.userImageUrl}` : "/PersonDefault.png"} alt="" />
+                                                    <img src={(blog.userImageUrl && blog.userImageUrl !== "/PersonDefault.png" ) ? `http://localhost:5110/${blog.userImageUrl}` : "/PersonDefault.png"} alt="" />
 
                                                     <span>{blog.userName}</span>
                                                 </section>

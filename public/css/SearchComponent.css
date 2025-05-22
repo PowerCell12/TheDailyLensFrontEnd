@@ -47,6 +47,7 @@
     box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
     transition: all .32s ease-in-out;
     cursor: pointer;
+    width: 30em;
 
     img{
         width: 4.8em;
@@ -92,6 +93,7 @@
     transition: all .32s ease-in-out;
     cursor: pointer;
     transition: all .32s ease-in-out;
+    width: 50em;
 
     img{ 
         width: 14em;
@@ -106,12 +108,14 @@
 
 .SearchComponentResultBlog:hover{
     transform: translateY(-4px);
+    background-color: #f0f0f0;
 }
 
 
 .SearchComponentResults{
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 3em;
 }
 

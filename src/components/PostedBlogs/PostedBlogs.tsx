@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
 import handleError from "../../utils/handleError";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { BlogInfo } from "../../interfaces/BlogInfo";
-import { HeaderProps } from "../../interfaces/HeaderProps";
 import SavedBlogs from "../SavedBlogs/SavedBlogs";
 
 
-export default function PostedBlogs({user}: HeaderProps) {
+export default function PostedBlogs() {
     const navigate = useNavigate()
     const [blogs, setBlogs] = useState<BlogInfo[]>([])
 
+    const { username } = useParams();
 
     useEffect(() => {
-        fetch(`http://localhost:5110/user/${user.name}/getBlogsByUser`, {
+        fetch(`http://localhost:5110/user/${username}/getBlogsByUser`, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("authToken")}`
@@ -25,19 +25,19 @@ export default function PostedBlogs({user}: HeaderProps) {
 
             return res.json()
         }).then(data => {
+            console.log(data["$values"])
             setBlogs(data["$values"])
         }).catch(err => {
             handleError(err, navigate)
         })
 
-    }, [user.name, navigate])
+    }, [username, navigate])
 
 
-    const customTags = ["javascript", "typescript", "python", "java", "csharp"]
 
 
     return(
-        <SavedBlogs blogs={blogs} customTags={customTags} title={"Posted"}/>
+        <SavedBlogs blogs={blogs} title={"Posted"}/>
     )
 
 }

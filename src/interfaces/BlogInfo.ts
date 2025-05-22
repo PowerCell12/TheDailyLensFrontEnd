@@ -18,7 +18,7 @@ export interface CommentBlog{
     likes: number,
     dislikes: number,
     createdAt: string,
-    authorId: number,
-    ParentCommentId: number,
+    authorId: string,
+    parentCommentId: number,
 }
 

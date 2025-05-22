@@ -3,11 +3,12 @@ import AuthForm from "../AuthForm";
 import { AuthService, fetchUserInfo } from "../../services/AuthService";
 import { useNavigate } from "react-router-dom";
 import { CheckEmailAndPassword, PasswordValidation} from "../../utils/AuthUtils";
-import { HeaderProps } from "../../interfaces/HeaderProps";
 import handleError from "../../utils/handleError";
+import { useAuth } from "../../contexts/useAuth";
 
 
-export default function Register({ setUser } : HeaderProps){
+export default function Register(){
+    const { setUser } = useAuth();
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({

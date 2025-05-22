@@ -77,3 +77,6 @@ export function CheckEmailAndPassword(errorData, formData){
     return {newErrorData, hasError}
 }
 
+
+
+export const defaultUser = {"name": "defaultName", "email": "", "accountType": "Basic User", "imageUrl": "/PersonDefault.png", "bio": "", "country": "", "fullName": "", "id": "0", "likedComments": [], "dislikedComments": [], "likedBlogs": []}

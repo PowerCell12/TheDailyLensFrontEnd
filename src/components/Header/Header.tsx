@@ -1,12 +1,13 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FetchWithAuthorization } from "../../wrappers/fetchWrapper";
 import { useEffect, useState } from "react";
-import { HeaderProps } from "../../interfaces/HeaderProps";
 import handleError from "../../utils/handleError";
+import { useAuth } from "../../contexts/useAuth";
 
 
 
-export default function Header({ user, setUser }: HeaderProps) {
+export default function Header() {
+    const {user, setUser} = useAuth();
     const [isOpen, setIsOpen] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
@@ -81,10 +82,10 @@ export default function Header({ user, setUser }: HeaderProps) {
             <nav >
 
                 <ul className="menu">
-                    <li><Link to={`results?search_query=business`}>Business</Link></li>
-                    <li><Link to={`results?search_query=technology`}>Technology</Link></li>
-                    <li><Link to={`results?search_query=weather`}>Weather</Link></li>
-                    <li><Link to={`results?search_query=politics`}>Politics</Link></li>
+                    <li><Link to={`results?search_query=business&page=1`}>Business</Link></li>
+                    <li><Link to={`results?search_query=technology&page=1`}>Technology</Link></li>
+                    <li><Link to={`results?search_query=weather&page=1`}>Weather</Link></li>
+                    <li><Link to={`results?search_query=politics&page=1`}>Politics</Link></li>
                 </ul>   
 
             </nav>
@@ -109,7 +110,7 @@ export default function Header({ user, setUser }: HeaderProps) {
                                     </div>
                                     <hr />
 
-                                    <Link to="/profile" className="sub-menu-link">
+                                    <Link to={`/profile/${user.name}`} className="sub-menu-link">
                                         <img src="/Settings.png" alt="" />
                                         <p>My Profile</p>
                                         <span>&gt;</span>
@@ -117,7 +118,7 @@ export default function Header({ user, setUser }: HeaderProps) {
 
 
 
-                                    <Link to={`/${user.name}/postedBlogs`} className="sub-menu-link">
+                                    <Link to={`/${user.name}/postedBlogs?page=1`} className="sub-menu-link">
                                         <img src="/Blogs.png" alt="" />
                                         <p>See Your Posted blogs</p>
                                         <span>&gt;</span>
@@ -131,7 +132,7 @@ export default function Header({ user, setUser }: HeaderProps) {
 
 
 
-                                    <Link to={`/${user.name}/likedBlogs`} className="sub-menu-link">
+                                    <Link to={`/${user.name}/likedBlogs?page=1`} className="sub-menu-link">
                                         <img src="/Liked.png" alt="" />
                                         <p>See Your Liked blogs</p>
                                         <span>&gt;</span>

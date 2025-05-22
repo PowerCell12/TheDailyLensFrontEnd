@@ -215,3 +215,131 @@
     opacity: 0.9;
     z-index: 2;
 }
+
+.ProfilePageComponentImageReadOnly{
+    cursor: auto !important;
+}
+
+.ProfilePageComponentImageReadOnly:hover{
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+
+.ProfilePageAccountManagmentReadOnly{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5em;
+        padding-left: 2em;
+        
+        img{
+            width: 15em;
+            height: 15em;
+            border-radius: 50%;
+            cursor: pointer;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        img:hover{
+            box-shadow: 0 0 15px white;
+            transition: 0.3s;
+        }
+    
+ 
+        .ProfilePageComponentPassword{
+            margin-top: .5em;
+            border-radius: .3em;
+            border: none;
+            font-size: 1.2em;
+        }
+
+        .ProfilePageComponentLabelPassword{
+            margin-bottom: 0em;
+            margin-top: 2.5em;
+            font-size: .9em;
+            padding-left: 1em;
+            font-weight: 600;
+            font-style: italic;    
+        }
+
+        .ProfilePageComponentForm{
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ProfilePageComponentButton {
+            margin-top: 1.3em;
+            border-radius: .3em;
+            padding: .7em 1em;
+            color: white;
+            background-color: black;
+            border: 1px solid #000;
+            cursor: pointer;
+            font-size: 1.05em;
+            line-height: 1.5;
+            transition: all .2s ease-out;
+        }
+
+        .ProfilePageComponentButton:hover {
+            box-shadow: 4px 4px 0 #587C9E;
+            transform: translateY(-4px);
+        }
+
+
+        .ProfilePageComponentButton:focus-visible{
+            outline-offset: 1px;
+        }
+
+        .ProfilePageComponentGreeting{
+            font-weight: 600;
+            margin-top: 1.5em;
+            color: white;    
+            font-style: italic;
+            font-size: 1.1em;
+        }
+}
+
+.ProfilePageAccountSettingsReadOnly{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    h2{
+        font-size: 1.4em;
+        max-width: 16em;
+        text-align: center;
+    }
+
+    .ProfilePageAccountSettingsSectionReadOnly{
+        display: flex;
+        align-items: center; 
+        justify-content: center;
+        gap: 2em;
+    }
+
+    .ProfilePageLinkReadOnly{
+        text-decoration: none;
+        color: white;
+        padding: .7em 1.2em;
+        border-radius: .3em;
+        background-color: black;
+        cursor: pointer;
+        transition: all .35s ease-out;
+        font-size: .96em;
+    }
+
+    .ProfilePageLinkReadOnly:hover{
+        transform: scale(1.05);
+    }
+
+}
+
+.ProfilePageComponentGreetingReadOnly{
+    font-weight: 500;
+    color: white;    
+    font-style: italic;
+}
+

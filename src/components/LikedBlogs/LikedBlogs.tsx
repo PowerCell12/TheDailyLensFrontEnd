@@ -1,5 +1,4 @@
-import { useNavigate } from "react-router-dom";
-import { HeaderProps } from "../../interfaces/HeaderProps";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { BlogInfo } from "../../interfaces/BlogInfo";
 import SavedBlogs from "../SavedBlogs/SavedBlogs";
@@ -7,14 +6,15 @@ import handleError from "../../utils/handleError";
 
 
 
-export default function LikedBlogs({user}: HeaderProps){
+export default function LikedBlogs(){
     const navigate = useNavigate()
     const [blogs, setBlogs] = useState<BlogInfo[]>([])
 
+    const { username } = useParams();
 
     useEffect(() => {
 
-        fetch(`http://localhost:5110/user/${user.name}/getLikedBlogs`, {
+        fetch(`http://localhost:5110/user/${username}/getLikedBlogs`, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("authToken")}`
@@ -34,14 +34,13 @@ export default function LikedBlogs({user}: HeaderProps){
         })
 
 
-    }, [user.name, navigate])
+    }, [username, navigate])
 
 
-    const customTags = ["javascript", "typescript", "python", "java", "csharp"]
 
 
     return (
-        <SavedBlogs blogs={blogs} customTags={customTags} title="Liked" />
+        <SavedBlogs blogs={blogs} title="Liked" />
     )
 
 

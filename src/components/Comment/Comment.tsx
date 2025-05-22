@@ -1,26 +1,23 @@
 import { useEffect, useRef, useState } from "react";
 import { CommentBlog } from "../../interfaces/BlogInfo";
-import { CommentAuthorData, HeaderProps } from "../../interfaces/HeaderProps";
+import { CommentAuthorData } from "../../interfaces/HeaderProps";
 import DateFormatter from "../../utils/dateUtils";
 import handleError from "../../utils/handleError";
 import { useNavigate } from "react-router-dom";
-import Reply from "../Reply/Reply";
+import { useAuth } from "../../contexts/useAuth";
+import { CommentProps } from "../../interfaces/Comment";
 
-type CommentProps = CommentBlog & {
-    user: HeaderProps["user"],
-    setBlogData,
-    blogData,
-    setIsEditing,
-    setIsReplaying,
-    commentId,
-    setCommentId,
-    replyingToReply,
-    setReplyingToReply
-}
 
-export default function Comment({ id, title, content, authorId, createdAt, user, setBlogData, blogData, setIsEditing, setIsReplaying, setCommentId, replyingToReply, setReplyingToReply} : CommentProps)
-// FIX
+
+export default function Comment({ 
+    id, title, content,
+    authorId,  createdAt, setBlogData, 
+    blogData, setIsEditing, setIsReplaying,
+    setCommentId, replyingToReply, setReplyingToReply,
+    parentCommentId, setNeedsTitleOrEditorData
+} : CommentProps)
 {
+    const { user } = useAuth();
     const [author, setAuthor] = useState<CommentAuthorData>({"name": "defaultName", "imageUrl": "/PersonDefault.png"});
     const [isOpen, setIsOpen] = useState(false);
     const dropDownRef = useRef<HTMLDivElement | null>(null);
@@ -29,6 +26,12 @@ export default function Comment({ id, title, content, authorId, createdAt, user,
     const navigate = useNavigate();
 
     const replyProps =  { user, setBlogData, blogData, setIsEditing, setIsReplaying, setCommentId, replyingToReply, setReplyingToReply };
+
+
+    useEffect(() => {
+        setIsLiked(user.likedComments.includes(id));
+        setIsDisliked(user.dislikedComments.includes(id));
+    }, [user, id])
 
 
     useEffect(() => {
@@ -117,11 +120,12 @@ export default function Comment({ id, title, content, authorId, createdAt, user,
             return res.json()
         }).then(data => {
             setIsDisliked(!isDisliked);
-            setBlogData((prevData: CommentBlog[]) => prevData.map(comment => {
+            setBlogData((prevData: CommentBlog[]) => 
+                prevData.map(comment => {
                 if (comment.id == id){
                     return {...comment, dislikes: data}
                 }
-                return comment
+                return comment 
             }))
         }).catch(err => {
             handleError(err, navigate)
@@ -145,8 +149,9 @@ export default function Comment({ id, title, content, authorId, createdAt, user,
     }
 
 
+
     return (
-        <section className="CommentSection">
+        <section className={parentCommentId == null ? `CommentSection` : `RepliedCommentSection`}>
             <article className="CommentHeaderAccount">
                 <section>
                     <img src={author?.imageUrl} alt="" />           
@@ -162,7 +167,7 @@ export default function Comment({ id, title, content, authorId, createdAt, user,
                         <img onClick={(e) => {e.stopPropagation(); setIsOpen(!isOpen) }} className="dropDownButton" src="/dots-settings.png" alt="" />
                         {isOpen && (
                                 <div  className="EditRemoveCommentButtons">
-                                    <button onClick={() => {setIsEditing(true); setIsReplaying(false); setCommentId(id); setIsOpen(false)}} className="EditCommentButton">Edit</button>
+                                    <button onClick={() => {setIsEditing(true); setIsReplaying(false); setCommentId(id); setIsOpen(false); setNeedsTitleOrEditorData(false)}} className="EditCommentButton">Edit</button>
                                     <button onClick={() => {removeCommentHandler()}} className="RemoveCommentButton">Remove</button>
                                 </div>
                         )}
@@ -191,7 +196,7 @@ export default function Comment({ id, title, content, authorId, createdAt, user,
                             <img className="like" src="/like.png" alt="" />
                         )}
                     </div>
-                    <span>{blogData.find((x: CommentBlog) => x.id == id).likes}</span>
+                    <span>{blogData ? blogData.find((x: CommentBlog) => x.id == id)?.likes ?? 0 : 0}</span>
                 </article>
 
                 <article>
@@ -203,27 +208,27 @@ export default function Comment({ id, title, content, authorId, createdAt, user,
                             <img className="dislike" src="/dislike.png" alt="" />
                         )}
                     </div>
-                    <span>{blogData.find((x: CommentBlog) => x.id == id).dislikes}</span>
+                    <span>{blogData ? blogData.find((x: CommentBlog) => x.id == id)?.dislikes ?? 0 : 0}</span>
                 </article>
 
-                {/* <button onClick={() => {setIsReplaying(true); setIsEditing(false); setCommentId(id); setIsOpen(false);
-                    if (blogData.find(x => x.id == id).replies.length > 0){
+                <button onClick={() => {setIsReplaying(true); setIsEditing(false); setCommentId(id); setIsOpen(false); setNeedsTitleOrEditorData(false);
+                    if (blogData && blogData.filter(x => x.parentCommentId == id).length > 0){
                         setReplyingToReply(true)
                     }
-                }} className="ReplyCommentButton">Reply</button> */}
+                }} className="ReplyCommentButton">Reply</button>
             </article>
 
 
 
-            {/* {blogData.find((x: CommentBlog) => x.id == id).replies.length > 0 && (
-                <section  className="RepliesSection">
-                    {blogData.find((x: CommentBlog) => x.id == id).replies.map((reply: CommentBlog) => {
+            {blogData && blogData.filter((x: CommentBlog) => x.parentCommentId == id).length > 0 && (
+                <section  className={parentCommentId == null ? `RepliesSection` : `RepliedRepliesSection`}>
+                    {blogData.filter((x: CommentBlog) => x.parentCommentId == id).map((reply: CommentBlog) => {
                         return (
-                            <Comment key={reply.id} {...reply} {...replyProps} commentId={reply.id} />
+                            <Comment key={reply.id} {...reply} {...replyProps} id={reply.id} />
                         )
                     })}
                 </section>
-            )} */}
+            )}
 
 
         </section>

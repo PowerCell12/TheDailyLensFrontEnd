@@ -61,7 +61,7 @@ export default function useUploadingImage(ImageFileref: React.RefObject<HTMLInpu
         return () => {
             ref.removeEventListener("change", () => {})
         }
-    }, [navigate, ImageFileref])
+    }, [navigate, ImageFileref, user, setUser])
     
     
     return undefined

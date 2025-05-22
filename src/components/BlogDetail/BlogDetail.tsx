@@ -1,13 +1,14 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import handleError from "../../utils/handleError";
 import { BlogInfo } from "../../interfaces/BlogInfo";
 import DateFormatter from "../../utils/dateUtils";
-import { HeaderProps } from "../../interfaces/HeaderProps";
 import DeleteConfirmation from "../DeleteConfirmation/DeleteConfirmation";
+import { useAuth } from "../../contexts/useAuth";
 
 
-export default function BlogDetail({user}: HeaderProps){
+export default function BlogDetail(){
+    const { user } = useAuth();
     const [blogData, setBlogData] = useState<BlogInfo>()
     const [showAdminOptions, setShowAdminOptions] = useState(false)
     const [deleteButtonClicked, setDeleteButtonClicked] = useState(false)
@@ -18,6 +19,7 @@ export default function BlogDetail({user}: HeaderProps){
     const [liked, setLiked] = useState(user.likedBlogs.includes(Number(id)))
 
     useEffect(() => {
+        console.log(user.id)
         window.scrollTo(0, 0);
         
 
@@ -133,8 +135,8 @@ export default function BlogDetail({user}: HeaderProps){
 
                 <section className="BlogDetailUserInfo">
                     <article className="BlogDetailUser1">
-                        <img className="BlogDetailUserImage" src={blogData?.userImageUrl ? `http://localhost:5110/${blogData.userImageUrl}` : "/PersonDefault.png"} alt="" />
-                        <span className="BlogDetailUserName">{blogData?.userName}</span>
+                        <img className="BlogDetailUserImage" src={(blogData?.userImageUrl && blogData.userImageUrl !== "/PersonDefault.png" ) ? `http://localhost:5110/${blogData.userImageUrl}` : "/PersonDefault.png"} alt="" />
+                        <Link to={`/profile/${blogData?.userName}`} className="BlogDetailUserName">{blogData?.userName}</Link>
                     </article>
 
 
@@ -155,15 +157,14 @@ export default function BlogDetail({user}: HeaderProps){
 
                 <div className="BlogDetailContent" dangerouslySetInnerHTML={{__html: blogData?.content || ""}}></div>                
 
-                {user && (    
-                        <section className="BlogDetailCommentButtons">
-                            <article  onClick={() => {likeHandler()}}>
-                                <img src={liked ? "/likeClicked.png" : "/like.png"} alt="" />
-                                <span>{blogData?.likes}</span>
-                            </article>
-                            <button className="BlogDetailCommentButtonFirst" onClick={() => {navigate(`/blog/${id}/comments`)}}>Show Comments</button>
-                        </section>
-                )}
+                <section className="BlogDetailCommentButtons">
+                    <article className={user.id == "0" ? "BlogDetailCommentButtonsArticleNoUser" :`BlogDetailCommentButtonsArticle`}  onClick={() => {if (user.id !== "0") likeHandler()}}>
+                        <img src={liked ? "/likeClicked.png" : "/like.png"} alt="" />
+                        <span>{blogData?.likes}</span>
+                    </article>
+                    <button className="BlogDetailCommentButtonFirst" onClick={() => {navigate(`/blog/${id}/comments`)}}>Show Comments</button>
+                </section>
+        
 
             </section>
 

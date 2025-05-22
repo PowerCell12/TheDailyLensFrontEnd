@@ -2,9 +2,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import BlogForm from "../BlogForm/BlogForm";
 import { useEffect, useState } from "react";
 import handleError from "../../utils/handleError";
+import { useAuth } from "../../contexts/useAuth";
 
 
 export default function EditBlog(){
+    const { user } = useAuth();
     const [editorData, setEditorData] = useState();
     const [title, setTitle] = useState(""); 
     const [thumbnail, setThumbnail] = useState<File | null>(null); // actually file 
@@ -27,6 +29,10 @@ export default function EditBlog(){
                 }
                 return res.json()
             }).then(data => {
+                if (data.authorId !== user.id){
+                    navigate("/")
+                }
+
                 const tags = data.tags["$values"]
 
                 setEditorData(data.content)
@@ -37,7 +43,7 @@ export default function EditBlog(){
                 handleError(err, navigate)
             })
 
-    }, [navigate, id])
+    }, [navigate, id, user.id])
 
 
     function editBlogPost(pathImage: string, cleaned: string){

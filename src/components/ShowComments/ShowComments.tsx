@@ -1,13 +1,12 @@
 import { useEffect, useRef, useState } from "react"
 import {  useNavigate, useParams } from "react-router-dom"
 import handleError from "../../utils/handleError"
-import { HeaderProps } from "../../interfaces/HeaderProps"
 import { CommentBlog } from "../../interfaces/BlogInfo"
 import ReactQuill from "react-quill"
 import Comment from "../Comment/Comment"
 
 
-export default function ShowComments({user}: HeaderProps){
+export default function ShowComments(){
     const navigate = useNavigate()
     const [blogData, setBlogData] = useState<CommentBlog[]>() // THE COMMENTS
     const { id } = useParams()
@@ -15,12 +14,13 @@ export default function ShowComments({user}: HeaderProps){
     const [commentTitle, setCommentTitle] = useState("")
     const [isEditing, setIsEditing] = useState(false)
     const [isReplaying, setIsReplaying] = useState(false)
-    const [commentId, setCommentId] = useState(0)
+    const [commentId, setCommentId] = useState(0) // WHAT
     const [oldData, setOldData] = useState({content: "", title: ""})
-    const [replyingToReply, setReplyingToReply] = useState(false);
+    const [replyingToReply, setReplyingToReply] = useState(false); // wHAT
+    const [needsTitleOrEditorData, setNeedsTitleOrEditorData] = useState(false)
     const quillRef = useRef<ReactQuill | null>(null);
 
-    const commentProps = { user, setBlogData, blogData, setIsEditing, setIsReplaying, commentId, setCommentId, replyingToReply, setReplyingToReply };
+    const commentProps = { setBlogData, blogData, setIsEditing, setIsReplaying, commentId, setCommentId, replyingToReply, setReplyingToReply };
 
     useEffect(() => {
            window.scrollTo(0, 0);
@@ -81,7 +81,7 @@ export default function ShowComments({user}: HeaderProps){
             }
             return res.json()
         }).then(data => {
-            console.log(data)
+            console.log(data["$values"])
             setBlogData(data["$values"])
 
         }).catch(err =>{
@@ -116,13 +116,13 @@ export default function ShowComments({user}: HeaderProps){
                     }
                     return res.json()
                 }).then(data => {
-                    setEditorData(`@${data.name} `)                    
+                    setCommentTitle(`@${data.name}`)                    
                 })
 
             }
         }
 
-    }, [isEditing, isReplaying, replyingToReply])
+    }, [isEditing, isReplaying, replyingToReply, commentId, blogData])
     
     const modules = {
         resize: {
@@ -153,6 +153,15 @@ export default function ShowComments({user}: HeaderProps){
 
     function CreateCommentHandler(e: React.FormEvent<HTMLFormElement>){
         e.preventDefault();
+        console.log(editorData)
+        console.log(commentTitle)
+
+        console.log(commentTitle.split(" "))
+
+        if (((!commentTitle || commentTitle == "") && (!editorData || editorData == "" || editorData == "<p><br></p>")) || ((commentTitle.split(" ")[0].startsWith("@") && commentTitle.split(" ").length == 1) && editorData == "")){
+            setNeedsTitleOrEditorData(true)
+            return
+        }
 
         if (isReplaying){
 
@@ -172,7 +181,7 @@ export default function ShowComments({user}: HeaderProps){
             }).then(data => {
                 setBlogData(prevData => prevData?.map(comment => {
                     if (comment.id == commentId){
-                        return {...comment, replies: [...comment.replies, data] }
+                        return {...comment }
                     }
                     return comment
                  }))
@@ -244,6 +253,8 @@ export default function ShowComments({user}: HeaderProps){
             })
         }
 
+        setNeedsTitleOrEditorData(false)
+
     }
 
 
@@ -283,8 +294,9 @@ export default function ShowComments({user}: HeaderProps){
                     {isReplaying && <button className="CommentYourselfButton" type="submit">Reply</button>}
                     {(!isEditing && !isReplaying) && <button className="CommentYourselfButton" type="submit">Post Comment</button>}
 
-                    {(isEditing || isReplaying) && <button className="CommentYourselfButton" onClick={() => {setIsEditing(false); setIsReplaying(false); setEditorData(oldData.content); setCommentTitle(oldData.title) }}>Cancel</button>}
+                    {(isEditing || isReplaying) && <button className="CommentYourselfButton" onClick={() => {setIsEditing(false); setIsReplaying(false); setEditorData(oldData.content); setCommentTitle(oldData.title); setNeedsTitleOrEditorData(false) }}>Cancel</button>}
                 </section>
+                {needsTitleOrEditorData && <p className="CommentYourselfError">Please fill out at least one field</p>}
 
             </form>
 
@@ -293,8 +305,11 @@ export default function ShowComments({user}: HeaderProps){
             <section className="ShowCommentsActuallyComments">
 
                 {blogData?.map((comment) => {
-                    if (comment.ParentCommentId != null) return null
-                    return <Comment key={comment.id} {...comment} {...commentProps} authorId={comment.authorId} />
+                    if (comment.parentCommentId != null) return null
+                    if (comment.authorId == null) { console.log("comment.authorId == null"); return null }
+                    if (comment.authorId !== null){
+                        return ( <Comment key={comment.id} {...comment} {...commentProps} authorId={comment.authorId} commentId={commentId}  setNeedsTitleOrEditorData={setNeedsTitleOrEditorData}/> )
+                    }                
                 })}
 
             </section>

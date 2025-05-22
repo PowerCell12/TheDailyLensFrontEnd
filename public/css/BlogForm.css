@@ -378,11 +378,11 @@
 
 
 
-
 /* the divs */
-.BlogTags{
+.BlogTagsBlogFormDiv{
     width: 45%;
     display: flex;
+    flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;

@@ -1,19 +1,48 @@
 import { HeaderProps } from "../../interfaces/HeaderProps"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import useUploadingImage from "../../hooks/UploadImage"
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useNavigate, useParams } from "react-router-dom"
 import handleError from "../../utils/handleError"
 import DeleteConfirmation from "../DeleteConfirmation/DeleteConfirmation"
+import { defaultUser } from "../../utils/AuthUtils"
+import { useAuth } from "../../contexts/useAuth"
 
 
 
-export default function ProfilePageComponent({user, setUser} : HeaderProps){
+export default function ProfilePageComponent(){
+    const { user: currentUser} = useAuth();
     const navigate = useNavigate()
+    const [user, setUser] = useState<HeaderProps["user"]>(defaultUser)
     const ImageFileref = useRef<HTMLInputElement>(null)
     const [deleteButtonClicked, setDeleteButtonClicked] = useState(false)
     const [DELETEWritten, setDELETEWritten] = useState(false)
     useUploadingImage(ImageFileref, {user, setUser})
 
+    const { username } = useParams();
+
+    useEffect(() => {
+
+        fetch(`http://localhost:5110/user/title/${username}`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("authToken")}`
+            },
+        }).then(async (res) => {
+            if (!res.ok){
+                const message =  await res.json()
+                throw Error(`${res.status} - ${message.message}`);
+            }
+            return res.json()
+        }).then((res) => {
+            console.log(res)
+            if (res.imageUrl == null) res.imageUrl = "/PersonDefault.png"
+            setUser({...res, imageUrl: res.imageUrl == "/PersonDefault.png" ? "/PersonDefault.png" : `http://localhost:5110/${res.imageUrl}`})
+        }).catch(err => {
+            handleError(err, navigate)
+        })
+
+
+    }, [navigate, username])
 
     function imgHandler() {
         if (ImageFileref.current == null || ImageFileref.current == undefined) return
@@ -66,25 +95,32 @@ export default function ProfilePageComponent({user, setUser} : HeaderProps){
 
     return (
         <section className="ProfilePageComponent">
-            <img src="/deleteProfilePic.png" alt="" id="DeleteProfilePicProfile" onClick={() => {DeleteProfilePicHandler()}}/>
+            
+            {user.id == currentUser.id && <img src="/deleteProfilePic.png" alt="" id="DeleteProfilePicProfile" onClick={() => {DeleteProfilePicHandler()}}/> }
             {deleteButtonClicked && 
                 <DeleteConfirmation setDeleteButtonClicked={setDeleteButtonClicked} deleteHandler={DeleteAccount} DELETEWritten={DELETEWritten} setDELETEWritten={setDELETEWritten} />
             }
 
-            <aside className="ProfilePageAccountManagment">
-                <h2>Account Managment</h2>
+            <aside className={user.id == currentUser.id ? "ProfilePageAccountManagment" : "ProfilePageAccountManagmentReadOnly"}>
+                {user.id == currentUser.id && <h2>My Account</h2> }
 
-                <img onClick={() => {imgHandler()}}   src={user.imageUrl} className={"ProfilePageComponentImage"} alt="" />
+                {user.id !== currentUser.id && <h2>{user.name}'s Account</h2> }
+                <img onClick={() => {if (user.id == currentUser.id) imgHandler()}}   src={user.imageUrl} className={user.id == currentUser.id ? "ProfilePageComponentImage" : "ProfilePageComponentImageReadOnly"} alt="" />
+
+                {user.id !== currentUser.id && <p className="ProfilePageComponentGreetingReadOnly">{user.name}s' profile overview and activity.</p>}
 
                 <input ref={ImageFileref} type="file" className="ProfilePageComponentImageFile" />
 
-                <p className="ProfilePageComponentGreeting">Hello, {user.name || user.email}!</p>
-                <form className="ProfilePageComponentForm" action="" method="post">
-                    <label className="ProfilePageComponentLabelPassword">New Password</label>
-                    <input type="password" placeholder={"*".repeat(8)} className="ProfilePageComponentPassword"/>
-            
-                    <button type="submit" className="ProfilePageComponentButton">Change Password</button>
-                </form>
+                {user.id === currentUser.id && <p className="ProfilePageComponentGreeting">Hello, {user.name || user.email}!</p> }
+
+                {user.id == currentUser.id &&
+                    <form className="ProfilePageComponentForm" action="" method="post">
+                        <label className="ProfilePageComponentLabelPassword">New Password</label>
+                        <input type="password" placeholder={"*".repeat(8)} className="ProfilePageComponentPassword"/>
+                
+                        <button type="submit" className="ProfilePageComponentButton">Change Password</button>
+                    </form>
+                }
             
             
             </aside>
@@ -132,14 +168,25 @@ export default function ProfilePageComponent({user, setUser} : HeaderProps){
 
             </main>
 
-            <aside className="ProfilePageAccountSettings">
-                <h2>Account Settings</h2>
-                <section className="ProfilePageAccountSettingsSection">
-                    <Link id="ProfilePageLinkEdit" to="/profile/edit" className="ProfilePageLink">Edit Profile</Link>
-                    <button id="ProfilePageLinkDelete" onClick={() => {setDeleteButtonClicked(true)}} className="ProfilePageLink">Delete Account</button>
-                </section>
-            </aside>
+            {currentUser.id == user.id &&             
+                <aside className="ProfilePageAccountSettings">
+                    <h2>Account Settings</h2>
+                    <section className="ProfilePageAccountSettingsSection">
+                        <Link id="ProfilePageLinkEdit" to="/profile/edit" className="ProfilePageLink">Edit Profile</Link>
+                        <button id="ProfilePageLinkDelete" onClick={() => {setDeleteButtonClicked(true)}} className="ProfilePageLink">Delete Account</button>
+                    </section>
+                </aside>
+            }
 
+            {currentUser.id !== user.id && 
+                <aside className="ProfilePageAccountSettingsReadOnly"> 
+                    <h2>See More About {user.name}</h2>
+                    <section className="ProfilePageAccountSettingsSectionReadOnly">
+                        <Link to={`/${user.name}/postedBlogs?page=1`} className="ProfilePageLinkReadOnly">See Posted Blogs</Link>
+                        <Link to={`/${user.name}/likedBlogs?page=1`} className="ProfilePageLinkReadOnly">See Liked Blogs</Link>
+                    </section>
+                </aside>
+            }
 
         </section>
     )
