@@ -12,6 +12,7 @@
     justify-self: center;
     color: white;
     box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+    position: relative;
 
     h1{
         margin-bottom: 0em;
@@ -157,4 +158,10 @@
     margin-bottom: 0em;
     position: relative;
     font-weight: 500;
+}
+
+
+.ShowCommentsNoComments{
+   font-size: 1.5em;
+   font-weight: 600;
 }

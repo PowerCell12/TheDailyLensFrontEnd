@@ -124,6 +124,13 @@ export default function Header() {
                                         <span>&gt;</span>
                                     </Link>
 
+                                    <Link to={`/${user.name}/postedComments?page=1`} className="sub-menu-link">
+                                        <img src="/comments.png" alt="" />
+                                        <p>See Your Posted Comments</p>
+                                        <span>&gt;</span>
+                                    </Link>
+
+
                                     <Link to="/createBlog" className="sub-menu-link">
                                         <img src="/CreateBlog.png" alt="" />
                                         <p>Create a new blog</p>

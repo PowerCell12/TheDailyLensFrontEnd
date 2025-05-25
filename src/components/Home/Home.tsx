@@ -4,14 +4,40 @@ import { BlogInfo } from "../../interfaces/BlogInfo"
 import handleError from "../../utils/handleError"
 import DateFormatter from "../../utils/dateUtils"
 import getHTMLElements from "../../utils/htmlUtils"
+import { useAuth } from "../../contexts/useAuth"
 
 
 export default function Home(){
     const navigate = useNavigate()
+    const [isSubscribed, setIsSubscribed] = useState(false)
     const [latestBlogs, setLatestBlogs] = useState<BlogInfo[]>([])
     const [topBlogs, setTopBlogs] = useState<BlogInfo[]>([])
     const [readAllClicked, setReadAllClicked] = useState(false)
     const searchRef = useRef<HTMLInputElement>(null)
+
+    const { user } = useAuth();
+
+    useEffect(() => {
+        if (!user.email) return
+
+        fetch(`http://localhost:5110/SMTP/isSubscribed/${user.email}`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("authToken")}`
+            }
+        }).then(async (res) => {
+            if (!res.ok){
+                const message =  await res.json()
+                throw Error(`${res.status} - ${message.message}`);
+            }
+            return res.json()
+        }).then(data => {
+            setIsSubscribed(data)
+        }).catch(err => {
+            handleError(err, navigate)
+        })
+
+    }, [navigate, user.email])
 
     useEffect(() => {
     
@@ -71,6 +97,30 @@ export default function Home(){
 
 
     }, [navigate])
+
+
+    function handleEmailClick(){
+
+        fetch(`http://localhost:5110/SMTP/updateSubscriptionStatus`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("authToken")}`
+            },
+            body: JSON.stringify({isSubscribed: !isSubscribed, email: user.email})
+        }).then(async (res) => {
+            if (!res.ok){
+                const message =  await res.json()
+                throw Error(`${res.status} - ${message.message}`);
+            }
+            return res.json()
+        }).then(() => {
+            setIsSubscribed(!isSubscribed)
+        }).catch(err => {
+            handleError(err, navigate)
+        })
+
+    }
 
 
     return (
@@ -190,11 +240,21 @@ export default function Home(){
                                 )
                             })}
 
-                            <section className="subscribe">
-                                <h4>Subscribe To Read More</h4>
-                                <p>Get notified when we publish something new</p>
-                                <button>Subscribe</button>
-                            </section>
+                            {isSubscribed == false ? (
+                                <section className="subscribe">
+                                    <h4>Subscribe To Read More</h4>
+                                    <p>Get notified when we publish something new.</p>
+                                    <button onClick={() => handleEmailClick()}>Subscribe</button>
+                                </section>
+                            ) : (
+                                <section className="subscribe">
+                                    <h4>Subscribed</h4>
+                                    <p>You're set to receive the latest updates from us.</p>
+                                    <button onClick={() => handleEmailClick()}>Unsubscribe</button>
+                                </section>
+                            )}
+
+
 
                     </article>
                 </section>

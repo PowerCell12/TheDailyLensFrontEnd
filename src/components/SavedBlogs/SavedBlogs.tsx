@@ -1,16 +1,18 @@
 import { useNavigate, useSearchParams } from "react-router-dom"
 import DateFormatter from "../../utils/dateUtils"
 import { BlogInfo } from "../../interfaces/BlogInfo"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import usePagination from "../../hooks/usePagination"
 import PaginationButtons from "../PaginationButtons/PaginationButtons"
+import SortingComponent from "../SortingComponent/SortingComponent"
 
 type SavedBlogsProps = {
     blogs: BlogInfo[],
     title :string,
+    setBlogs: React.Dispatch<React.SetStateAction<BlogInfo[]>>
 }
 
-export default function SavedBlogs({blogs, title}: SavedBlogsProps){
+export default function SavedBlogs({blogs, setBlogs, title}: SavedBlogsProps){
     const [searchParams, setSearchParams] = useSearchParams();
     const search_query2 = searchParams.get("page")
 
@@ -18,14 +20,31 @@ export default function SavedBlogs({blogs, title}: SavedBlogsProps){
     const ItemsPerPage = 4; // 6
     const { currentPage, totalPages, CanGoNext, CanGoPrev,  goNext, goPrev, goToPage, paginatedData} = usePagination({data: blogs,  itemsPerPage: ItemsPerPage, initialPage: Number(page), setSearchParams})
   
+    const sortingRef = useRef<HTMLDivElement>(null);
+    const [show, setShow] = useState(false);
+
     const navigate = useNavigate()
+
+
+    useEffect(() => {
+        const sortHandle = (e) => {
+            if (sortingRef.current && !sortingRef.current.contains(e.target as Node)) {
+                setShow(false);
+            }   
+        }
+
+        document.addEventListener("mousedown", sortHandle)
+        return () => {document.removeEventListener("mousedown", sortHandle)}
+
+    }, [])
 
     useEffect(() => {
         setPage(searchParams.get("page"));
     }, [searchParams]);
 
-    console.log(totalPages)
     
+    console.log(totalPages)
+
     return(
             <>
                 {((Number(page) < 1 || Number(page) > totalPages) && totalPages !== 0) && (
@@ -40,6 +59,8 @@ export default function SavedBlogs({blogs, title}: SavedBlogsProps){
     
                 
                 <section className={(totalPages > 0 && (Number(page) >= 1 && Number(page) <= totalPages)) ? "PostedBlogs" : undefined}>
+                    {totalPages > 0 && <SortingComponent text={"Blogs"} setShow={setShow} show={show} sortingRef={sortingRef} setData={setBlogs}   />}
+                 
                     {paginatedData.map((blog: BlogInfo) => {
                         return(
                             <section key={blog.id} className="BlogCard" onClick={() => {navigate(`/blog/${blog.id}`)}}>

@@ -6,6 +6,7 @@ import handleError from "../../utils/handleError";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/useAuth";
 import { CommentProps } from "../../interfaces/Comment";
+import DeleteConfirmation from "../DeleteConfirmation/DeleteConfirmation";
 
 
 
@@ -23,10 +24,11 @@ export default function Comment({
     const dropDownRef = useRef<HTMLDivElement | null>(null);
     const [isLiked, setIsLiked] = useState(user.likedComments.includes(id));
     const [isDisliked, setIsDisliked] = useState(user.dislikedComments.includes(id));
+    const [deleteButtonClicked, setDeleteButtonClicked] = useState(false)
+    const [DELETEWritten, setDELETEWritten] = useState(false)
     const navigate = useNavigate();
 
     const replyProps =  { user, setBlogData, blogData, setIsEditing, setIsReplaying, setCommentId, replyingToReply, setReplyingToReply };
-
 
     useEffect(() => {
         setIsLiked(user.likedComments.includes(id));
@@ -152,13 +154,17 @@ export default function Comment({
 
     return (
         <section className={parentCommentId == null ? `CommentSection` : `RepliedCommentSection`}>
+            {deleteButtonClicked && 
+                <DeleteConfirmation setDeleteButtonClicked={setDeleteButtonClicked} deleteHandler={removeCommentHandler} DELETEWritten={DELETEWritten} setDELETEWritten={setDELETEWritten} titleWord="Comment" sentence="Are you sure you want to delete this comment?" />
+            }
+            
             <article className="CommentHeaderAccount">
                 <section>
-                    <img src={author?.imageUrl} alt="" />           
+                    <img onClick={() => {navigate(`/profile/${author.name}`)}} src={author?.imageUrl} alt="" />           
 
                     <article className="CommentHeader">
                         <span>{DateFormatter(createdAt)}</span>
-                        <h1>{author?.name}</h1>
+                        <h1 onClick={() => {navigate(`/profile/${author.name}`)}}>{author?.name}</h1>
                     </article>            
                 </section>
 
@@ -168,7 +174,7 @@ export default function Comment({
                         {isOpen && (
                                 <div  className="EditRemoveCommentButtons">
                                     <button onClick={() => {setIsEditing(true); setIsReplaying(false); setCommentId(id); setIsOpen(false); setNeedsTitleOrEditorData(false)}} className="EditCommentButton">Edit</button>
-                                    <button onClick={() => {removeCommentHandler()}} className="RemoveCommentButton">Remove</button>
+                                    <button onClick={() => {setDeleteButtonClicked(true)}} className="RemoveCommentButton">Remove</button>
                                 </div>
                         )}
 
@@ -179,7 +185,14 @@ export default function Comment({
 
             <article className="CommentContent">
 
-                <h3>{title}</h3>
+                {parentCommentId != null && (
+
+                    <h3 className="RepliedTo" onClick={() => {navigate(`/profile/${title.split(" ")[0].replace("@", "")}`)}}>{title}</h3>
+                )}
+
+                {parentCommentId == null && (
+                    <h3>{title}</h3>
+                )}
 
                 <p dangerouslySetInnerHTML={{__html: content}}></p>
 

@@ -40,7 +40,7 @@ export default function LikedBlogs(){
 
 
     return (
-        <SavedBlogs blogs={blogs} title="Liked" />
+        <SavedBlogs blogs={blogs} title="Liked" setBlogs={setBlogs} />
     )
 
 

@@ -8,7 +8,7 @@
     max-width: 40em;
     box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
     padding-bottom: 2.5em;
-
+    width: 50em;
 
     h1{
         font-size: 1.5em;
@@ -17,6 +17,7 @@
         margin-bottom: 0em;
         text-align: center;
         border-bottom: 1px solid #000;
+        width: 100%;
     }
 
     p{
@@ -66,7 +67,7 @@
 
     #EditProfileDeleteAccountClose{
         position: absolute;
-        top: 30%;
+        top: 29.8%;
         right: 34.5%;
         cursor: pointer;
         color: black;

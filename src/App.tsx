@@ -16,6 +16,7 @@ import PostedBlogs from "./components/PostedBlogs/PostedBlogs.tsx"
 import EditBlog from "./components/EditBlog/EditBlog.tsx"
 import LikedBlogs from "./components/LikedBlogs/LikedBlogs.tsx"
 import SearchComponent from "./components/SearchComponent/SearchComponent.tsx"
+import { PostedComments } from "./components/PostedComments/PostedComments.tsx"
 
 
 function App(){
@@ -33,6 +34,7 @@ function App(){
 
           <Route  element={<RouteGuard />}>
             <Route path="/profile/:username" element={<ProfilePageComponent />}/>
+            <Route path="/:username/postedComments" element={<PostedComments /> } />  {/* HERE */}
             <Route path="/profile/edit" element={<EditProfile />}/>
             <Route path="/createBlog" element={<CreateBlog />}/>
             <Route path="/blog/:id/comments" element={<ShowComments />}/>

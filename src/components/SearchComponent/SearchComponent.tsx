@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import handleError from "../../utils/handleError";
 import { SearchUser } from "../../interfaces/SearchUser";
@@ -6,6 +6,7 @@ import { SearchBlog } from "../../interfaces/SearchBlog";
 import DateFormatter from "../../utils/dateUtils";
 import usePagination from "../../hooks/usePagination";
 import PaginationButtons from "../PaginationButtons/PaginationButtons";
+import SortingComponent from "../SortingComponent/SortingComponent";
 
 
 export default function SearchComponent(){
@@ -19,8 +20,25 @@ export default function SearchComponent(){
     const ItemsPerPage = 6;
 
     const [results, setResults] = useState<(SearchUser | SearchBlog)[]>([]);
+    const [show, setShow] = useState(false);
     const { currentPage, totalPages, CanGoNext, CanGoPrev,  goNext, goPrev, goToPage, paginatedData} = usePagination({data: results,  itemsPerPage: ItemsPerPage, initialPage: Number(page), setSearchParams})
+    
+    const sortingRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate()
+
+
+
+    useEffect(() => {
+        const sortHandle = (e) => {
+            if (sortingRef.current && !sortingRef.current.contains(e.target as Node)) {
+                setShow(false);
+            }   
+        }
+
+        document.addEventListener("mousedown", sortHandle)
+        return () => {document.removeEventListener("mousedown", sortHandle)}
+
+    }, [])
 
 
     useEffect(() => {
@@ -59,6 +77,8 @@ export default function SearchComponent(){
 
     return (
         <section className="SearchComponent">
+            {totalPages > 0 &&  <SortingComponent setData={setResults} text="Results" setShow={setShow} show={show} sortingRef={sortingRef} /> }
+
             <div className="searchBar searchBar2">
                 <input type="text" placeholder="Search" value={search || ""} onChange={(e) => {setSearch(e.target.value);
                     setSearchParams(params => {

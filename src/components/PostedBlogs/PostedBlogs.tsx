@@ -37,7 +37,7 @@ export default function PostedBlogs() {
 
 
     return(
-        <SavedBlogs blogs={blogs} title={"Posted"}/>
+        <SavedBlogs blogs={blogs} title={"Posted"} setBlogs={setBlogs}/>
     )
 
 }

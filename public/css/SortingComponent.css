@@ -1,0 +1,50 @@
+.SortingComponentContainerSort{
+    position: absolute;
+    top: 2.5em;
+    right: 2em;
+    z-index: 2;
+
+
+    img{
+        width: 2.2em;
+        cursor: pointer;
+        transition: all .4s ease-in-out;
+    }
+
+    img:hover{
+        transform: scale(1.1);
+    }
+
+
+    .SortingComponent{
+        margin-top: .5em;
+        min-width: 4.4em;
+        display: flex;
+        flex-direction: column;
+        gap: .5em;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background-color: #e1e5f2;
+        padding: 1em;
+        border-radius: .4em;
+        color: black;
+        box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+
+        button{
+            border: none;
+            padding: .5em;
+            border-radius: .6em;
+            cursor: pointer;
+            background-color: white;
+            transition: all .4s ease-in-out;
+        }
+
+        button:hover{
+            transform: scale(1.05);
+        }
+
+    }
+
+}
+

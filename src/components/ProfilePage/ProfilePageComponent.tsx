@@ -98,7 +98,7 @@ export default function ProfilePageComponent(){
             
             {user.id == currentUser.id && <img src="/deleteProfilePic.png" alt="" id="DeleteProfilePicProfile" onClick={() => {DeleteProfilePicHandler()}}/> }
             {deleteButtonClicked && 
-                <DeleteConfirmation setDeleteButtonClicked={setDeleteButtonClicked} deleteHandler={DeleteAccount} DELETEWritten={DELETEWritten} setDELETEWritten={setDELETEWritten} />
+                <DeleteConfirmation setDeleteButtonClicked={setDeleteButtonClicked} deleteHandler={DeleteAccount} DELETEWritten={DELETEWritten} setDELETEWritten={setDELETEWritten} titleWord="Account" sentence="Deleting your account will remove all of your information! This action cannot be undone!" />
             }
 
             <aside className={user.id == currentUser.id ? "ProfilePageAccountManagment" : "ProfilePageAccountManagmentReadOnly"}>
@@ -184,6 +184,7 @@ export default function ProfilePageComponent(){
                     <section className="ProfilePageAccountSettingsSectionReadOnly">
                         <Link to={`/${user.name}/postedBlogs?page=1`} className="ProfilePageLinkReadOnly">See Posted Blogs</Link>
                         <Link to={`/${user.name}/likedBlogs?page=1`} className="ProfilePageLinkReadOnly">See Liked Blogs</Link>
+                        <Link to={`/${user.name}/postedComments?page=1`} className="ProfilePageLinkReadOnly">See Posted Comments</Link>
                     </section>
                 </aside>
             }

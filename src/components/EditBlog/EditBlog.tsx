@@ -18,6 +18,8 @@ export default function EditBlog(){
 
 
     useEffect(() => {
+            if (user.id === "0"){ return }
+
             fetch(`http://localhost:5110/blog/${id}`, {
                 method: "GET",
                 headers: {

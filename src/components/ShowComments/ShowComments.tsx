@@ -4,6 +4,7 @@ import handleError from "../../utils/handleError"
 import { CommentBlog } from "../../interfaces/BlogInfo"
 import ReactQuill from "react-quill"
 import Comment from "../Comment/Comment"
+import SortingComponent from "../SortingComponent/SortingComponent"
 
 
 export default function ShowComments(){
@@ -18,9 +19,25 @@ export default function ShowComments(){
     const [oldData, setOldData] = useState({content: "", title: ""})
     const [replyingToReply, setReplyingToReply] = useState(false); // wHAT
     const [needsTitleOrEditorData, setNeedsTitleOrEditorData] = useState(false)
+    const [show, setShow] = useState(false)
+    const sortingRef = useRef<HTMLDivElement>(null); // Ref for sorting component
     const quillRef = useRef<ReactQuill | null>(null);
 
     const commentProps = { setBlogData, blogData, setIsEditing, setIsReplaying, commentId, setCommentId, replyingToReply, setReplyingToReply };
+
+    useEffect(() => {
+
+        const sortHandle = (e) => {
+            if (sortingRef.current && !sortingRef.current.contains(e.target as Node)) {
+                setShow(false);
+            }   
+        }
+
+        document.addEventListener("mousedown", sortHandle)
+        return () => {document.removeEventListener("mousedown", sortHandle)}
+
+    }, [])
+
 
     useEffect(() => {
            window.scrollTo(0, 0);
@@ -262,6 +279,9 @@ export default function ShowComments(){
     return (
  
         <section className="ShowCommentsMainContainer">
+            {(blogData && blogData?.length > 0) && <SortingComponent sortingRef={sortingRef} setShow={setShow} show={show} setData={setBlogData} text={"Comments"} />}
+
+
             <h1>{blogData?.length} Comments</h1>
 
             <section className="ShowCommentsButtons">
@@ -303,6 +323,7 @@ export default function ShowComments(){
 
 
             <section className="ShowCommentsActuallyComments">
+                {blogData?.length == 0 && <p className="ShowCommentsNoComments">No comments yet!</p>}
 
                 {blogData?.map((comment) => {
                     if (comment.parentCommentId != null) return null

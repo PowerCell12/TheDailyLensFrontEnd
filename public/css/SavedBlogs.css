@@ -24,6 +24,7 @@
     border-radius: .5em;
     box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
     padding-bottom: 4em;
+    position: relative;
 }
 
 .BlogCard{

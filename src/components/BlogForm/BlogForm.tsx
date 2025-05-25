@@ -18,10 +18,50 @@ export default function BlogForm({editorData, title, setTitle, thumbnail, setThu
     const [previewThumbnail, setPreviewThumbnail] = useState(false); // a boolean for previewing the thumbnail
     const [tagsCount, setTagsCount] = useState(4); // a counter for the tags
     const [overTagCount, setOverTagCount] = useState(false); // a boolean for the tag count
+    const [allTags, setAlLTags] = useState<string[]>([]);
+    const [allTagsUse, setAllTagsUse] = useState<string[]>([]);
+    const [showTagList, setShowTagList] = useState(true);
     const tagInputRef = useRef<HTMLInputElement>(null);
+    const tagListRef = useRef<HTMLUListElement>(null);
     const ThumbnailInputRef = useRef<HTMLInputElement>(null);
     const navigate = useNavigate();
     const quillRef = useRef<ReactQuill | null>(null);
+
+    useEffect(() => {
+
+        function handleKeyDown(e: MouseEvent) {
+            if (
+            tagInputRef.current &&
+            !tagInputRef.current.contains(e.target as Node) &&
+            tagListRef.current &&
+            !tagListRef.current.contains(e.target as Node)
+            ) {
+                setShowTagList(false);
+            }
+
+        }
+
+          document.addEventListener("mousedown", handleKeyDown);
+          return () => {
+            document.removeEventListener("mousedown", handleKeyDown);
+          };
+
+    }, [])
+
+
+    useEffect(() => {
+
+        fetch("http://localhost:5110/blog/tags")
+        .then(res => res.json())
+        .then(data => {
+            setAlLTags(data["$values"])
+            setAllTagsUse(data["$values"])
+        })
+        .catch(err => {
+            handleError(err, navigate)
+        })
+
+    }, [])
 
     useEffect(() => {
         setTagsCount(4 - tags.length);
@@ -101,6 +141,15 @@ export default function BlogForm({editorData, title, setTitle, thumbnail, setThu
             e.preventDefault();
             e.stopPropagation();
 
+            setShowTagList(true)
+            setAllTagsUse([])
+
+
+            if (tags.includes(tagInputRef.current?.value)){
+                tagInputRef.current!.value = "";
+                return;
+            }
+
             if (tagInputRef.current?.value === ""){
                 setOverTagCount(false);
                 return;
@@ -116,7 +165,6 @@ export default function BlogForm({editorData, title, setTitle, thumbnail, setThu
                 setOverTagCount(true);
                 return;
             }
-
 
             setTagsCount(prev => prev - (tagInput?.length ?? 0));
             tagInputRef.current!.value = "";
@@ -229,6 +277,45 @@ export default function BlogForm({editorData, title, setTitle, thumbnail, setThu
         setOverTagCount(false);
     }
 
+    function changeAllTagsHandler(){
+        if (!showTagList){
+            setShowTagList(true)
+        }
+
+        setAllTagsUse(allTags.filter(tag => tagInputRef.current?.value.trim().toLowerCase() ? tag.includes(tagInputRef.current.value.trim().toLowerCase()) : true).slice(0, 6));
+    }
+
+
+    function handleListClick(tag: string){
+        setShowTagList(false)
+        setAllTagsUse([])
+
+        if (tag === ""){
+            setOverTagCount(false);
+            return;
+        }
+
+        const tagInput = tag.split(",")
+        .map(tag => tag.trim())
+        .filter(tag => tag !== "")
+        .map(tag => tag.toLowerCase())
+        .filter((tag, index, self) => self.indexOf(tag) === index);
+
+        if (tagsCount - (tagInput?.length ?? 0) < 0){
+            setOverTagCount(true);
+            return;
+        }
+
+
+        setTagsCount(prev => prev - (tagInput?.length ?? 0));
+        tagInputRef.current!.value = "";
+        setOverTagCount(false);
+        // @ts-expect-error doesn't matter
+        setTags(prev => [...prev, ...(tagInput ?? [])]);
+    }
+
+
+
     return (
          <form className="CreateBlogForm" onSubmit={createBlogComponent}>
                 <article>
@@ -270,7 +357,7 @@ export default function BlogForm({editorData, title, setTitle, thumbnail, setThu
 
 
                 <section className='BlogTagsBlogForm'>
-                    <ul id='tag-list'></ul>
+                    
                     <header className='BlogTagsHeader'>
                         <img src="/tags.png" alt="" />
                         <h4>Tags</h4>
@@ -282,10 +369,11 @@ export default function BlogForm({editorData, title, setTitle, thumbnail, setThu
                         {tags.map((tag, index) => (
                             <div key={index} className={"BlogTagsBlogFormDiv"}>
                                 <p title={tag}>{tag}</p>
-                                <i onClick={() => {removeTag(tag)}} className="fa-solid fa-xmark fa-lg BlogTagRemove"></i>
+                                <i onClick={() => {removeTag(tag); setAllTagsUse([])}} className="fa-solid fa-xmark fa-lg BlogTagRemove"></i>
                             </div>
                         ))}
-                        <input onKeyDown={handleTagInput}  ref={tagInputRef} type="text" id='tag-input' placeholder='Add a tag' />
+                        <input onChange={changeAllTagsHandler} onKeyDown={handleTagInput}  ref={tagInputRef} type="text" id='tag-input' placeholder='Add a tag' />
+                
                     </section>
                     <section className='BlogTagsButtons'>
                         <span>{tagsCount} tags are remaining</span>
@@ -294,6 +382,19 @@ export default function BlogForm({editorData, title, setTitle, thumbnail, setThu
                     {overTagCount && (
                         <p className='BlogTagsError'>You have gone over the tag limit, remove some tags (max 4)</p>
                     )}
+
+
+                     {(tagInputRef.current?.value !== ""  && allTagsUse.length !== 0 && showTagList === true) && (
+                        <ul ref={tagListRef} id='tag-list'>
+
+                            {allTagsUse
+                                .map((tag) => {
+                                    return <li className='tag-list-item' onClick={() => {handleListClick(tag)}}  key={tag}>{tag}</li>
+                            })}
+
+                        </ul>
+                    )}
+
                 </section>
 
 

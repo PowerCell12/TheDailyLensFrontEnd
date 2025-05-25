@@ -17,3 +17,17 @@ export interface CommentProps {
     setNeedsTitleOrEditorData: React.Dispatch<React.SetStateAction<boolean>>;
     parentCommentId: number
 }
+
+
+export interface PostedCommentsInterface{
+    id: number;
+    title: string;
+    createdAt: string;
+    content: string;
+    likes: number;
+    dislikes: number;
+    isLiked: boolean,
+    isDisliked: boolean;
+    blogId: number;
+    show: boolean;
+}

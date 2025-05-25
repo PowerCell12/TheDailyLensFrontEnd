@@ -42,6 +42,10 @@
         align-items: center;
         gap: 1.2em;
 
+        img{
+            cursor: pointer;
+        }
+
         a{
             font-size: .90em;
             font-style: italic;

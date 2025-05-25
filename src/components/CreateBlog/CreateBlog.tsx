@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import handleError from '../../utils/handleError';
 import BlogForm from '../BlogForm/BlogForm';
-
-
+import { useAuth } from '../../contexts/useAuth';
+import { stripHtml  } from '../../utils/htmlUtils';
 
 export default function CreateBlog() {
     const [editorData, setEditorData] = useState('');
@@ -13,8 +13,8 @@ export default function CreateBlog() {
     const [tags, setTags] = useState<string[]>([]); // an array for the tags
 
     const navigate = useNavigate();
+    const { user } = useAuth();
     
-
 
     function createBlogPost(pathImage: string, cleaned: string){
         fetch("http://localhost:5110/blog", {
@@ -24,7 +24,40 @@ export default function CreateBlog() {
                 "Authorization": `Bearer ${localStorage.getItem("authToken")}`
             },
             body: JSON.stringify({title, thumbnail: pathImage, content: cleaned, tags: tags})
-        }).then(() => {
+        }).then((data) => {
+            if (!data.ok){
+                throw Error(`${data.status} - ${data.statusText}`);
+            }
+            return data.json()
+        }).then(data => {
+
+            fetch(`http://localhost:5110/SMTP/sendEmail`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("authToken")}`
+                },
+                body: JSON.stringify({subject: `${user.name} Just Published a New Blog: "${title}"`, body: `
+                        <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6; padding: 10px;font-size: 1.35em;">
+                        <p>Hey there,</p>
+
+                        <p><strong>${user.name}</strong> has just shared something new!</p>
+
+                        <p style="font-style: italic; color: #555;">
+                            “${stripHtml(cleaned).slice(0, 200)}...”
+                        </p>
+
+                        <p>
+                            👉 <a href="http://localhost:5173/blog/${data}" style="color: #1a73e8; text-decoration: none;">
+                            Read the full post here
+                            </a>
+                        </p>
+
+                        <p>Enjoy reading!<br/>— The Team</p>
+                        </div>
+                `, currentEmail: user.email})
+            })
+
             navigate("/")
         }).catch(err => {
             handleError(err, navigate)

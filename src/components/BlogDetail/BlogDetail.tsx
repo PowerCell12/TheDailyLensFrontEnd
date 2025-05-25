@@ -114,7 +114,7 @@ export default function BlogDetail(){
         <>
             <section className="BlogDetailMain">
                 {deleteButtonClicked && (
-                    <DeleteConfirmation setDeleteButtonClicked={setDeleteButtonClicked} deleteHandler={deleteBlogHandler} DELETEWritten={DELETEWritten} setDELETEWritten={setDELETEWritten} />
+                    <DeleteConfirmation setDeleteButtonClicked={setDeleteButtonClicked} deleteHandler={deleteBlogHandler} DELETEWritten={DELETEWritten} setDELETEWritten={setDELETEWritten} titleWord="Blog" sentence="Are you sure you want to delete this blog? This action cannot be undone." />
                 )}
 
                 <img className="BlogDetailThumbnail" src={blogData?.thumbnail? blogData.thumbnail : "/BlogThumbnailDefault.png"} alt="" />
@@ -135,7 +135,7 @@ export default function BlogDetail(){
 
                 <section className="BlogDetailUserInfo">
                     <article className="BlogDetailUser1">
-                        <img className="BlogDetailUserImage" src={(blogData?.userImageUrl && blogData.userImageUrl !== "/PersonDefault.png" ) ? `http://localhost:5110/${blogData.userImageUrl}` : "/PersonDefault.png"} alt="" />
+                        <img onClick={() => navigate(`/profile/${blogData?.userName}`)} className="BlogDetailUserImage" src={(blogData?.userImageUrl && blogData.userImageUrl !== "/PersonDefault.png" ) ? `http://localhost:5110/${blogData.userImageUrl}` : "/PersonDefault.png"} alt="" />
                         <Link to={`/profile/${blogData?.userName}`} className="BlogDetailUserName">{blogData?.userName}</Link>
                     </article>
 
