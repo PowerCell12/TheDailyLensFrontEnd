@@ -17,6 +17,7 @@ import EditBlog from "./components/EditBlog/EditBlog.tsx"
 import LikedBlogs from "./components/LikedBlogs/LikedBlogs.tsx"
 import SearchComponent from "./components/SearchComponent/SearchComponent.tsx"
 import { PostedComments } from "./components/PostedComments/PostedComments.tsx"
+import AdminDashboard from "./components/AdminDashboard/AdminDashboard.tsx"
 
 
 function App(){
@@ -41,6 +42,7 @@ function App(){
             <Route path="/:username/postedBlogs" element={<PostedBlogs /> }/>
             <Route path="/blog/:id/edit" element={<EditBlog />}/>
             <Route path="/:username/likedBlogs" element={<LikedBlogs />} />
+            <Route path="/admin" element={<AdminDashboard />} />
           </Route>
  
           <Route element={<GuestGuard />}>

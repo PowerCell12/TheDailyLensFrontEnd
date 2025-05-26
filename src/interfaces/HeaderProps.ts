@@ -1,9 +1,9 @@
 export interface HeaderProps {
-    user: { name: string; email: string, accountType: string, imageUrl: string, bio: string, country: string, fullName: string, id: string, likedComments: number[], dislikedComments: number[], likedBlogs: number[] };
+    user: { name: string; email: string, accountType: number, imageUrl: string, bio: string, country: string, fullName: string, id: string, likedComments: number[], dislikedComments: number[], likedBlogs: number[] };
     setUser: React.Dispatch<React.SetStateAction<{
         name: string;
         email: string;
-        accountType: string;
+        accountType: number;
         imageUrl: string;
         bio: string;
         country: string;
