@@ -31,6 +31,7 @@
 * Article detail pages with full content
 * Sending emails for subscribed users
 * Infinite scroll or pagination for article lists
+* Admin panel at path /admin
 
 ---
 
@@ -127,6 +128,7 @@ Below is a high-level overview of key components:
             <Route path="/:username/postedBlogs" element={<PostedBlogs /> }/>
             <Route path="/blog/:id/edit" element={<EditBlog />}/>
             <Route path="/:username/likedBlogs" element={<LikedBlogs />} />
+            <Route path="/admin" element={<AdminDashboard />} />
           </Route>
  
           <Route element={<GuestGuard />}>
