@@ -2,11 +2,12 @@ import { useNavigate, useParams } from "react-router-dom";
 import BlogForm from "../BlogForm/BlogForm";
 import { useEffect, useState } from "react";
 import handleError from "../../utils/handleError";
-import { useAuth } from "../../contexts/useAuth";
+import { HeaderProps } from "../../interfaces/HeaderProps";
+import { defaultUser } from "../../utils/AuthUtils";
 
 
 export default function EditBlog(){
-    const { user } = useAuth();
+    const [user, setUser] = useState<HeaderProps["user"]>(defaultUser)
     const [editorData, setEditorData] = useState();
     const [title, setTitle] = useState(""); 
     const [thumbnail, setThumbnail] = useState<File | null>(null); // actually file 
@@ -15,6 +16,44 @@ export default function EditBlog(){
     const { id } = useParams()
 
     const navigate = useNavigate();
+
+
+    useEffect(() => {    
+            if (id == null) return;
+
+
+            fetch(`http://localhost:5110/user/getUserInfoByByBlogId`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem("authToken")}`
+                    },
+                    body: JSON.stringify(Number(id))
+                }
+            ).then(async (result) => {
+                if (!result.ok){
+                    const message =  await result.json()
+                    throw Error(`${result.status} - ${message.message}`);
+                }
+
+                return result.json()
+            }).then(data => {
+                if (data.name == user.name && data.email == user.email){
+                    return;
+                }
+
+                let imageUrl = "";
+                if (data.imageUrl == "/PersonDefault.png" || data.imageUrl == null || data.imageUrl == undefined || data.imageUrl == ""){
+                imageUrl = "/PersonDefault.png"
+                }else imageUrl = `http://localhost:5110/${data.imageUrl}`
+
+                setUser({name: data.name, email: data.email, accountType: data.accountType, country: data.country, fullName: data.fullName, imageUrl:  imageUrl, bio: data.bio, id: data.id, likedComments: data.likedComments["$values"], dislikedComments: data.dislikedComments["$values"], likedBlogs: data.likedBlogs["$values"]});
+            }).catch(err =>  {
+            handleError(err, navigate)
+            }) 
+    }, [user, navigate, id]);
+
 
 
     useEffect(() => {

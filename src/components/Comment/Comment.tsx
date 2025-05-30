@@ -168,7 +168,7 @@ export default function Comment({
                     </article>            
                 </section>
 
-                {authorId === user.id && (
+                {(authorId === user.id || user.accountType === 1) && (
                     <article className="EditRemoveCommentSection" ref={dropDownRef}>
                         <img onClick={(e) => {e.stopPropagation(); setIsOpen(!isOpen) }} className="dropDownButton" src="/dots-settings.png" alt="" />
                         {isOpen && (

@@ -1,12 +1,13 @@
 import {  useEffect, useMemo, useRef, useState } from "react"
-import {  useNavigate } from "react-router-dom"
+import {  useNavigate, useParams } from "react-router-dom"
 import { Countries, UserValidations } from "../../utils/UserUtils"
 import handleError from "../../utils/handleError"
-import { useAuth } from "../../contexts/useAuth"
+import { HeaderProps } from "../../interfaces/HeaderProps"
+import { defaultUser } from "../../utils/AuthUtils"
 
 
 export default function EditProfile(){
-    const { user, setUser} = useAuth();
+    const [user, setUser] = useState<HeaderProps["user"]>(defaultUser)
     const ListCountry = useMemo<string[]>(() => {
         return Countries()
     }, [])
@@ -27,6 +28,33 @@ export default function EditProfile(){
     })
     const [Imagefile, setImagefile] = useState<File>()
     const [ImagefileURL, setImagefileURL] = useState<string>("")
+
+    const {username } = useParams()
+
+
+    useEffect(() => {
+    
+            fetch(`http://localhost:5110/user/title/${username}`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("authToken")}`
+                },
+            }).then(async (res) => {
+                if (!res.ok){
+                    const message =  await res.json()
+                    throw Error(`${res.status} - ${message.message}`);
+                }
+                return res.json()
+            }).then((res) => {
+                console.log(res)
+                if (res.imageUrl == null) res.imageUrl = "/PersonDefault.png"
+                setUser({...res, imageUrl: res.imageUrl == "/PersonDefault.png" ? "/PersonDefault.png" : `http://localhost:5110/${res.imageUrl}`})
+            }).catch(err => {
+                handleError(err, navigate)
+            })
+    
+    
+    }, [navigate, username])
 
 
     useEffect(() => {
@@ -79,6 +107,7 @@ export default function EditProfile(){
         if (Imagefile){
             formData.append("file", Imagefile);
             formData.append("frontEndUrl", "EditProfile");
+            formData.append("userId", user.id);
         
             fetch("http://localhost:5110/user/uploadImage", {
                 method: "POST",
@@ -103,8 +132,10 @@ export default function EditProfile(){
             fetch("http://localhost:5110/user/resetProfileImage", {
                 method: "POST",
                 headers: {
-                    "Authorization": `Bearer ${localStorage.getItem("authToken")}`
-                }
+                    "Authorization": `Bearer ${localStorage.getItem("authToken")}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(user.id)
             }).then (async (res) => {
                 if (!res.ok){
                     const message =  await res.json()
@@ -127,6 +158,7 @@ export default function EditProfile(){
                 country: InputDict.country,
                 email: InputDict.email,
                 bio: InputDict.bio,
+                currentName: username
             }),
             headers: {
                 "Content-Type": "application/json",

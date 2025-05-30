@@ -35,8 +35,8 @@ function App(){
 
           <Route  element={<RouteGuard />}>
             <Route path="/profile/:username" element={<ProfilePageComponent />}/>
-            <Route path="/:username/postedComments" element={<PostedComments /> } />  {/* HERE */}
-            <Route path="/profile/edit" element={<EditProfile />}/>
+            <Route path="/:username/postedComments" element={<PostedComments /> } /> 
+            <Route path="/profile/:username/edit" element={<EditProfile />}/>
             <Route path="/createBlog" element={<CreateBlog />}/>
             <Route path="/blog/:id/comments" element={<ShowComments />}/>
             <Route path="/:username/postedBlogs" element={<PostedBlogs /> }/>

@@ -5,17 +5,17 @@ import handleError from "../utils/handleError"
 
 
 
-export default function useUploadingImage(ImageFileref: React.RefObject<HTMLInputElement>, {user, setUser} : HeaderProps, setfromCancel: React.Dispatch<React.SetStateAction<boolean>> = () => {}){
+export function useUploadingImage(ImageFileref: React.RefObject<HTMLInputElement>, {user, setUser} : HeaderProps, setfromCancel: React.Dispatch<React.SetStateAction<boolean>> = () => {}){
     const navigate = useNavigate()
 
 
-
     useEffect(() => {
+        if (user.id === "0") return
         if (ImageFileref.current == null || ImageFileref.current == undefined) return
 
         const ref = ImageFileref.current
 
-        ImageFileref.current.addEventListener("change", () => {
+        function handleFileChange(){
 
             if (ImageFileref.current?.files?.length == 0) return
 
@@ -23,7 +23,7 @@ export default function useUploadingImage(ImageFileref: React.RefObject<HTMLInpu
             if (String(user.imageUrl?.split("/").pop()) === String(ImageFileref.current?.files?.[0]?.name)) {
                 return
             }
-
+ 
             const file = ImageFileref.current?.files?.[0]
 
             const formData = new FormData()
@@ -31,7 +31,8 @@ export default function useUploadingImage(ImageFileref: React.RefObject<HTMLInpu
 
             formData.append("file", file)
             formData.append("frontEndUrl", "ProfilePage/EditProfile")
-            
+            formData.append("userId", user.id)
+
             console.log(file.name)
 
             fetch("http://localhost:5110/user/uploadImage", {
@@ -56,13 +57,13 @@ export default function useUploadingImage(ImageFileref: React.RefObject<HTMLInpu
             .catch(err => {
                 handleError(err, navigate)
             })
-        })
+        }
+
+        ref.addEventListener("change", handleFileChange)
 
         return () => {
-            ref.removeEventListener("change", () => {})
+            ref.removeEventListener("change", handleFileChange)
         }
-    }, [navigate, ImageFileref, user, setUser])
+    }, [navigate, ImageFileref, user.id])
     
-    
-    return undefined
 }

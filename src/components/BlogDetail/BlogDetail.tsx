@@ -109,6 +109,7 @@ export default function BlogDetail(){
 
     }
 
+    console.log(id)
     
     return (
         <>
@@ -119,7 +120,7 @@ export default function BlogDetail(){
 
                 <img className="BlogDetailThumbnail" src={blogData?.thumbnail? blogData.thumbnail : "/BlogThumbnailDefault.png"} alt="" />
 
-                {user.id === blogData?.authorId && (
+                {(user.id === blogData?.authorId || user.accountType === 1) && (
                     <article ref={dropDownRef} className="BlogDetailAdmin">
                         <img className="BlogDetailDots" onClick={(e) => {e.stopPropagation(); setShowAdminOptions(!showAdminOptions)}} src="/dots-settings.png" alt="" />
                     

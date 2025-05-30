@@ -1,6 +1,6 @@
 import { HeaderProps } from "../../interfaces/HeaderProps"
 import { useEffect, useRef, useState } from "react"
-import useUploadingImage from "../../hooks/UploadImage"
+import {useUploadingImage }  from "../../hooks/UploadImage"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import handleError from "../../utils/handleError"
 import DeleteConfirmation from "../DeleteConfirmation/DeleteConfirmation"
@@ -10,7 +10,7 @@ import { useAuth } from "../../contexts/useAuth"
 
 
 export default function ProfilePageComponent(){
-    const { user: currentUser} = useAuth();
+    const {user: currentUser} = useAuth()
     const navigate = useNavigate()
     const [user, setUser] = useState<HeaderProps["user"]>(defaultUser)
     const ImageFileref = useRef<HTMLInputElement>(null)
@@ -19,6 +19,7 @@ export default function ProfilePageComponent(){
     useUploadingImage(ImageFileref, {user, setUser})
 
     const { username } = useParams();
+
 
     useEffect(() => {
 
@@ -55,9 +56,11 @@ export default function ProfilePageComponent(){
             fetch("http://localhost:5110/user/deleteProfile", {
                 method: "DELETE",
                 headers: {
+                    "Content-Type": "application/json",
                     "Authorization": `Bearer ${localStorage.getItem("authToken")}`
-                }}
-            ).then(async (res) => {
+                },
+                body: JSON.stringify(user.id)
+            }).then(async (res) => {
                 if (!res.ok){
                     const message =  await res.json()
                     throw Error(`${res.status} - ${message.message}`);
@@ -75,11 +78,15 @@ export default function ProfilePageComponent(){
         if (user.imageUrl == "/PersonDefault.png") return
 
 
+        const userId = user.id
+
         fetch("http://localhost:5110/user/resetProfileImage", {
             method: "POST",
             headers: {
+                "Content-Type": "application/json",
                 "Authorization": `Bearer ${localStorage.getItem("authToken")}`
-            }
+            },
+            body: JSON.stringify(userId)
         }).then (async (res) => {
             if (!res.ok){
                 const message =  await res.json()
@@ -96,24 +103,24 @@ export default function ProfilePageComponent(){
     return (
         <section className="ProfilePageComponent">
             
-            {user.id == currentUser.id && <img src="/deleteProfilePic.png" alt="" id="DeleteProfilePicProfile" onClick={() => {DeleteProfilePicHandler()}}/> }
+            {(user.id == currentUser.id || currentUser.accountType === 1) && <img src="/deleteProfilePic.png" alt="" id="DeleteProfilePicProfile" onClick={() => {DeleteProfilePicHandler()}}/> }
             {deleteButtonClicked && 
                 <DeleteConfirmation setDeleteButtonClicked={setDeleteButtonClicked} deleteHandler={DeleteAccount} DELETEWritten={DELETEWritten} setDELETEWritten={setDELETEWritten} titleWord="Account" sentence="Deleting your account will remove all of your information! This action cannot be undone!" />
             }
 
-            <aside className={user.id == currentUser.id ? "ProfilePageAccountManagment" : "ProfilePageAccountManagmentReadOnly"}>
-                {user.id == currentUser.id && <h2>My Account</h2> }
+            <aside className={(user.id == currentUser.id || currentUser.accountType === 1) ? "ProfilePageAccountManagment" : "ProfilePageAccountManagmentReadOnly"}>
+                {(user.id == currentUser.id) && <h2>My Account</h2> }
 
                 {user.id !== currentUser.id && <h2>{user.name}'s Account</h2> }
-                <img onClick={() => {if (user.id == currentUser.id) imgHandler()}}   src={user.imageUrl} className={user.id == currentUser.id ? "ProfilePageComponentImage" : "ProfilePageComponentImageReadOnly"} alt="" />
+                <img onClick={() => {if ((user.id == currentUser.id || currentUser.accountType === 1)) imgHandler()}}   src={user.imageUrl} className={(user.id == currentUser.id || currentUser.accountType === 1) ? "ProfilePageComponentImage" : "ProfilePageComponentImageReadOnly"} alt="" />
 
-                {user.id !== currentUser.id && <p className="ProfilePageComponentGreetingReadOnly">{user.name}s' profile overview and activity.</p>}
+                {(user.id !== currentUser.id)  && <p className="ProfilePageComponentGreetingReadOnly">{user.name}s' profile overview and activity.</p>}
 
                 <input ref={ImageFileref} type="file" className="ProfilePageComponentImageFile" />
 
                 {user.id === currentUser.id && <p className="ProfilePageComponentGreeting">Hello, {user.name || user.email}!</p> }
 
-                {user.id == currentUser.id &&
+                {(user.id == currentUser.id || currentUser.accountType === 1) &&
                     <form className="ProfilePageComponentForm" action="" method="post">
                         <label className="ProfilePageComponentLabelPassword">New Password</label>
                         <input type="password" placeholder={"*".repeat(8)} className="ProfilePageComponentPassword"/>
@@ -168,17 +175,17 @@ export default function ProfilePageComponent(){
 
             </main>
 
-            {currentUser.id == user.id &&             
+            {(currentUser.id == user.id || currentUser.accountType === 1) &&             
                 <aside className="ProfilePageAccountSettings">
                     <h2>Account Settings</h2>
                     <section className="ProfilePageAccountSettingsSection">
-                        <Link id="ProfilePageLinkEdit" to="/profile/edit" className="ProfilePageLink">Edit Profile</Link>
+                        <Link id="ProfilePageLinkEdit" to={`/profile/${user.name}/edit`} className="ProfilePageLink">Edit Profile</Link>
                         <button id="ProfilePageLinkDelete" onClick={() => {setDeleteButtonClicked(true)}} className="ProfilePageLink">Delete Account</button>
                     </section>
                 </aside>
             }
 
-            {currentUser.id !== user.id && 
+            {(currentUser.id !== user.id && currentUser.accountType !== 1) && 
                 <aside className="ProfilePageAccountSettingsReadOnly"> 
                     <h2>See More About {user.name}</h2>
                     <section className="ProfilePageAccountSettingsSectionReadOnly">
