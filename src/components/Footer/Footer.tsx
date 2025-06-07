@@ -48,7 +48,7 @@ export default function Footer(){
             <section className="footerBottom">
                 <ul className="footerFinalLinks">
                     <li>The Daily Lens Inc. © {date.getFullYear()}</li>
-                    <li><Link to="/">Privacy and Terms</Link></li>
+                    <li><Link to="/terms-of-service">Privacy and Terms</Link></li>
                 </ul>
 
                 <article className="socials">

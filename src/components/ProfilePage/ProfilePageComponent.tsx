@@ -66,7 +66,9 @@ export default function ProfilePageComponent(){
                     throw Error(`${res.status} - ${message.message}`);
                 }
 
-                localStorage.removeItem("authToken")
+                if (currentUser.id == user.id){
+                    localStorage.removeItem("authToken")
+                }
                 navigate("/")
             }).catch(err => {
                 handleError(err, navigate)
@@ -100,6 +102,7 @@ export default function ProfilePageComponent(){
 
     }
 
+    
     return (
         <section className="ProfilePageComponent">
             
@@ -120,13 +123,8 @@ export default function ProfilePageComponent(){
 
                 {user.id === currentUser.id && <p className="ProfilePageComponentGreeting">Hello, {user.name || user.email}!</p> }
 
-                {(user.id == currentUser.id || currentUser.accountType === 1) &&
-                    <form className="ProfilePageComponentForm" action="" method="post">
-                        <label className="ProfilePageComponentLabelPassword">New Password</label>
-                        <input type="password" placeholder={"*".repeat(8)} className="ProfilePageComponentPassword"/>
-                
-                        <button type="submit" className="ProfilePageComponentButton">Change Password</button>
-                    </form>
+                {(user.id == currentUser.id || currentUser.accountType === 1) &&                
+                    <button type="submit" onClick={() => navigate(`/resetPassword/${user.email}`)} className="ProfilePageComponentButton">Change Password</button>
                 }
             
             
@@ -153,7 +151,7 @@ export default function ProfilePageComponent(){
                 <section className="ProfilePageProfileInformation">
                     <article>
                         <h5>Account Type</h5>
-                        <p>{user.accountType || "Basic User"}</p>
+                        <p>{user.accountType == 0 ? "Basic User" : "Admin"}</p>
                     </article>
 
                     <article>

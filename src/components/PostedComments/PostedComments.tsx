@@ -151,7 +151,11 @@ export function PostedComments(){
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("authToken")}`
             }
-        }).then(() => {
+        }).then(async (data) => {
+            if (!data.ok){
+                const message =  await data.json()
+                throw Error(`${data.status} - ${message.message}`);
+            }
             setResults((prevBlogData: PostedCommentsInterface[]) => prevBlogData.filter(comment => comment.id !== commentId))
             setDELETEWritten(false)
             setDeleteCommentConf(false)

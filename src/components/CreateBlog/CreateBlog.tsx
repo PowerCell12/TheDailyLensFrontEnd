@@ -24,14 +24,15 @@ export default function CreateBlog() {
                 "Authorization": `Bearer ${localStorage.getItem("authToken")}`
             },
             body: JSON.stringify({title, thumbnail: pathImage, content: cleaned, tags: tags})
-        }).then((data) => {
+        }).then(async (data) => {
             if (!data.ok){
-                throw Error(`${data.status} - ${data.statusText}`);
+                const message =  await data.json()
+                throw Error(`${message.status} - ${message.statusText}`);
             }
             return data.json()
         }).then(data => {
 
-            fetch(`http://localhost:5110/SMTP/sendEmail`, {
+            fetch(`http://localhost:5110/SMTP/sendEmail`, { // need a catch for this 
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

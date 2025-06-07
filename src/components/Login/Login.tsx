@@ -27,7 +27,6 @@ export default function Login(){
 
         const validation = CheckEmailAndPassword(errorData, formData); 
 
-
         setErrorData(validation.newErrorData);
         
         if (validation.hasError) {
@@ -35,8 +34,8 @@ export default function Login(){
         }
 
         AuthService({email: formData.email, password: formData.password}, 'http://localhost:5110/auth/login')
-        .then(data => {
-            localStorage.setItem("authToken", data) // not a good practice
+        .then(data => {            
+            localStorage.setItem("authToken", data.token) // not a good practice
 
             fetchUserInfo().then(data => {
                 setUser(data)
@@ -47,7 +46,6 @@ export default function Login(){
         .catch(err => {
                 handleError(err, navigate)
             }) 
-
 
     }
 

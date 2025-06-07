@@ -18,6 +18,8 @@ import LikedBlogs from "./components/LikedBlogs/LikedBlogs.tsx"
 import SearchComponent from "./components/SearchComponent/SearchComponent.tsx"
 import { PostedComments } from "./components/PostedComments/PostedComments.tsx"
 import AdminDashboard from "./components/AdminDashboard/AdminDashboard.tsx"
+import ResetPassword from "./components/ResetPassword/ResetPassword.tsx"
+import PrivacyTerms from "./components/PrivacyTermsComponent/PrivacyTerms.tsx"
 
 
 function App(){
@@ -32,6 +34,8 @@ function App(){
           <Route path="*" element={<Navigate to="/error/404/Page%20Not%20Found" />} />
           <Route path="/blog/:id" element={<BlogDetail  />}/>
           <Route path="/results" element={<SearchComponent  />}/>
+          <Route path="/resetPassword/:email" element={<ResetPassword />}/>
+          <Route path="/terms-of-service" element={< PrivacyTerms /> } />
 
           <Route  element={<RouteGuard />}>
             <Route path="/profile/:username" element={<ProfilePageComponent />}/>

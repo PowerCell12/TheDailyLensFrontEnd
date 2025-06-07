@@ -60,8 +60,7 @@ export default function SearchComponent(){
             }
         }).then(async (res) => {
             if (!res.ok){
-                const message =  await res.json()
-                throw Error(`${res.status} - ${message.message}`);
+                throw Error("Failed to fetch search results. Please try again later.");
             }
           
             return res.json()

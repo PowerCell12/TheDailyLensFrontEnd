@@ -19,8 +19,7 @@ export default function PostedBlogs() {
             }
         }).then(async (res) => {
             if (!res.ok) {
-                const message = await res.json()
-                throw Error(`${res.status} - ${message.message}`);
+                throw Error("500 - Internal Server Error");
             }
 
             return res.json()

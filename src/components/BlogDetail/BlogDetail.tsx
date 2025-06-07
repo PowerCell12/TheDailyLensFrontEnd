@@ -68,7 +68,11 @@ export default function BlogDetail(){
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("authToken")}`
             }
-        }).then(() => {
+        }).then(async (data) => {
+            if (!data.ok){
+                const message =  await data.json()
+                throw Error(`${data.status} - ${message.message}`);
+            }
             navigate("/")
         }).catch(err => {
             handleError(err, navigate)
@@ -109,7 +113,6 @@ export default function BlogDetail(){
 
     }
 
-    console.log(id)
     
     return (
         <>

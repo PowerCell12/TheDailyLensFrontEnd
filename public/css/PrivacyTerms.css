@@ -1,0 +1,187 @@
+
+.PrivacyTermsComponent{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2em;
+    background-color:  #587C9E;
+    border-radius: .5em;
+    color: white;
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+    position: relative;
+    margin-top: 2em;
+    padding-bottom: 0em;
+
+
+    h1{
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 1.2em;
+        margin-top: 0em;
+    }
+}
+
+.PrivacyTerms, .PrivacyTermsSecond{
+    margin-bottom: 2em;
+    text-align: center;
+}
+
+
+.privacyTermsIntro, .termsIntro{
+    width: 40%;
+    text-align: center;
+    margin-bottom: 2em;
+    margin-top: 2em;
+    line-height: 2em;
+    font-size: 1.05em;
+    font-weight: 600;
+    font-style: italic;
+}
+
+
+
+/* the big blogs */
+.privacyTermsIntroArticle, .privacyTermsCookiesArticle, .termsIntroArticle, .termsChangesArticle, .termsContentArticle{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8em;
+    background-color: #789DBC;
+    border-radius: .5em;;
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+    margin-bottom: 3em;
+    transition: all 0.4s ease-in-out;
+
+    img{
+        width: 18em;
+        height: 18em;
+    }
+}
+
+.privacyTermsIntroArticle:hover, .privacyTermsCookiesArticle:hover, .termsIntroArticle:hover, .termsChangesArticle:hover, .termsContentArticle:hover{
+    transform: scale(1.02);
+}
+
+.privacyTermsCookiesArticle{
+    padding: 2em;
+    gap: 2em !important;
+
+    img{
+        width: 13em;
+        height: 13em;
+    }
+}
+
+.privacyTermsDataSharingParagraph{
+    max-width: 50%;
+}
+
+.privacyTermsCookiesSectionMain{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 45%;
+
+    section{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+
+        h3{
+            margin-top: 1.5em;
+            margin-bottom: 0em;
+            font-size: 1.5em;
+            font-weight: 600;
+        }
+
+        p{
+            margin-top: 0.5em;
+            max-width: 80%;
+            line-height: 1.2em;
+            text-align: center;
+            font-size: 1.07em;
+            font-weight: 500;
+            font-style: italic;
+        }
+    }
+}
+
+
+
+.termsIntroArticle, .termsChangesArticle{
+    padding: 1.1em;
+    
+    img{
+        width: 15em;
+        height: 15em;
+    }
+
+    p{
+        line-height: 1.8em;
+    }
+}
+
+.termsChangesArticle{
+    padding: 2em;
+    margin-top: 3em;
+
+    section{
+        display: flex;  
+        flex-direction: column;
+        align-items: center;
+        width: 42%;
+    
+        h3{
+            margin-top: 1.5em;
+            margin-bottom: 0em;
+            font-size: 1.5em;
+            font-weight: 600;
+        }
+
+        p{
+            text-align: center;
+            line-height: 1.6em;
+            font-size: 1.05em;
+            font-weight: 500;
+            font-style: italic;
+        }
+    
+    }
+
+}
+
+
+.termsContentArticle{
+    padding: 2em;
+    gap: 1em !important;
+
+    img{
+        width: 13em;
+        height: 13em;
+    }
+
+    h3{
+        margin-top: 1.5em;
+        margin-bottom: 0em;
+        font-size: 1.5em;
+        font-weight: 600;
+    }
+
+    p{
+        text-align: center;
+        line-height: 1.4em;
+        font-size: 1.05em;
+        font-weight: 500;
+        font-style: italic;
+        max-width: 75%;
+    }
+
+}
+
+.termsContentSection{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+

@@ -215,3 +215,21 @@
   bottom: 47% !important;
 }
 
+
+.LogInForgotPassword{
+  width: 8em;
+  align-self: flex-end;
+  color: #CCCCCC !important;
+  font-size: .82em !important;
+  font-style: italic;
+  font-weight: 500 !important;
+  cursor: pointer;
+  margin-top: .3em !important;
+  margin-bottom: 1em !important;
+  transition: all 0.35s ease-in-out;
+}
+
+.LogInForgotPassword:hover{
+  color: peachpuff !important;
+  text-decoration: underline;
+}

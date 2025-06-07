@@ -1,12 +1,15 @@
 import { Link } from 'react-router-dom';
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import ForgotPassword from './ForgotPassword/ForgotPassword';
+import { defaultUser } from '../utils/AuthUtils';
 
 
 // @ts-expect-error it doesn't fucking work otherwise
 export default function AuthForm({mode, formData, setFormData, onSubmitHandler, errorData}){
     const [hidePass, setHidePass] = useState({"password": true, "confirmPassword": true})
     const [passwordInputType, setPasswordInputType] = useState({"password": "password", "confirmPassword": "password"})
-
+    const [ForgetPasswordClicked, setForgetPasswordClicked] = useState(false);
+    const [sendEmail, setSendEmail] = useState(false);
 
     const isLogin = mode == "login";
 
@@ -36,8 +39,22 @@ export default function AuthForm({mode, formData, setFormData, onSubmitHandler, 
 
     }
 
+    useEffect(() => {
+        if (sendEmail === false) return;
+        
+        setTimeout(() => {
+            setSendEmail(false);
+            setForgetPasswordClicked(false);
+        }, 4000)
+
+    }, [sendEmail])
+
     return (
         <form className="AuthForm" onSubmit={onSubmitHandler}>
+
+            {ForgetPasswordClicked &&  <ForgotPassword setForgetPasswordClicked={setForgetPasswordClicked} setSendEmail={setSendEmail} currentUser={defaultUser}/>}
+
+            {sendEmail && <p className='SendEmailAuthForm'>Check your email for the reset link!</p>}
 
             <h3>{isLogin ? "Welcome Back!" : "Register Now!"}</h3>
 
@@ -53,6 +70,8 @@ export default function AuthForm({mode, formData, setFormData, onSubmitHandler, 
 
             <input type={passwordInputType["password"]} className={`AuthInput ${errorData["password"] && "invalid"}`} placeholder="Enter your password" name="password" value={formData["password"]} onChange={onChangeEvent}/>
             {errorData["password"] && <span className='error-text'>Use 6+ characters with numbers & symbols.</span>}
+
+            {isLogin && <p onClick={() => setForgetPasswordClicked(true)} className="LogInForgotPassword">Forgot password?</p>}
 
             {!isLogin && <input className={`AuthInput ${errorData["confirmPassword"] && "invalid"}`} placeholder="Confirm Your Password" name="confirmPassword" value={formData["confirmPassword"]} type={passwordInputType["confirmPassword"]} onChange={onChangeEvent}/>}
             {(!isLogin && errorData["confirmPassword"]) && <span className='error-text'>Passwords must match and be valid</span>}

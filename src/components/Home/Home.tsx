@@ -27,8 +27,7 @@ export default function Home(){
             }
         }).then(async (res) => {
             if (!res.ok){
-                const message =  await res.json()
-                throw Error(`${res.status} - ${message.message}`);
+                throw Error("500 - Internal Server Error");
             }
             return res.json()
         }).then(data => {
@@ -110,10 +109,8 @@ export default function Home(){
             body: JSON.stringify({isSubscribed: !isSubscribed, email: user.email})
         }).then(async (res) => {
             if (!res.ok){
-                const message =  await res.json()
-                throw Error(`${res.status} - ${message.message}`);
+                throw Error("500 - Internal Server Error");
             }
-            return res.json()
         }).then(() => {
             setIsSubscribed(!isSubscribed)
         }).catch(err => {
@@ -240,20 +237,28 @@ export default function Home(){
                                 )
                             })}
 
-                            {isSubscribed == false ? (
+
+                            {user.id !== "0" ? (
+                                isSubscribed == false ? (
+                                    <section className="subscribe">
+                                        <h4>Subscribe To Read More</h4>
+                                        <p>Get notified when we publish something new.</p>
+                                        <button onClick={() => handleEmailClick()}>Subscribe</button>
+                                    </section>
+                                ) : (
+                                    <section className="subscribe">
+                                        <h4>Subscribed</h4>
+                                        <p>You're set to receive the latest updates from us.</p>
+                                        <button onClick={() => handleEmailClick()}>Unsubscribe</button>
+                                    </section>
+                                )  
+                            ) : (
                                 <section className="subscribe">
                                     <h4>Subscribe To Read More</h4>
                                     <p>Get notified when we publish something new.</p>
-                                    <button onClick={() => handleEmailClick()}>Subscribe</button>
-                                </section>
-                            ) : (
-                                <section className="subscribe">
-                                    <h4>Subscribed</h4>
-                                    <p>You're set to receive the latest updates from us.</p>
-                                    <button onClick={() => handleEmailClick()}>Unsubscribe</button>
+                                    <button  disabled>Subscribe</button>
                                 </section>
                             )}
-
 
 
                     </article>

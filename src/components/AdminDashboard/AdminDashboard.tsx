@@ -61,8 +61,7 @@ export default function AdminDashboard() {
             body: JSON.stringify(allUsers.map(user => { return { Id: user.id, AccountType: user.accountType } }))
         }).then(async (res) => {
             if (!res.ok){
-                const message =  await res.json()
-                throw Error(`${res.status} - ${message.message}`);
+                throw Error("403 - You are not authorized to perform this action.");
             }
         }).then(() => {
             window.scrollTo(0, 0);

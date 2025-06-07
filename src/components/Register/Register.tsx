@@ -48,8 +48,8 @@ export default function Register(){
 
 
         AuthService({email: formData.email, password: formData.password}, 'http://localhost:5110/auth/register')
-            .then(async data => {
-                localStorage.setItem("authToken", data) // not a good practice
+            .then(async (data) => {
+                localStorage.setItem("authToken", data.token) // not a good practice
                 
                 fetchUserInfo().then(data => {
                     setUser({...data})
@@ -59,7 +59,7 @@ export default function Register(){
             })
             .catch(err => {
                     handleError(err, navigate)
-                })       
+            })       
 
     }
 

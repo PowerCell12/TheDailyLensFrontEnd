@@ -142,7 +142,11 @@ export default function Comment({
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("authToken")}`
             }
-        }).then(() => {
+        }).then(async (data) => {
+            if (!data.ok){
+                const message =  await data.json()
+                throw Error(`${data.status} - ${message.message}`);
+            }
             setBlogData((prevBlogData: CommentBlog[]) => prevBlogData.filter(comment => comment.id !== id))
         }).catch(err => {
             handleError(err, navigate)

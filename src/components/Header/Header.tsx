@@ -1,8 +1,8 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { FetchWithAuthorization } from "../../wrappers/fetchWrapper";
 import { useEffect, useState } from "react";
 import handleError from "../../utils/handleError";
 import { useAuth } from "../../contexts/useAuth";
+import { defaultUser } from "../../utils/AuthUtils";
 
 
 
@@ -11,6 +11,7 @@ export default function Header() {
     const [isOpen, setIsOpen] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
+
 
 
     useEffect(() => {
@@ -38,29 +39,20 @@ export default function Header() {
 
 
     function LogoutHandler(){
-        
-        FetchWithAuthorization("http://localhost:5110/auth/logout", "POST")
-        .then(async response => {
+
+        fetch("http://localhost:5110/auth/logout", {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("authToken")}`
+            }
+        }).then(async response => {
             if (response.ok === false) {
-                    const message = await response.json();
-                    throw Error(`${response.status} - ${message.message}`);
+                    throw Error("500 - Logout failed. Please try again.");
             }
 
             setIsOpen(false);
             localStorage.clear();
-            setUser({
-                "name": "defaultName",
-                "email": "",
-                "accountType": "",
-                "country": "",
-                "fullName": "",
-                "imageUrl": "/PersonDefault.png",
-                "bio": "",
-                "id": "0",
-                "likedComments": [],
-                "dislikedComments": [],
-                "likedBlogs": []
-            });
+            setUser(defaultUser);
             navigate("/");
         })
         .catch((err) => {
