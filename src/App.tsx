@@ -20,6 +20,7 @@ import { PostedComments } from "./components/PostedComments/PostedComments.tsx"
 import AdminDashboard from "./components/AdminDashboard/AdminDashboard.tsx"
 import ResetPassword from "./components/ResetPassword/ResetPassword.tsx"
 import PrivacyTerms from "./components/PrivacyTermsComponent/PrivacyTerms.tsx"
+import AuthCallback from "./components/AuthCallback/AuthCallback.tsx"
 
 
 function App(){
@@ -36,6 +37,7 @@ function App(){
           <Route path="/results" element={<SearchComponent  />}/>
           <Route path="/resetPassword/:email" element={<ResetPassword />}/>
           <Route path="/terms-of-service" element={< PrivacyTerms /> } />
+          <Route path="/auth-callback" element={< AuthCallback />}/>
 
           <Route  element={<RouteGuard />}>
             <Route path="/profile/:username" element={<ProfilePageComponent />}/>

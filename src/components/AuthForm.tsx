@@ -49,6 +49,14 @@ export default function AuthForm({mode, formData, setFormData, onSubmitHandler, 
 
     }, [sendEmail])
 
+
+    function handleGoogleClick(){
+
+        window.location.href = "http://localhost:5110/auth/google-login";
+
+    }
+
+
     return (
         <form className="AuthForm" onSubmit={onSubmitHandler}>
 
@@ -87,7 +95,7 @@ export default function AuthForm({mode, formData, setFormData, onSubmitHandler, 
 
             <span className="divider">{ isLogin ? "Or Log in with" : "Or Sign up with"} </ span>
 
-            <button type="button"><img src="/GoogleLogo.png" alt="" /> <span>Google</span></button>
+            <button onClick={handleGoogleClick} type="button"><img src="/GoogleLogo.png" alt="" /> <span>Google</span></button>
 
             <img  src="/PasswordEye.png" alt="password" className="PasswordEye" id={errorData["email"] ? "PasswordEyeInvalid" : undefined}  onClick={ChangeVisibilityPasswordHandler}/>
             {!isLogin && <img  id='ConfirmPassword' src="/PasswordEye.png" alt="confirmPassword" className={`PasswordEye ${(errorData["email"] || errorData["password"]) && "PasswordEyeInvalid"}`} onClick={ChangeVisibilityPasswordHandler}/> }

@@ -4,10 +4,12 @@ import { Countries, UserValidations } from "../../utils/UserUtils"
 import handleError from "../../utils/handleError"
 import { HeaderProps } from "../../interfaces/HeaderProps"
 import { defaultUser } from "../../utils/AuthUtils"
+import { useAuth } from "../../contexts/useAuth"
 
 
 export default function EditProfile(){
     const [user, setUser] = useState<HeaderProps["user"]>(defaultUser)
+    const {setUser: currentsetUser} = useAuth()
     const ListCountry = useMemo<string[]>(() => {
         return Countries()
     }, [])
@@ -104,7 +106,9 @@ export default function EditProfile(){
 
         const formData = new FormData();
 
+        
         if (Imagefile){
+            console.log(Imagefile)
             formData.append("file", Imagefile);
             formData.append("frontEndUrl", "EditProfile");
             formData.append("userId", user.id);
@@ -122,7 +126,8 @@ export default function EditProfile(){
                 }
                 return res.json()
             }).then((data) => {
-                setUser({...user, imageUrl: `http://localhost:5110/${data.imageUrl}`})  
+                console.log(data.imageUrl)
+                currentsetUser({...user, imageUrl: `http://localhost:5110/${data.imageUrl}`})  
             }).catch(err => {
                 handleError(err, navigate)
             })   
@@ -142,7 +147,7 @@ export default function EditProfile(){
                     throw Error(`${res.status} - ${message.message}`);
                 }
     
-                setUser({...user, imageUrl: "/PersonDefault.png"})
+                currentsetUser({...user, imageUrl: "/PersonDefault.png"})
             }).catch(err => {
                 handleError(err, navigate)
             })
@@ -172,7 +177,7 @@ export default function EditProfile(){
 
             return res.json()
         }).then((data) => {
-            setUser({...user, name: data.username, fullName: data.fullName, country: data.country, email: data.email, bio: data.bio})
+            currentsetUser({...user, name: data.username, fullName: data.fullName, country: data.country, email: data.email, bio: data.bio})
             navigate(`/profile/${data.username}`)
         }).catch(err => {
             handleError(err, navigate)

@@ -1,0 +1,36 @@
+.AuthCallbackContainer{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.4); /* dark overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px); /* this blurs the background */
+    z-index: 1000; /* make sure it's on top */
+}
+
+.AuthCallback{
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    width: 30em;
+    height: 3em;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    color: black;
+    align-items: center;
+    justify-content: center;
+    gap: 3em;
+
+    p{
+        font-size: 1.5em;
+        font-weight: 500;
+        font-style: italic;
+    }
+
+
+}
