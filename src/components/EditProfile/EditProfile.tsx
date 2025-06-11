@@ -9,7 +9,7 @@ import { useAuth } from "../../contexts/useAuth"
 
 export default function EditProfile(){
     const [user, setUser] = useState<HeaderProps["user"]>(defaultUser)
-    const {setUser: currentsetUser} = useAuth()
+    const {user: currentUser, setUser: setCurrentUser} = useAuth()
     const ListCountry = useMemo<string[]>(() => {
         return Countries()
     }, [])
@@ -48,7 +48,6 @@ export default function EditProfile(){
                 }
                 return res.json()
             }).then((res) => {
-                console.log(res)
                 if (res.imageUrl == null) res.imageUrl = "/PersonDefault.png"
                 setUser({...res, imageUrl: res.imageUrl == "/PersonDefault.png" ? "/PersonDefault.png" : `http://localhost:5110/${res.imageUrl}`})
             }).catch(err => {
@@ -90,9 +89,95 @@ export default function EditProfile(){
 
     }, [])
 
+    function editPRofileHandlerFinal(data: { imageUrl: string }){
+        fetch("http://localhost:5110/user/editProfile", {
+                method: "POST",
+                body: JSON.stringify({
+                    username: InputDict.username,
+                    fullName: InputDict.fullName,
+                    country: InputDict.country,
+                    email: InputDict.email,
+                    bio: InputDict.bio,
+                    currentName: username
+                }),
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("authToken")}`
+                }
+            }).then(async (res) => {
+                if (!res.ok){
+                    const message =  await res.json()
+                    throw Error(`${res.status} - ${message.message}`);
+                }
+
+                return res.json()
+            }).then((data1) => {
+                console.log(data1.imageUrl)
+                if (user.id == currentUser.id){
+                    if (data.imageUrl == "/PersonDefault.png"){
+                        setCurrentUser({...user, name: data1.username, fullName: data1.fullName, country: data1.country, email: data1.email, bio: data1.bio, imageUrl: data.imageUrl})
+                    }
+                    else{
+                        setCurrentUser({...user, name: data1.username, fullName: data1.fullName, country: data1.country, email: data1.email, bio: data1.bio, imageUrl: `http://localhost:5110/${data.imageUrl}`})
+                    }
+                }
+                navigate(`/profile/${data1.username}`)
+            }).catch(err => {
+                handleError(err, navigate)
+            })  
+    }
 
 
-    function SubmitEditProfile(event: React.FormEvent<HTMLFormElement>){ 
+    function uploadImage(Imagefile: string | Blob){
+        const formData = new FormData()
+
+        formData.append("file", Imagefile);
+        formData.append("frontEndUrl", "EditProfile");
+        formData.append("userId", user.id);
+        
+        return fetch("http://localhost:5110/user/uploadImage", {
+            method: "POST",
+            body: formData,
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("authToken")}`
+            }
+        }).then(async (res) => {
+            if (!res.ok){
+                if (res.status == 500) throw Error("500 - Internal Server Error")
+                const message =  await res.json()
+                throw Error(`${res.status} - ${message.message}`);
+            }
+            return res.json()
+        }).then(async (data) => {
+            editPRofileHandlerFinal(data)
+        }).catch(err => {
+            handleError(err, navigate)
+        })   
+    }
+
+    function resetProfileImage(){
+        return fetch("http://localhost:5110/user/resetProfileImage", {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("authToken")}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(user.id)
+        }).then (async (res) => {
+            if (!res.ok){
+                const message =  await res.json()
+                throw Error(`${res.status} - ${message.message}`);
+            }
+
+            editPRofileHandlerFinal({imageUrl: "/PersonDefault.png"})
+
+        }).catch(err => {
+            handleError(err, navigate)
+        })
+    }
+
+
+    async function SubmitEditProfile(event: React.FormEvent<HTMLFormElement>){ 
         event.preventDefault()
 
         const finalData = UserValidations(InputDict, {...errorDict})
@@ -103,87 +188,15 @@ export default function EditProfile(){
             return
         }
 
-
-        const formData = new FormData();
-
-        
         if (Imagefile){
-            console.log(Imagefile)
-            formData.append("file", Imagefile);
-            formData.append("frontEndUrl", "EditProfile");
-            formData.append("userId", user.id);
-        
-            fetch("http://localhost:5110/user/uploadImage", {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${localStorage.getItem("authToken")}`
-                },
-                body: formData
-            }).then(async (res) => {
-                if (!res.ok){
-                    const message =  await res.json()
-                    throw Error(`${res.status} - ${message.message}`);
-                }
-                return res.json()
-            }).then((data) => {
-                console.log(data.imageUrl)
-                currentsetUser({...user, imageUrl: `http://localhost:5110/${data.imageUrl}`})  
-            }).catch(err => {
-                handleError(err, navigate)
-            })   
+            await uploadImage(Imagefile)
         }
 
         if (ImagefileURL == "/PersonDefault.png"){
-            fetch("http://localhost:5110/user/resetProfileImage", {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${localStorage.getItem("authToken")}`,
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(user.id)
-            }).then (async (res) => {
-                if (!res.ok){
-                    const message =  await res.json()
-                    throw Error(`${res.status} - ${message.message}`);
-                }
-    
-                currentsetUser({...user, imageUrl: "/PersonDefault.png"})
-            }).catch(err => {
-                handleError(err, navigate)
-            })
+           await resetProfileImage()
         }
-        
-        
 
-        fetch("http://localhost:5110/user/editProfile", {
-            method: "POST",
-            body: JSON.stringify({
-                username: InputDict.username,
-                fullName: InputDict.fullName,
-                country: InputDict.country,
-                email: InputDict.email,
-                bio: InputDict.bio,
-                currentName: username
-            }),
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem("authToken")}`
-            }
-        }).then(async (res) => {
-            if (!res.ok){
-                const message =  await res.json()
-                throw Error(`${res.status} - ${message.message}`);
-            }
-
-            return res.json()
-        }).then((data) => {
-            currentsetUser({...user, name: data.username, fullName: data.fullName, country: data.country, email: data.email, bio: data.bio})
-            navigate(`/profile/${data.username}`)
-        }).catch(err => {
-            handleError(err, navigate)
-        })
-
-    
+        navigate(`/profile/${user.name}`)
     }
 
     function ProfileImageHandler(){

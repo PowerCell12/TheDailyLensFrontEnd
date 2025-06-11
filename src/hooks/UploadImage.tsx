@@ -5,7 +5,7 @@ import handleError from "../utils/handleError"
 
 
 
-export function useUploadingImage(ImageFileref: React.RefObject<HTMLInputElement>, {user, setUser} : HeaderProps, setfromCancel: React.Dispatch<React.SetStateAction<boolean>> = () => {}){
+export function useUploadingImage(ImageFileref: React.RefObject<HTMLInputElement>, {user, setUser} : HeaderProps, {currentUser, setCurrentUser} : HeaderProps, setfromCancel: React.Dispatch<React.SetStateAction<boolean>> = () => {}){
     const navigate = useNavigate()
 
 
@@ -52,6 +52,9 @@ export function useUploadingImage(ImageFileref: React.RefObject<HTMLInputElement
             }).then((data) => {
                 console.log(data)
                 setfromCancel(true)
+                if (currentUser.id == user.id){
+                    setCurrentUser({...currentUser, imageUrl: `http://localhost:5110/${data.imageUrl}`})
+                }
                 setUser({...user, imageUrl: `http://localhost:5110/${data.imageUrl}`})
             })
             .catch(err => {

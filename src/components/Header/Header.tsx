@@ -12,8 +12,6 @@ export default function Header() {
     const navigate = useNavigate();
     const location = useLocation();
 
-
-
     useEffect(() => {
         if (isOpen == false){
             return;

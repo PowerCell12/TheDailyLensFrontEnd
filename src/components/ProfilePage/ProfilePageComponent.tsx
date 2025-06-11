@@ -10,13 +10,13 @@ import { useAuth } from "../../contexts/useAuth"
 
 
 export default function ProfilePageComponent(){
-    const {user: currentUser} = useAuth()
+    const {user: currentUser, setUser: setCurrentUser} = useAuth()
     const navigate = useNavigate()
     const [user, setUser] = useState<HeaderProps["user"]>(defaultUser)
     const ImageFileref = useRef<HTMLInputElement>(null)
     const [deleteButtonClicked, setDeleteButtonClicked] = useState(false)
     const [DELETEWritten, setDELETEWritten] = useState(false)
-    useUploadingImage(ImageFileref, {user, setUser})
+    useUploadingImage(ImageFileref, {user, setUser}, {currentUser, setCurrentUser})
 
     const { username } = useParams();
 
@@ -68,6 +68,7 @@ export default function ProfilePageComponent(){
 
                 if (currentUser.id == user.id){
                     localStorage.removeItem("authToken")
+                    setCurrentUser(defaultUser)
                 }
                 navigate("/")
             }).catch(err => {
@@ -93,6 +94,10 @@ export default function ProfilePageComponent(){
             if (!res.ok){
                 const message =  await res.json()
                 throw Error(`${res.status} - ${message.message}`);
+            }
+
+            if (user.id == currentUser.id){
+                setCurrentUser({...currentUser, imageUrl: "/PersonDefault.png"})
             }
 
             setUser({...user, imageUrl: "/PersonDefault.png"})

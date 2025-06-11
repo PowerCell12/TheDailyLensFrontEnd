@@ -128,6 +128,7 @@ export default function Home(){
                     <img onClick={() => (searchRef.current?.value != "" && navigate(`results?search_query=${searchRef.current?.value}&page=1`))} src="/searchIcon.png" alt="" />
                 </div>
 
+                {latestBlogs.length > 0 ? (
                 <section className="homeMainContent">
                     <article className="latest-headlines" >
                             <button className="MainLatestHeadlinesSeeMore" onClick={() => navigate(`/results?search_query=latest&page=1`)}>View all</button>
@@ -174,46 +175,57 @@ export default function Home(){
                             </section>
 
                             <section className="OtherLastestHeadlines">
-                                    
-                                <section className="OtherLatestHeadlineFirst" onClick={() => navigate(`blog/${latestBlogs[1]?.id}`)}>
-                                    <section>
-                                        <span>{DateFormatter(latestBlogs[1]?.createdAt)}</span>
+                                
+                                {latestBlogs.length > 1 ? (
+                                    <section className="OtherLatestHeadlineFirst" onClick={() => navigate(`blog/${latestBlogs[1]?.id}`)}>
+                                        <section>
+                                            <span>{DateFormatter(latestBlogs[1]?.createdAt)}</span>
 
-                                        <ul className="MainLatestHeadlinesTags">
-                                                {latestBlogs[1]?.tags?.map((tag) => {
-                                                    return <li title={tag} key={tag}>{tag}</li> // HERE KEY IS THE TAG.ID
-                                                })}
-                                        </ul>
+                                            <ul className="MainLatestHeadlinesTags">
+                                                    {latestBlogs[1]?.tags?.map((tag) => {
+                                                        return <li title={tag} key={tag}>{tag}</li> // HERE KEY IS THE TAG.ID
+                                                    })}
+                                            </ul>
+                                        </section>
+
+                                        <h2>{latestBlogs[1]?.title}</h2>
+
+                                        <img src={latestBlogs[1]?.thumbnail} alt="" />
+                                    </section>
+                                ) : (
+
+                                    <section className="NoSecondLatest" onClick={() => {navigate("/createBlog")}}>
+                                        <h2>Become a Contributor: Publish Now!</h2>
+
+                                        <img src="BlogThumbnailDefault.jpg" alt="" />
                                     </section>
 
-                                    <h2>{latestBlogs[1]?.title}</h2>
+                                )}
+                                
+                                {latestBlogs.length > 2 && (
+                                    <section className="OtherLatestHeadlineOthers2">
+                                        {latestBlogs.slice(2).map((blog) => {
+                                            return (
+                                                <section key={blog.id} className="OtherLatestHeadlineOthers" onClick={() => navigate(`blog/${blog.id}`)}>
+                                                    <section className="OtherLatestHeadlineUserInfo1">
+                                                        <span>{DateFormatter(latestBlogs[1]?.createdAt)}</span>
 
-                                    <img src={latestBlogs[1]?.thumbnail} alt="" />
-                                </section>
+                                                        <span title={blog.tags[0]} className="OtherLatestHeadlineTags">{blog.tags[0]}</span>
+                                                    </section>
 
-                                <section className="OtherLatestHeadlineOthers2">
-                                    {latestBlogs.slice(2).map((blog) => {
-                                        return (
-                                            <section key={blog.id} className="OtherLatestHeadlineOthers" onClick={() => navigate(`blog/${blog.id}`)}>
-                                                <section className="OtherLatestHeadlineUserInfo1">
-                                                    <span>{DateFormatter(latestBlogs[1]?.createdAt)}</span>
+                                                    <h3>{blog.title}</h3>
 
-                                                    <span title={blog.tags[0]} className="OtherLatestHeadlineTags">{blog.tags[0]}</span>
+                                                    <section className="OtherLatestHeadlineUserInfo2">
+                                                        <img src={(blog.userImageUrl && blog.userImageUrl !== "/PersonDefault.png" ) ? `http://localhost:5110/${blog.userImageUrl}` : "/PersonDefault.png"} alt="" />
+
+                                                        <span>{blog.userName}</span>
+                                                    </section>
+
                                                 </section>
-
-                                                <h3>{blog.title}</h3>
-
-                                                <section className="OtherLatestHeadlineUserInfo2">
-                                                    <img src={(blog.userImageUrl && blog.userImageUrl !== "/PersonDefault.png" ) ? `http://localhost:5110/${blog.userImageUrl}` : "/PersonDefault.png"} alt="" />
-
-                                                    <span>{blog.userName}</span>
-                                                </section>
-
-                                            </section>
-                                        )
-                                    })}
-                                </section>
-
+                                            )
+                                        })}
+                                    </section>
+                                )}
                             </section>
 
                             
@@ -263,6 +275,12 @@ export default function Home(){
 
                     </article>
                 </section>
+                ) : (
+                    <div className="no-headlines">
+                        <h1>Nothing to show just yet</h1>
+                        <p>We don't have any headlines at the moment—check back soon!</p>
+                    </div>
+                )}
             </main>
         </>
 
